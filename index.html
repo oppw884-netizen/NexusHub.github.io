@@ -18,6 +18,20 @@
     --muted:     #7a8399;
     --pill-bg:   #eef3ff;
     --success:   #16c784;
+    --star:      #f5b301;
+  }
+
+  html[data-theme="dark"]{
+    --bg:        #0b0f19;
+    --surface:   #141a29;
+    --border:    #232b3d;
+    --blue:      #4a7dff;
+    --blue-2:    #22c1f0;
+    --ink:       #eef1f8;
+    --muted:     #8b93a7;
+    --pill-bg:   #1b2233;
+    --success:   #1fd68f;
+    --star:      #ffcc33;
   }
 
   *{ box-sizing:border-box; }
@@ -30,6 +44,7 @@
     min-height:100vh;
     position:relative;
     overflow-x:hidden;
+    transition:background .3s ease, color .3s ease;
   }
 
   .deco-dot{ position:absolute; width:5px; height:5px; border-radius:50%; background:#c7d3ec; }
@@ -73,6 +88,32 @@
     font-family:'Prompt',sans-serif; font-weight:600; font-size:13.5px; cursor:pointer;
     box-shadow:0 8px 18px rgba(47,107,255,.3);
   }
+
+  .topbar-actions{ display:flex; align-items:center; gap:10px; }
+
+  .btn-theme{
+    width:40px; height:40px; border-radius:12px; border:1px solid var(--border);
+    background:var(--pill-bg); color:var(--ink); cursor:pointer;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    transition:background .2s ease, transform .2s ease;
+  }
+  .btn-theme:hover{ transform:translateY(-2px); }
+  .btn-theme svg{ width:19px; height:19px; }
+  .btn-theme .icon-sun{ display:none; }
+  html[data-theme="dark"] .btn-theme .icon-moon{ display:none; }
+  html[data-theme="dark"] .btn-theme .icon-sun{ display:block; }
+
+  .btn-bookmark{
+    position:absolute; top:10px; left:10px; width:32px; height:32px; border-radius:9px;
+    background:rgba(255,255,255,.92); border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:transform .2s ease, background .2s ease; z-index:2;
+  }
+  html[data-theme="dark"] .btn-bookmark{ background:rgba(20,26,41,.85); }
+  .btn-bookmark:hover{ transform:scale(1.1); }
+  .btn-bookmark svg{ width:16px; height:16px; stroke:var(--muted); fill:none; transition:fill .2s ease, stroke .2s ease; }
+  .btn-bookmark.active svg{ fill:var(--star); stroke:var(--star); }
+  .thumb .thumb-tag{ left:48px; }
 
   .hero{ position:relative; text-align:center; padding:56px 20px 30px; z-index:2; }
   .kicker{
@@ -134,8 +175,9 @@
   }
   .thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
   .thumb-tag{
-    position:absolute; top:10px; left:10px; background:rgba(255,255,255,.92); color:var(--ink);
+    position:absolute; top:10px; left:10px; background:rgba(255,255,255,.92); color:#0f1728;
     font-size:10.5px; font-weight:700; padding:5px 10px; border-radius:8px;
+    max-width:calc(100% - 92px); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
   }
   .thumb-partner{
     position:absolute; top:10px; right:10px; display:flex; align-items:center; gap:4px;
@@ -223,9 +265,6 @@
     h1{ font-size:27px; }
   }
 
-  /* ========================================================
-     อนิเมชั่น
-  ======================================================== */
   @keyframes fadeUp{
     from{ opacity:0; transform:translateY(18px); }
     to{ opacity:1; transform:translateY(0); }
@@ -360,12 +399,19 @@
       </div>
     </div>
 
-    <!-- เพิ่ม Event onclick และ ID เพื่อใช้สลับหน้า / คัดลอก Discord -->
     <nav class="nav-pill">
       <button class="nav-item active" id="btnTabScripts" onclick="switchTab('scripts')">&lt;/&gt; คลังสคริปต์</button>
+      <button class="nav-item" id="btnTabFavorites" onclick="switchTab('favorites')">⭐ รายการโปรด</button>
       <button class="nav-item" id="btnTabPartners" onclick="switchTab('partners')">🎖 พาร์ทเนอร์</button>
       <button class="nav-item" onclick="copyDiscordLink()">💬 Discord Community</button>
     </nav>
+
+    <div class="topbar-actions">
+      <button class="btn-theme" id="btnTheme" onclick="toggleTheme()" title="สลับธีมมืด/สว่าง">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.2M12 19.8V22M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2 12h2.2M19.8 12H22M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6" stroke-linecap="round"/></svg>
+      </button>
+    </div>
   </header>
 
   <section class="hero">
@@ -398,9 +444,6 @@
     </div>
   </div>
 
-  <!-- นำระบบ Tab View มาครอบในส่วนนี้ -->
-  
-  <!-- ====== หน้าคลังสคริปต์ (View 1) ====== -->
   <div id="viewScripts" class="view active">
     <div class="search-wrap">
       <div class="search-bar">
@@ -411,7 +454,15 @@
     <div class="grid" id="hubContainer"></div>
   </div>
 
-  <!-- ====== หน้าพาร์ทเนอร์ (View 2) ====== -->
+  <div id="viewFavorites" class="view">
+    <section style="text-align:center; padding:20px 20px 20px; position:relative; z-index:2;">
+      <div class="kicker" style="margin-bottom:12px;"><span class="dot"></span> YOUR COLLECTION</div>
+      <h2 style="font-size:26px; font-weight:800; margin:0 0 10px; line-height:1.25;">รายการโปรดของคุณ</h2>
+      <p style="color:var(--muted); font-size:14.5px; font-weight:500; margin:0 auto;">กดรูปดาว ⭐ บนสคริปต์ที่ชอบเพื่อบันทึกไว้ที่นี่ (บันทึกในเครื่องนี้เท่านั้น)</p>
+    </section>
+    <div class="grid" id="favoritesContainer" style="padding-bottom:60px;"></div>
+  </div>
+
   <div id="viewPartners" class="view">
     <section style="text-align:center; padding:20px 20px 40px; position:relative; z-index:2;">
       <div class="kicker teal" style="margin-bottom:12px;"><span class="dot"></span> OFFICIAL VERIFIED PARTNERS</div>
@@ -421,14 +472,14 @@
 
     <div class="partner-grid">
       <div class="partner-card" style="animation-delay:.1s">
-        <div class="partner-avatar fallback">BOB</div>
+        <div class="partner-avatar fallback">H</div>
         <div class="partner-name">bob</div>
         <div class="partner-tag">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.118.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
           bob_rbx
         </div>
         <div class="partner-meta">
-          <span>ผลงาน: <b>2</b> สคริปต์</span>
+          <span>ผลงาน: <b>1</b> สคริปต์</span>
           <span style="display:flex; align-items:center; gap:6px;">
             <span style="width:7px; height:7px; border-radius:50%; background:var(--success);"></span> Active
           </span>
@@ -436,7 +487,6 @@
       </div>
     </div>
   </div>
-  <!-- =============================== -->
 
   <div class="toast" id="toastBox">คัดลอกสำเร็จ!</div>
 
@@ -444,21 +494,158 @@
   const discordLink = "https://discord.gg/m56SY6PMyU";
 
   // ========================================================
-  // ระบบนับ "เข้าชมทั้งหมด" และ "ออนไลน์อยู่" แบบข้อมูลจริง
-  // หมายเหตุ: เดิมใช้ api.countapi.xyz แต่บริการนั้นปิดตัวไปแล้ว
-  // เปลี่ยนมาใช้ countapi.mileshilliard.com (โปรเจกต์สานต่อ ฟรี ไม่ต้องสมัคร)
-  // เปลี่ยนชื่อ KEY ด้านล่างให้เป็นชื่อเฉพาะของเว็บคุณ เพื่อไม่ให้ชนกับเว็บอื่น
+  // ระบบสลับธีมมืด/สว่าง (Dark / Light Mode)
+  // ใช้ attribute data-theme บน <html> + จำค่าไว้ใน localStorage
   // ========================================================
-const COUNTER_API = 'https://countapi.mileshilliard.com/api/v1';
-const VIEWS_KEY = 'nexushub_bob_rbx_v1_views';
-const ONLINE_JOIN_KEY = 'nexushub_bob_rbx_v1_online_join';
-const ONLINE_LEAVE_KEY = 'nexushub_bob_rbx_v1_online_leave';
+  const THEME_KEY = 'nexushub_bob_rbx_v1_theme';
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+  }
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    try { localStorage.setItem(THEME_KEY, next); } catch (e) { /* เงียบไว้ */ }
+  }
+
+  (function initTheme() {
+    let saved = null;
+    try { saved = localStorage.getItem(THEME_KEY); } catch (e) { /* เงียบไว้ */ }
+    if (saved === 'dark' || saved === 'light') {
+      applyTheme(saved);
+    } else {
+      // ไม่เคยตั้งค่าไว้ -> ใช้ตามค่าระบบของเครื่องผู้ใช้
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      applyTheme(prefersDark ? 'dark' : 'light');
+    }
+  })();
+  // ========================================================
+
+  // ========================================================
+  // ระบบรายการโปรด / บุ๊กมาร์ก (Bookmarks / Favorites)
+  // บันทึกเป็นรายการ id ของสคริปต์ไว้ใน localStorage (เก็บเฉพาะเครื่องนี้)
+  // ========================================================
+  const FAVORITES_KEY = 'nexushub_bob_rbx_v1_favorites';
+
+  function getFavorites() {
+    try {
+      const raw = localStorage.getItem(FAVORITES_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) { return []; }
+  }
+
+  function saveFavorites(list) {
+    try { localStorage.setItem(FAVORITES_KEY, JSON.stringify(list)); } catch (e) { /* เงียบไว้ */ }
+  }
+
+  function isFavorite(id) {
+    return getFavorites().includes(id);
+  }
+
+  function toggleFavorite(id, btnEl) {
+    let list = getFavorites();
+    const active = list.includes(id);
+    if (active) {
+      list = list.filter(x => x !== id);
+    } else {
+      list.push(id);
+    }
+    saveFavorites(list);
+    if (btnEl) btnEl.classList.toggle('active', !active);
+
+    const t = document.getElementById('toastBox');
+    t.innerText = active ? '💔 นำออกจากรายการโปรดแล้ว' : '⭐ บันทึกลงรายการโปรดแล้ว!';
+    t.classList.remove('show'); void t.offsetWidth;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 1800);
+
+    renderFavorites();
+  }
+
+  function bookmarkBtnHtml(id) {
+    const active = isFavorite(id) ? ' active' : '';
+    return `
+      <button class="btn-bookmark${active}" onclick="event.stopPropagation(); toggleFavorite(${id}, this)" title="บันทึกรายการโปรด">
+        <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.2 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.2 5.9-.8L12 3.5Z"/></svg>
+      </button>`;
+  }
+
+  function renderFavorites() {
+    const favContainer = document.getElementById('favoritesContainer');
+    if (!favContainer) return;
+    const favIds = getFavorites();
+    favContainer.innerHTML = '';
+
+    if (favIds.length === 0) {
+      favContainer.innerHTML = `
+        <div class="no-partners" style="grid-column:1/-1;">
+          ยังไม่มีรายการโปรด — กดปุ่ม ⭐ บนสคริปต์ที่ชอบในหน้าคลังสคริปต์เพื่อบันทึกไว้ที่นี่
+        </div>`;
+      return;
+    }
+
+    favIds.forEach(id => {
+      const data = scriptsData[id];
+      if (!data) return;
+      const card = document.createElement('div');
+      card.className = 'script-card';
+
+      if (data.type === 'script') {
+        card.innerHTML = `
+          <div class="thumb">
+            ${data.img ? `<img src="${data.img}">` : ''}
+            ${bookmarkBtnHtml(id)}
+            <div class="thumb-tag">${data.tag || 'สคริปต์'}</div>
+            <div class="thumb-partner">✓ Partner</div>
+          </div>
+          <div class="card-body">
+            <div class="script-title">${data.title}</div>
+            <div class="author-row">
+              <div class="author-avatar">🎮</div>
+              <div class="author-name">${data.author}</div>
+            </div>
+            <button class="btn-copy" onclick="doCopy(${id}, this)">
+              <svg viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M5 15V5a2 2 0 0 1 2-2h10" stroke="currentColor" stroke-width="1.8"/></svg>
+              คัดลอกสคริปต์
+            </button>
+          </div>`;
+      } else {
+        card.innerHTML = `
+          <div class="thumb" style="cursor:pointer" onclick="window.open('${data.code}','_blank')">
+            <img src="${data.img}">
+            ${bookmarkBtnHtml(id)}
+            <div class="thumb-partner">✓ Partner</div>
+          </div>
+          <div class="card-body">
+            <div class="script-title">${data.title}</div>
+            <a class="btn-copy btn-discord" href="${data.code}" target="_blank">
+              💬 เข้าร่วม Discord
+            </a>
+          </div>`;
+      }
+      favContainer.appendChild(card);
+    });
+  }
+  // ========================================================
+
+  // ========================================================
+  // ระบบนับ "เข้าชมทั้งหมด" และ "ออนไลน์อยู่" แบบข้อมูลจริง (แก้ไขแล้ว)
+  // COUNTER_API ต้องเป็น "base URL" เฉยๆ ห้ามมี /shield หรือ query string ต่อท้าย
+  // เพราะโค้ดด้านล่างจะเอาไปต่อเป็น ${COUNTER_API}/hit/{key} และ ${COUNTER_API}/get/{key}
+  // คีย์ (VIEWS_KEY / ONLINE_JOIN_KEY / ONLINE_LEAVE_KEY) ต้องเป็นชื่อสั้นๆ ไม่ซ้ำใคร
+  // ห้ามใส่เป็น URL เด็ดขาด ไม่งั้น endpoint จะพังและ API จะไม่ตอบ JSON กลับมา
+  // ========================================================
+  const COUNTER_API = 'https://countapi.mileshilliard.com/api/v1';
+  const VIEWS_KEY = 'nexushub_bob_rbx_v1_views';
+  const ONLINE_JOIN_KEY = 'nexushub_bob_rbx_v1_online_join';
+  const ONLINE_LEAVE_KEY = 'nexushub_bob_rbx_v1_online_leave';
 
   const statViewsEl = document.getElementById('statViews');
   const statOnlineEl = document.getElementById('statOnline');
   let hasJoined = false;
 
-  // ค่อยๆ ไล่ตัวเลขขึ้นแทนการเปลี่ยนโครมๆ + ใส่เอฟเฟกต์ bump สั้นๆ ตอนอัปเดต
   const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   function animateNumber(el, newValue){
     const from = parseInt((el.dataset.raw || el.textContent).replace(/[^0-9-]/g, ''), 10) || 0;
@@ -481,19 +668,16 @@ const ONLINE_LEAVE_KEY = 'nexushub_bob_rbx_v1_online_leave';
     requestAnimationFrame(step);
   }
 
-  // นับเข้าชมทั้งหมด: บวก 1 ทุกครั้งที่มีคนเปิดหน้านี้ (นับจริงข้ามทุกเครื่อง)
   async function trackTotalViews() {
     try {
       const res = await fetch(`${COUNTER_API}/hit/${VIEWS_KEY}`);
       const data = await res.json();
-      if (typeof data.value === 'number') animateNumber(statViewsEl, data.value);
+      if (data && typeof data.value !== 'undefined') animateNumber(statViewsEl, Number(data.value));
     } catch (e) {
       console.warn('นับเข้าชมไม่สำเร็จ', e);
     }
   }
 
-  // นับออนไลน์ตอนนี้ โดยใช้ 2 ตัวนับที่บวกอย่างเดียว (join / leave)
-  // แล้วคำนวณ "ออนไลน์อยู่" = join - leave ฝั่ง JS เอง เพื่อเลี่ยงปัญหาการลบค่าไม่ตรงกันตอนหลายคนเข้าพร้อมกัน
   async function joinOnline() {
     if (hasJoined) return;
     hasJoined = true;
@@ -509,7 +693,6 @@ const ONLINE_LEAVE_KEY = 'nexushub_bob_rbx_v1_online_leave';
     if (!hasJoined) return;
     hasJoined = false;
     try {
-      // keepalive ช่วยให้คำขอส่งสำเร็จแม้ปิดแท็บไปแล้ว
       fetch(`${COUNTER_API}/hit/${ONLINE_LEAVE_KEY}`, { keepalive: true });
     } catch (e) { /* เงียบไว้ ไม่ต้องแจ้งผู้ใช้ */ }
   }
@@ -522,8 +705,8 @@ const ONLINE_LEAVE_KEY = 'nexushub_bob_rbx_v1_online_leave';
       ]);
       const joinData = await joinRes.json();
       const leaveData = await leaveRes.json();
-      const joins = typeof joinData.value === 'number' ? joinData.value : 0;
-      const leaves = typeof leaveData.value === 'number' ? leaveData.value : 0;
+      const joins = joinData && typeof joinData.value !== 'undefined' ? Number(joinData.value) : 0;
+      const leaves = leaveData && typeof leaveData.value !== 'undefined' ? Number(leaveData.value) : 0;
       animateNumber(statOnlineEl, Math.max(joins - leaves, 1));
     } catch (e) {
       console.warn('อัปเดตยอดออนไลน์ไม่สำเร็จ', e);
@@ -532,7 +715,7 @@ const ONLINE_LEAVE_KEY = 'nexushub_bob_rbx_v1_online_leave';
 
   trackTotalViews();
   joinOnline();
-  setInterval(pollOnline, 8000); // รีเฟรชยอดออนไลน์ทุก 8 วิ ให้ทุกคนเห็นตรงกัน
+  setInterval(pollOnline, 8000);
 
   window.addEventListener('pagehide', leaveOnline);
   window.addEventListener('beforeunload', leaveOnline);
@@ -555,7 +738,7 @@ const ONLINE_LEAVE_KEY = 'nexushub_bob_rbx_v1_online_leave';
     navigator.clipboard.writeText(scriptsData[id].code).then(() => {
       const t = document.getElementById('toastBox');
       t.innerText = '📋 คัดลอกสคริปต์แล้ว!';
-      t.classList.remove('show'); void t.offsetWidth; // รีสตาร์ทอนิเมชั่นทุกครั้งที่กด
+      t.classList.remove('show'); void t.offsetWidth;
       t.classList.add('show');
       setTimeout(() => t.classList.remove('show'), 2000);
 
@@ -566,7 +749,6 @@ const ONLINE_LEAVE_KEY = 'nexushub_bob_rbx_v1_online_leave';
     });
   }
 
-  // --- เพิ่มฟังก์ชันใหม่ตรงนี้: คัดลอกลิงก์ Discord ---
   function copyDiscordLink() {
     navigator.clipboard.writeText(discordLink).then(() => {
       const t = document.getElementById('toastBox');
@@ -577,18 +759,25 @@ const ONLINE_LEAVE_KEY = 'nexushub_bob_rbx_v1_online_leave';
     });
   }
 
-  // --- เพิ่มฟังก์ชันใหม่ตรงนี้: สลับหน้าการแสดงผล View ---
   function switchTab(viewName) {
     document.getElementById('viewScripts').classList.remove('active');
+    document.getElementById('viewFavorites').classList.remove('active');
     document.getElementById('viewPartners').classList.remove('active');
     document.getElementById('btnTabScripts').classList.remove('active');
+    document.getElementById('btnTabFavorites').classList.remove('active');
     document.getElementById('btnTabPartners').classList.remove('active');
 
     if(viewName === 'scripts') {
       const v = document.getElementById('viewScripts');
-      void v.offsetWidth; // รีสตาร์ทอนิเมชั่นตอนสลับแท็บ
+      void v.offsetWidth;
       v.classList.add('active');
       document.getElementById('btnTabScripts').classList.add('active');
+    } else if(viewName === 'favorites') {
+      const v = document.getElementById('viewFavorites');
+      renderFavorites();
+      void v.offsetWidth;
+      v.classList.add('active');
+      document.getElementById('btnTabFavorites').classList.add('active');
     } else if(viewName === 'partners') {
       const v = document.getElementById('viewPartners');
       void v.offsetWidth;
@@ -609,6 +798,7 @@ const ONLINE_LEAVE_KEY = 'nexushub_bob_rbx_v1_online_leave';
         card.innerHTML = `
           <div class="thumb">
             ${data.img ? `<img src="${data.img}">` : ''}
+            ${bookmarkBtnHtml(i)}
             <div class="thumb-tag">${data.tag || 'สคริปต์'}</div>
             <div class="thumb-partner">✓ Partner</div>
           </div>
@@ -627,6 +817,7 @@ const ONLINE_LEAVE_KEY = 'nexushub_bob_rbx_v1_online_leave';
         card.innerHTML = `
           <div class="thumb" style="cursor:pointer" onclick="window.open('${data.code}','_blank')">
             <img src="${data.img}">
+            ${bookmarkBtnHtml(i)}
             <div class="thumb-partner">✓ Partner</div>
           </div>
           <div class="card-body">
@@ -646,6 +837,8 @@ const ONLINE_LEAVE_KEY = 'nexushub_bob_rbx_v1_online_leave';
     }
     container.appendChild(card);
   }
+
+  renderFavorites();
 
   document.getElementById('searchInput').addEventListener('input', (e) => {
     const q = e.target.value.trim().toLowerCase();

@@ -222,6 +222,123 @@
     .topbar{ padding:14px 18px; }
     h1{ font-size:27px; }
   }
+
+  /* ========================================================
+     อนิเมชั่น
+  ======================================================== */
+  @keyframes fadeUp{
+    from{ opacity:0; transform:translateY(18px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  @keyframes fadeIn{
+    from{ opacity:0; }
+    to{ opacity:1; }
+  }
+  @keyframes floatY{
+    0%,100%{ transform:translateY(0); }
+    50%{ transform:translateY(-8px); }
+  }
+  @keyframes pulseDot{
+    0%,100%{ transform:scale(1); box-shadow:0 0 0 0 rgba(22,199,132,.5); }
+    50%{ transform:scale(1.15); box-shadow:0 0 0 4px rgba(22,199,132,0); }
+  }
+  @keyframes shimmer{
+    0%{ background-position:-200% 0; }
+    100%{ background-position:200% 0; }
+  }
+  @keyframes popIn{
+    0%{ opacity:0; transform:translate(-50%,-130px) scale(.9); }
+    100%{ opacity:1; transform:translate(-50%,0) scale(1); }
+  }
+  @keyframes spinSlow{
+    from{ transform:rotate(0deg); }
+    to{ transform:rotate(360deg); }
+  }
+
+  body{ animation:fadeIn .5s ease both; }
+
+  .deco-dot{ animation:floatY 5s ease-in-out infinite; }
+  .deco-dot:nth-child(2){ animation-delay:.6s; }
+  .deco-dot:nth-child(3){ animation-delay:1.2s; }
+
+  .brand-mark{ transition:transform .35s ease; }
+  .brand:hover .brand-mark{ transform:rotate(-8deg) scale(1.06); }
+
+  .nav-item{ transition:background .25s ease, color .25s ease, transform .15s ease; }
+  .nav-item:active{ transform:scale(.95); }
+  .nav-item.active{ animation:fadeIn .3s ease; }
+
+  .btn-login{ transition:transform .2s ease, filter .2s ease; }
+  .btn-login:hover{ transform:translateY(-2px); filter:brightness(1.08); }
+
+  .hero .kicker{ animation:fadeUp .6s ease both; }
+  .hero h1{ animation:fadeUp .7s ease both .08s; }
+  .hero p{ animation:fadeUp .7s ease both .16s; }
+
+  .stat-card{
+    animation:fadeUp .6s ease both;
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .stat-card:nth-child(1){ animation-delay:.22s; }
+  .stat-card:nth-child(2){ animation-delay:.30s; }
+  .stat-card:nth-child(3){ animation-delay:.38s; }
+  .stat-card:hover{ transform:translateY(-4px); box-shadow:0 14px 30px rgba(16,24,40,.09); }
+
+  .stat-label .live{ animation:pulseDot 1.6s ease-in-out infinite; }
+
+  .stat-num{ transition:color .2s ease; }
+  .stat-num.bump{ animation:fadeUp .3s ease; }
+
+  .search-wrap{ animation:fadeUp .6s ease both .3s; }
+  .search-bar{ transition:box-shadow .25s ease, transform .25s ease; }
+  .search-bar:focus-within{ box-shadow:0 10px 28px rgba(47,107,255,.14); transform:translateY(-1px); }
+
+  .script-card{
+    opacity:0;
+    animation:fadeUp .55s cubic-bezier(.2,.7,.3,1) forwards;
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .script-card:hover{ transform:translateY(-6px); box-shadow:0 18px 36px rgba(16,24,40,.10); }
+  .script-card:hover .thumb img{ transform:scale(1.06); }
+  .thumb img{ transition:transform .4s ease; }
+  .thumb-partner{ animation:fadeIn .5s ease both .2s; }
+
+  .script-card.locked{ opacity:0; animation:fadeIn .5s ease forwards; }
+  .script-card.locked .n{ position:relative; }
+
+  .btn-copy{ position:relative; overflow:hidden; }
+  .btn-copy::after{
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(120deg, transparent 30%, rgba(255,255,255,.35) 50%, transparent 70%);
+    background-size:200% 100%; opacity:0; transition:opacity .2s ease;
+  }
+  .btn-copy:hover::after{ opacity:1; animation:shimmer 1.1s linear infinite; }
+  .btn-copy:active{ transform:scale(.97); }
+  .btn-copy.copied{ background:linear-gradient(90deg, var(--success), #12b3c9); }
+
+  .partner-card{
+    opacity:0; animation:fadeUp .6s ease forwards;
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .partner-card:hover{ transform:translateY(-5px); box-shadow:0 16px 34px rgba(16,24,40,.10); }
+  .partner-avatar{ transition:transform .3s ease; }
+  .partner-card:hover .partner-avatar{ transform:scale(1.05) rotate(-2deg); }
+  .partner-meta .active-dot,
+  .partner-meta span:last-child span:first-child{ animation:pulseDot 1.6s ease-in-out infinite; }
+
+  .view{ animation:fadeUp .4s ease both; }
+
+  .toast{ transition:none; }
+  .toast.show{ animation:popIn .4s cubic-bezier(.2,.8,.3,1.2) forwards; }
+
+  @media (prefers-reduced-motion: reduce){
+    *, *::before, *::after{
+      animation-duration:.001ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:.001ms !important;
+      scroll-behavior:auto !important;
+    }
+  }
 </style>
 </head>
 <body>
@@ -303,7 +420,7 @@
     </section>
 
     <div class="partner-grid">
-      <div class="partner-card">
+      <div class="partner-card" style="animation-delay:.1s">
         <div class="partner-avatar fallback">H</div>
         <div class="partner-name">bob</div>
         <div class="partner-tag">
@@ -326,6 +443,108 @@
 <script>
   const discordLink = "https://discord.gg/m56SY6PMyU";
 
+  // ========================================================
+  // ระบบนับ "เข้าชมทั้งหมด" และ "ออนไลน์อยู่" แบบข้อมูลจริง
+  // หมายเหตุ: เดิมใช้ api.countapi.xyz แต่บริการนั้นปิดตัวไปแล้ว
+  // เปลี่ยนมาใช้ countapi.mileshilliard.com (โปรเจกต์สานต่อ ฟรี ไม่ต้องสมัคร)
+  // เปลี่ยนชื่อ KEY ด้านล่างให้เป็นชื่อเฉพาะของเว็บคุณ เพื่อไม่ให้ชนกับเว็บอื่น
+  // ========================================================
+const COUNTER_API = 'https://countapi.mileshilliard.com/api/v1/hit/demo_visits/shield?text=visits&bgcolor=a855f7&textcolor=ffffff&style=flat';
+// URL ฐาน (base URL) ของบริการนับตัวเลขกลาง (CountAPI) ใช้เก็บค่าตัวนับต่างๆ 
+// ให้ทุกคนที่เข้าเว็บเห็นค่าตรงกัน (ไม่ใช่แค่นับในเครื่องตัวเอง)
+
+const VIEWS_KEY = 'nexushub_bob_rbx_v1_views';
+const ONLINE_JOIN_KEY = 'nexushub_bob_rbx_v1_online_join';
+const ONLINE_LEAVE_KEY = 'nexushub_bob_rbx_v1_online_leave';
+
+  const statViewsEl = document.getElementById('statViews');
+  const statOnlineEl = document.getElementById('statOnline');
+  let hasJoined = false;
+
+  // ค่อยๆ ไล่ตัวเลขขึ้นแทนการเปลี่ยนโครมๆ + ใส่เอฟเฟกต์ bump สั้นๆ ตอนอัปเดต
+  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function animateNumber(el, newValue){
+    const from = parseInt((el.dataset.raw || el.textContent).replace(/[^0-9-]/g, ''), 10) || 0;
+    const to = newValue;
+    el.dataset.raw = String(to);
+    if (reduceMotion || from === to) { el.textContent = to.toLocaleString(); return; }
+    const duration = 500;
+    const start = performance.now();
+    function step(now){
+      const p = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      const current = Math.round(from + (to - from) * eased);
+      el.textContent = current.toLocaleString();
+      if (p < 1) requestAnimationFrame(step);
+      else {
+        el.classList.add('bump');
+        setTimeout(() => el.classList.remove('bump'), 300);
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
+  // นับเข้าชมทั้งหมด: บวก 1 ทุกครั้งที่มีคนเปิดหน้านี้ (นับจริงข้ามทุกเครื่อง)
+  async function trackTotalViews() {
+    try {
+      const res = await fetch(`${COUNTER_API}/hit/${VIEWS_KEY}`);
+      const data = await res.json();
+      if (typeof data.value === 'number') animateNumber(statViewsEl, data.value);
+    } catch (e) {
+      console.warn('นับเข้าชมไม่สำเร็จ', e);
+    }
+  }
+
+  // นับออนไลน์ตอนนี้ โดยใช้ 2 ตัวนับที่บวกอย่างเดียว (join / leave)
+  // แล้วคำนวณ "ออนไลน์อยู่" = join - leave ฝั่ง JS เอง เพื่อเลี่ยงปัญหาการลบค่าไม่ตรงกันตอนหลายคนเข้าพร้อมกัน
+  async function joinOnline() {
+    if (hasJoined) return;
+    hasJoined = true;
+    try {
+      await fetch(`${COUNTER_API}/hit/${ONLINE_JOIN_KEY}`);
+    } catch (e) {
+      console.warn('เข้าร่วมนับออนไลน์ไม่สำเร็จ', e);
+    }
+    pollOnline();
+  }
+
+  function leaveOnline() {
+    if (!hasJoined) return;
+    hasJoined = false;
+    try {
+      // keepalive ช่วยให้คำขอส่งสำเร็จแม้ปิดแท็บไปแล้ว
+      fetch(`${COUNTER_API}/hit/${ONLINE_LEAVE_KEY}`, { keepalive: true });
+    } catch (e) { /* เงียบไว้ ไม่ต้องแจ้งผู้ใช้ */ }
+  }
+
+  async function pollOnline() {
+    try {
+      const [joinRes, leaveRes] = await Promise.all([
+        fetch(`${COUNTER_API}/get/${ONLINE_JOIN_KEY}`),
+        fetch(`${COUNTER_API}/get/${ONLINE_LEAVE_KEY}`)
+      ]);
+      const joinData = await joinRes.json();
+      const leaveData = await leaveRes.json();
+      const joins = typeof joinData.value === 'number' ? joinData.value : 0;
+      const leaves = typeof leaveData.value === 'number' ? leaveData.value : 0;
+      animateNumber(statOnlineEl, Math.max(joins - leaves, 1));
+    } catch (e) {
+      console.warn('อัปเดตยอดออนไลน์ไม่สำเร็จ', e);
+    }
+  }
+
+  trackTotalViews();
+  joinOnline();
+  setInterval(pollOnline, 8000); // รีเฟรชยอดออนไลน์ทุก 8 วิ ให้ทุกคนเห็นตรงกัน
+
+  window.addEventListener('pagehide', leaveOnline);
+  window.addEventListener('beforeunload', leaveOnline);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') leaveOnline();
+    else if (document.visibilityState === 'visible') joinOnline();
+  });
+  // ========================================================
+
   const scriptsData = {
     1: { type:"script", tag:"+1 Speed Keyboard: Escape the Backrooms", title:"+1 Speed Keyboard: Escape the Backrooms", author:"bob", code:`loadstring(game:HttpGet("https://raw.githubusercontent.com/oppw884-netizen/Nexus-Hub/refs/heads/main/%2B1%20Speed%20Keyboard%3A%20Escape%20the%20Backrooms.Lua"))()`, img:"https://tr.rbxcdn.com/180DAY-341b524768671042b4cd19d5fef00151/768/432/Image/Webp/noFilter" },
     2: { type:"script", tag:"+1 Speed Moonwalk Escape🌙", title:"+1 Speed Moonwalk Escape🌙", author:"bob", code:`loadstring(game:HttpGet("https://raw.githubusercontent.com/oppw884-netizen/Nexus-Hub/refs/heads/main/%2B1%20Speed%20Moonwalk%20Escape.Lua"))()`, img:"https://tr.rbxcdn.com/180DAY-2f74ce9a6075079747459b8eaad881c2/768/432/Image/Webp/noFilter" },
@@ -335,12 +554,18 @@
   const container = document.getElementById('hubContainer');
   document.getElementById('statScripts').textContent = Object.keys(scriptsData).length;
 
-  function doCopy(id){
+  function doCopy(id, btnEl){
     navigator.clipboard.writeText(scriptsData[id].code).then(() => {
       const t = document.getElementById('toastBox');
       t.innerText = '📋 คัดลอกสคริปต์แล้ว!';
+      t.classList.remove('show'); void t.offsetWidth; // รีสตาร์ทอนิเมชั่นทุกครั้งที่กด
       t.classList.add('show');
       setTimeout(() => t.classList.remove('show'), 2000);
+
+      if (btnEl) {
+        btnEl.classList.add('copied');
+        setTimeout(() => btnEl.classList.remove('copied'), 900);
+      }
     });
   }
 
@@ -349,6 +574,7 @@
     navigator.clipboard.writeText(discordLink).then(() => {
       const t = document.getElementById('toastBox');
       t.innerText = '📋 คัดลอกลิงก์ Discord แล้ว!';
+      t.classList.remove('show'); void t.offsetWidth;
       t.classList.add('show');
       setTimeout(() => t.classList.remove('show'), 2000);
     });
@@ -362,16 +588,21 @@
     document.getElementById('btnTabPartners').classList.remove('active');
 
     if(viewName === 'scripts') {
-      document.getElementById('viewScripts').classList.add('active');
+      const v = document.getElementById('viewScripts');
+      void v.offsetWidth; // รีสตาร์ทอนิเมชั่นตอนสลับแท็บ
+      v.classList.add('active');
       document.getElementById('btnTabScripts').classList.add('active');
     } else if(viewName === 'partners') {
-      document.getElementById('viewPartners').classList.add('active');
+      const v = document.getElementById('viewPartners');
+      void v.offsetWidth;
+      v.classList.add('active');
       document.getElementById('btnTabPartners').classList.add('active');
     }
   }
 
   for (let i = 1; i <= totalSlots; i++) {
     const card = document.createElement('div');
+    card.style.animationDelay = `${Math.min(i * 0.05, 0.6)}s`;
     const data = scriptsData[i];
 
     if (data) {
@@ -390,7 +621,7 @@
               <div class="author-avatar">🎮</div>
               <div class="author-name">${data.author}</div>
             </div>
-            <button class="btn-copy" onclick="doCopy(${i})">
+            <button class="btn-copy" onclick="doCopy(${i}, this)">
               <svg viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M5 15V5a2 2 0 0 1 2-2h10" stroke="currentColor" stroke-width="1.8"/></svg>
               คัดลอกสคริปต์
             </button>

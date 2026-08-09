@@ -125,36 +125,36 @@
   .filter-chip.active{ background:var(--blue); border-color:var(--blue); color:#fff; }
 
   /* แถวสถิติในการ์ด: ยอดคัดลอก */
-  .card-stats{ display:flex; align-items:center; gap:14px; font-size:11.5px; color:var(--muted); font-weight:600; }
-  .card-stats span{ display:flex; align-items:center; gap:4px; }
+  .card-stats{ display:flex; flex-wrap:wrap; align-items:center; row-gap:6px; column-gap:12px; font-size:11.5px; color:var(--muted); font-weight:600; }
+  .card-stats span{ display:flex; align-items:center; gap:4px; white-space:nowrap; }
   .card-stats b{ color:var(--ink); font-family:'JetBrains Mono', monospace; }
 
   .action-row{ display:flex; gap:8px; }
   .btn-like{
-    display:flex; align-items:center; gap:5px; flex-shrink:0; background:var(--pill-bg); border:1px solid var(--border);
-    color:var(--ink); border-radius:12px; padding:0 13px; font-size:12.5px; font-weight:700; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:7px; flex-shrink:0; background:var(--pill-bg); border:1px solid var(--border);
+    color:var(--ink); border-radius:13px; padding:0 16px; height:48px; font-size:14.5px; font-weight:700; cursor:pointer;
     font-family:'Prompt',sans-serif; transition:background .2s ease, color .2s ease, transform .15s ease, border-color .2s ease;
   }
-  .btn-like svg{ width:15px; height:15px; fill:none; stroke:currentColor; transition:fill .2s ease; }
+  .btn-like svg{ width:19px; height:19px; fill:none; stroke:currentColor; transition:fill .2s ease; }
   .btn-like.liked{ background:#ffe9ec; color:#ef4463; border-color:#ffc4cd; }
   .btn-like.liked svg{ fill:#ef4463; stroke:#ef4463; }
   .btn-like:disabled{ cursor:default; }
   .btn-like:not(:disabled):hover{ transform:translateY(-2px); }
   html[data-theme="dark"] .btn-like.liked{ background:rgba(239,68,99,.16); }
   .btn-share{
-    width:42px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
-    background:var(--pill-bg); border:1px solid var(--border); border-radius:12px; cursor:pointer; color:var(--ink);
+    width:52px; height:48px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    background:var(--pill-bg); border:1px solid var(--border); border-radius:13px; cursor:pointer; color:var(--ink);
     transition:background .2s ease, transform .15s ease;
   }
-  .btn-share svg{ width:16px; height:16px; }
+  .btn-share svg{ width:20px; height:20px; }
   .btn-share:hover{ background:var(--border); transform:translateY(-2px); }
 
   .btn-report{
-    width:42px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
-    background:var(--pill-bg); border:1px solid var(--border); border-radius:12px; cursor:pointer; color:var(--ink);
+    width:52px; height:48px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    background:var(--pill-bg); border:1px solid var(--border); border-radius:13px; cursor:pointer; color:var(--ink);
     transition:background .2s ease, transform .15s ease, color .2s ease, border-color .2s ease;
   }
-  .btn-report svg{ width:16px; height:16px; }
+  .btn-report svg{ width:20px; height:20px; }
   .btn-report:not(:disabled):hover{ background:var(--border); transform:translateY(-2px); }
   .btn-report.reported{ background:#ffe9ec; color:#ef4463; border-color:#ffc4cd; }
   .btn-report:disabled{ cursor:default; }
@@ -334,9 +334,30 @@
     grid-column:1/-1; text-align:center; color:var(--muted); font-size:13.5px; padding:30px 0;
   }
 
+  /* ปุ่มแฮมเบอร์เกอร์ + เมนูมือถือ (แสดงเฉพาะจอเล็ก) */
+  .btn-menu{
+    display:none; width:40px; height:40px; border-radius:12px; border:1px solid var(--border);
+    background:var(--pill-bg); color:var(--ink); cursor:pointer;
+    align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .btn-menu svg{ width:19px; height:19px; }
+
+  .mobile-nav{
+    display:none; position:absolute; top:100%; left:0; right:0; z-index:6;
+    background:var(--surface); border-bottom:1px solid var(--border);
+    box-shadow:0 14px 28px rgba(16,24,40,.12);
+    flex-direction:column; padding:10px;
+  }
+  .mobile-nav.open{ display:flex; }
+  .mobile-nav .nav-item{
+    justify-content:flex-start; padding:13px 14px; border-radius:10px; width:100%;
+  }
+  .mobile-nav .nav-item.active{ box-shadow:none; }
+
   @media (max-width:760px){
     .nav-pill{ display:none; }
-    .topbar{ padding:14px 18px; }
+    .topbar{ padding:14px 18px; position:relative; }
+    .btn-menu{ display:flex; }
     h1{ font-size:27px; }
   }
 
@@ -474,7 +495,7 @@
       </div>
     </div>
 
-    <nav class="nav-pill">
+    <nav class="nav-pill" aria-label="เมนูหลัก">
       <button class="nav-item active" id="btnTabScripts" onclick="switchTab('scripts')">&lt;/&gt; คลังสคริปต์</button>
       <button class="nav-item" id="btnTabFavorites" onclick="switchTab('favorites')">⭐ รายการโปรด</button>
       <button class="nav-item" id="btnTabRecent" onclick="switchTab('recent')">🕓 ดูล่าสุด</button>
@@ -483,11 +504,22 @@
     </nav>
 
     <div class="topbar-actions">
-      <button class="btn-theme" id="btnTheme" onclick="toggleTheme()" title="สลับธีมมืด/สว่าง">
+      <button class="btn-theme" id="btnTheme" onclick="toggleTheme()" title="สลับธีมมืด/สว่าง" aria-label="สลับธีมมืด/สว่าง">
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
         <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.2M12 19.8V22M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2 12h2.2M19.8 12H22M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6" stroke-linecap="round"/></svg>
       </button>
+      <button class="btn-menu" id="btnMobileMenu" onclick="toggleMobileMenu()" title="เมนู" aria-label="เปิด/ปิดเมนู">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
     </div>
+
+    <nav class="mobile-nav" id="mobileNav" aria-label="เมนูมือถือ">
+      <button class="nav-item active" id="btnTabScriptsMobile" onclick="switchTab('scripts'); closeMobileMenu();">&lt;/&gt; คลังสคริปต์</button>
+      <button class="nav-item" id="btnTabFavoritesMobile" onclick="switchTab('favorites'); closeMobileMenu();">⭐ รายการโปรด</button>
+      <button class="nav-item" id="btnTabRecentMobile" onclick="switchTab('recent'); closeMobileMenu();">🕓 ดูล่าสุด</button>
+      <button class="nav-item" id="btnTabPartnersMobile" onclick="switchTab('partners'); closeMobileMenu();">🎖 พาร์ทเนอร์</button>
+      <button class="nav-item" onclick="copyDiscordLink(); closeMobileMenu();">💬 Discord Community</button>
+    </nav>
   </header>
 
   <section class="hero">
@@ -558,7 +590,7 @@
 
     <div class="partner-grid">
       <div class="partner-card" style="animation-delay:.1s">
-        <div class="partner-avatar fallback">H</div>
+        <div class="partner-avatar fallback">BOB</div>
         <div class="partner-name">bob</div>
         <div class="partner-tag">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.118.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
@@ -664,7 +696,7 @@
   function bookmarkBtnHtml(id) {
     const active = isFavorite(id) ? ' active' : '';
     return `
-      <button class="btn-bookmark${active}" onclick="event.stopPropagation(); toggleFavorite(${id}, this)" title="บันทึกรายการโปรด">
+      <button class="btn-bookmark${active}" onclick="event.stopPropagation(); toggleFavorite(${id}, this)" title="บันทึกรายการโปรด" aria-label="บันทึกรายการโปรด">
         <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.2 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.2 5.9-.8L12 3.5Z"/></svg>
       </button>`;
   }
@@ -707,14 +739,14 @@
               คัดลอกสคริปต์
             </button>
             <div class="action-row">
-              <button class="btn-like js-like-btn-${id}" style="flex:1" onclick="likeScript(${id}, this)" title="โหวตว่าสคริปต์นี้ใช้งานได้จริง">
+              <button class="btn-like js-like-btn-${id}" style="flex:1" onclick="likeScript(${id}, this)" title="โหวตว่าสคริปต์นี้ใช้งานได้จริง" aria-label="โหวตว่าสคริปต์นี้ใช้งานได้จริง">
                 <svg viewBox="0 0 24 24"><path d="M12 20s-7-4.3-9.3-8.6C1.2 8 2.6 4.8 5.7 4.1c1.9-.4 3.7.5 4.7 2 .9 1.4.6 1.5 1.6 0 1-1.5 2.8-2.4 4.7-2 3.1.7 4.5 3.9 3 7.3C19 15.7 12 20 12 20Z"/></svg>
                 ใช้ได้จริง
               </button>
-              <button class="btn-report js-report-btn-${id}" onclick="reportScript(${id}, this)" title="แจ้งว่าสคริปต์นี้ใช้ไม่ได้แล้ว">
+              <button class="btn-report js-report-btn-${id}" onclick="reportScript(${id}, this)" title="แจ้งว่าสคริปต์นี้ใช้ไม่ได้แล้ว" aria-label="แจ้งว่าสคริปต์นี้ใช้ไม่ได้แล้ว">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 3v18M5 4h11l-2.2 3.5L16 11H5"/></svg>
               </button>
-              <button class="btn-share" onclick="shareScript(${id})" title="แชร์ลิงก์เฉพาะสคริปต์นี้">
+              <button class="btn-share" onclick="shareScript(${id})" title="แชร์ลิงก์เฉพาะสคริปต์นี้" aria-label="แชร์ลิงก์เฉพาะสคริปต์นี้">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.7l7.4-4.2M8.3 13.3l7.4 4.2"/></svg>
               </button>
             </div>
@@ -940,7 +972,7 @@
       title: "+1 Speed Keyboard: Escape the Backrooms",
       author: "bob",
       category: "plus1",
-      categoryLabel: "+1 Escape",
+      categoryLabel: "+1 Escape 🚶🏻",
       status: "working", // เปลี่ยนได้: working / updating / patched
       code: `loadstring(game:HttpGet("https://raw.githubusercontent.com/oppw884-netizen/Nexus-Hub/refs/heads/main/%2B1%20Speed%20Keyboard%3A%20Escape%20the%20Backrooms.Lua"))()`,
       img: "https://tr.rbxcdn.com/180DAY-341b524768671042b4cd19d5fef00151/768/432/Image/Webp/noFilter"
@@ -951,7 +983,7 @@
       title: "+1 Speed Moonwalk Escape🌙",
       author: "bob",
       category: "plus1",
-      categoryLabel: "+1 Escape",
+      categoryLabel: "+1 Escape 🚶🏻",
       status: "working", // เปลี่ยนได้: working / updating / patched
       code: `loadstring(game:HttpGet("https://raw.githubusercontent.com/oppw884-netizen/Nexus-Hub/refs/heads/main/%2B1%20Speed%20Moonwalk%20Escape.Lua"))()`,
       img: "https://tr.rbxcdn.com/180DAY-2f74ce9a6075079747459b8eaad881c2/768/432/Image/Webp/noFilter"
@@ -1169,34 +1201,54 @@
     });
   }
 
+  // ========================================================
+  // เมนูมือถือ (Hamburger Menu) — ใช้แก้บั๊กที่เมนูหายตอนจอเล็ก
+  // ========================================================
+  function toggleMobileMenu() {
+    document.getElementById('mobileNav').classList.toggle('open');
+  }
+
+  function closeMobileMenu() {
+    document.getElementById('mobileNav').classList.remove('open');
+  }
+
+  document.addEventListener('click', (e) => {
+    const nav = document.getElementById('mobileNav');
+    const btn = document.getElementById('btnMobileMenu');
+    if (nav.classList.contains('open') && !nav.contains(e.target) && !btn.contains(e.target)) {
+      closeMobileMenu();
+    }
+  });
+  // ========================================================
+
   function switchTab(viewName) {
     ['viewScripts','viewFavorites','viewRecent','viewPartners'].forEach(id =>
       document.getElementById(id).classList.remove('active'));
-    ['btnTabScripts','btnTabFavorites','btnTabRecent','btnTabPartners'].forEach(id =>
-      document.getElementById(id).classList.remove('active'));
+    ['btnTabScripts','btnTabFavorites','btnTabRecent','btnTabPartners'].forEach(id => {
+      document.getElementById(id).classList.remove('active');
+      const mobileBtn = document.getElementById(id + 'Mobile');
+      if (mobileBtn) mobileBtn.classList.remove('active');
+    });
+
+    function activate(viewId, btnId) {
+      const v = document.getElementById(viewId);
+      void v.offsetWidth;
+      v.classList.add('active');
+      document.getElementById(btnId).classList.add('active');
+      const mobileBtn = document.getElementById(btnId + 'Mobile');
+      if (mobileBtn) mobileBtn.classList.add('active');
+    }
 
     if (viewName === 'scripts') {
-      const v = document.getElementById('viewScripts');
-      void v.offsetWidth;
-      v.classList.add('active');
-      document.getElementById('btnTabScripts').classList.add('active');
+      activate('viewScripts', 'btnTabScripts');
     } else if (viewName === 'favorites') {
       renderFavorites();
-      const v = document.getElementById('viewFavorites');
-      void v.offsetWidth;
-      v.classList.add('active');
-      document.getElementById('btnTabFavorites').classList.add('active');
+      activate('viewFavorites', 'btnTabFavorites');
     } else if (viewName === 'recent') {
       renderRecent();
-      const v = document.getElementById('viewRecent');
-      void v.offsetWidth;
-      v.classList.add('active');
-      document.getElementById('btnTabRecent').classList.add('active');
+      activate('viewRecent', 'btnTabRecent');
     } else if (viewName === 'partners') {
-      const v = document.getElementById('viewPartners');
-      void v.offsetWidth;
-      v.classList.add('active');
-      document.getElementById('btnTabPartners').classList.add('active');
+      activate('viewPartners', 'btnTabPartners');
     }
   }
 
@@ -1268,7 +1320,12 @@
   renderRecent();
   checkShareHash();
 
-  document.getElementById('searchInput').addEventListener('input', applyFilters);
+  // หน่วงเวลาการค้นหาเล็กน้อย (debounce) กันไม่ให้กรองถี่เกินไปตอนพิมพ์เร็วๆ
+  let searchDebounceTimer = null;
+  document.getElementById('searchInput').addEventListener('input', () => {
+    clearTimeout(searchDebounceTimer);
+    searchDebounceTimer = setTimeout(applyFilters, 150);
+  });
 </script>
 </body>
 </html>

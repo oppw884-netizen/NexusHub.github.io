@@ -257,10 +257,11 @@
   .locked-inner .t{ font-size:13px; font-weight:600; }
 
   .toast{
-    position:fixed; top:20px; left:50%; transform:translate(-50%,-100px);
-    background:var(--ink); color:#fff; padding:12px 26px; border-radius:30px;
-    font-weight:600; font-size:13px; z-index:9999; opacity:0;
-    transition:transform .3s ease, opacity .3s ease; box-shadow:0 10px 24px rgba(0,0,0,.25);
+    position:fixed; bottom:28px; left:50%; transform:translate(-50%,40px);
+    background:#141a29; color:#ffffff; padding:12px 26px; border-radius:30px;
+    font-weight:600; font-size:13px; z-index:9999; opacity:0; max-width:calc(100% - 32px);
+    white-space:nowrap; text-align:center;
+    transition:transform .3s ease, opacity .3s ease; box-shadow:0 10px 24px rgba(0,0,0,.35);
   }
   .toast.show{ transform:translate(-50%,0); opacity:1; }
 
@@ -330,7 +331,7 @@
     100%{ background-position:200% 0; }
   }
   @keyframes popIn{
-    0%{ opacity:0; transform:translate(-50%,-130px) scale(.9); }
+    0%{ opacity:0; transform:translate(-50%,60px) scale(.9); }
     100%{ opacity:1; transform:translate(-50%,0) scale(1); }
   }
   @keyframes spinSlow{

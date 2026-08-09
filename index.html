@@ -19,8 +19,6 @@
     --pill-bg:   #eef3ff;
     --success:   #16c784;
     --star:      #f5b301;
-    --skeleton:  #e2e8f0;
-    --skeleton-shine: #f8fafc;
   }
 
   html[data-theme="dark"]{
@@ -34,12 +32,10 @@
     --pill-bg:   #1b2233;
     --success:   #1fd68f;
     --star:      #ffcc33;
-    --skeleton:  #1e293b;
-    --skeleton-shine: #334155;
   }
 
   *{ box-sizing:border-box; }
-  html,body{ margin:0; padding:0; scroll-behavior: smooth; }
+  html,body{ margin:0; padding:0; }
   body{
     -webkit-user-select:none; user-select:none;
     background:var(--bg);
@@ -67,6 +63,7 @@
     display:flex; align-items:center; justify-content:center;
     box-shadow:0 6px 16px rgba(47,107,255,.35);
   }
+  .brand-mark svg{ width:22px; height:22px; }
   .brand-text{ display:flex; flex-direction:column; line-height:1.15; }
   .brand-text .name{ font-weight:800; font-size:19px; letter-spacing:.5px; }
   .brand-text .name .accent{ color:var(--blue); }
@@ -84,6 +81,12 @@
   .nav-item.active{
     background:linear-gradient(90deg, var(--blue), var(--blue-2)); color:#fff;
     box-shadow:0 6px 14px rgba(47,107,255,.35);
+  }
+  .btn-login{
+    display:flex; align-items:center; gap:8px; padding:11px 20px; border-radius:12px;
+    background:linear-gradient(90deg, var(--blue), var(--blue-2)); color:#fff; border:none;
+    font-family:'Prompt',sans-serif; font-weight:600; font-size:13.5px; cursor:pointer;
+    box-shadow:0 8px 18px rgba(47,107,255,.3);
   }
 
   .topbar-actions{ display:flex; align-items:center; gap:10px; }
@@ -112,12 +115,55 @@
   .btn-bookmark.active svg{ fill:var(--star); stroke:var(--star); }
   .thumb .thumb-tag{ left:48px; }
 
+  /* ตัวกรองหมวดหมู่ */
+  .filter-chips{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; max-width:820px; margin:0 auto 8px; padding:0 20px; }
+  .filter-chip{
+    padding:7px 15px; border-radius:999px; border:1px solid var(--border); background:var(--surface);
+    color:var(--muted); font-size:12.5px; font-weight:600; cursor:pointer; font-family:'Prompt',sans-serif;
+    transition:background .2s ease, color .2s ease, border-color .2s ease;
+  }
+  .filter-chip.active{ background:var(--blue); border-color:var(--blue); color:#fff; }
+
+  /* แถวสถิติในการ์ด: ยอดคัดลอก */
+  .card-stats{ display:flex; align-items:center; gap:14px; font-size:11.5px; color:var(--muted); font-weight:600; }
+  .card-stats span{ display:flex; align-items:center; gap:4px; }
+  .card-stats b{ color:var(--ink); font-family:'JetBrains Mono', monospace; }
+
+  .action-row{ display:flex; gap:8px; }
+  .btn-like{
+    display:flex; align-items:center; gap:5px; flex-shrink:0; background:var(--pill-bg); border:1px solid var(--border);
+    color:var(--ink); border-radius:12px; padding:0 13px; font-size:12.5px; font-weight:700; cursor:pointer;
+    font-family:'Prompt',sans-serif; transition:background .2s ease, color .2s ease, transform .15s ease, border-color .2s ease;
+  }
+  .btn-like svg{ width:15px; height:15px; fill:none; stroke:currentColor; transition:fill .2s ease; }
+  .btn-like.liked{ background:#ffe9ec; color:#ef4463; border-color:#ffc4cd; }
+  .btn-like.liked svg{ fill:#ef4463; stroke:#ef4463; }
+  .btn-like:disabled{ cursor:default; }
+  .btn-like:not(:disabled):hover{ transform:translateY(-2px); }
+  html[data-theme="dark"] .btn-like.liked{ background:rgba(239,68,99,.16); }
+  .btn-share{
+    width:42px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    background:var(--pill-bg); border:1px solid var(--border); border-radius:12px; cursor:pointer; color:var(--ink);
+    transition:background .2s ease, transform .15s ease;
+  }
+  .btn-share svg{ width:16px; height:16px; }
+  .btn-share:hover{ background:var(--border); transform:translateY(-2px); }
+
+  /* Loading skeleton บนรูปภาพ thumbnail */
+  .thumb-skeleton{
+    position:absolute; inset:0; z-index:1;
+    background:linear-gradient(100deg, rgba(255,255,255,.10) 30%, rgba(255,255,255,.28) 50%, rgba(255,255,255,.10) 70%);
+    background-size:200% 100%; animation:shimmer 1.3s linear infinite;
+  }
+
+  /* ไฮไลต์การ์ดตอนถูกแชร์ลิงก์เข้ามา */
+  .script-card.highlight{ outline:3px solid var(--blue); outline-offset:2px; }
+
   .hero{ position:relative; text-align:center; padding:56px 20px 30px; z-index:2; }
   .kicker{
     display:inline-flex; align-items:center; gap:7px; padding:7px 16px; border-radius:999px;
     background:var(--pill-bg); color:var(--blue); font-size:12px; font-weight:700;
     letter-spacing:1px; border:1px solid #d8e4ff; margin-bottom:20px;
-    cursor: pointer; transition: all 0.2s ease;
   }
   .kicker .dot{ width:6px; height:6px; border-radius:50%; background:var(--blue); }
   h1{ font-size:38px; font-weight:800; margin:0 0 14px; line-height:1.25; }
@@ -145,7 +191,7 @@
   .stat-label .live{ width:7px; height:7px; border-radius:50%; background:var(--success); }
   .stat-num{ font-size:22px; font-weight:800; font-family:'JetBrains Mono', monospace; }
 
-  .search-wrap{ max-width:820px; margin:26px auto 20px; padding:0 20px; position:relative; z-index:2; }
+  .search-wrap{ max-width:820px; margin:26px auto 40px; padding:0 20px; position:relative; z-index:2; }
   .search-bar{
     display:flex; align-items:center; gap:12px; background:var(--surface);
     border:1px solid var(--border); border-radius:16px; padding:15px 22px;
@@ -156,15 +202,7 @@
     border:none; outline:none; flex:1; font-family:'Prompt',sans-serif; font-size:14px;
     background:transparent; color:var(--ink);
   }
-  
-  /* Filter Tags */
-  .filter-wrap {
-    display: flex; gap: 8px; margin-top: 15px; overflow-x: auto; padding-bottom: 10px; max-width: 820px; margin-inline: auto; padding-inline: 20px;
-  }
-  .filter-wrap::-webkit-scrollbar { display: none; }
-  .filter-btn { border-color: var(--border); background: var(--surface); color: var(--muted); margin-bottom: 0; }
-  .filter-btn:hover { background: var(--pill-bg); color: var(--blue); }
-  .filter-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .search-bar input::placeholder{ color:#a9b1c4; }
 
   .grid{
     max-width:960px; margin:0 auto; padding:0 20px 60px; position:relative; z-index:2;
@@ -174,12 +212,7 @@
   .script-card{
     background:var(--surface); border:1px solid var(--border); border-radius:18px; overflow:hidden;
     box-shadow:0 10px 28px rgba(16,24,40,.05); display:flex; flex-direction:column;
-    transition:transform .25s ease, box-shadow .25s ease; scroll-margin-top: 100px;
   }
-  .script-card.highlight {
-    animation: highlightCard 2s ease forwards;
-  }
-
   .thumb{
     position:relative; height:170px; background:linear-gradient(135deg, var(--blue), #9b5cff, var(--blue-2));
     overflow:hidden;
@@ -204,24 +237,14 @@
   }
   .author-name{ font-size:12.5px; color:var(--muted); font-weight:600; }
 
-  /* Action Buttons Row */
-  .action-row { display: flex; gap: 8px; }
   .btn-copy{
-    flex: 1; display:flex; align-items:center; justify-content:center; gap:8px; padding:13px;
+    display:flex; align-items:center; justify-content:center; gap:8px; padding:13px;
     border:none; border-radius:12px; font-family:'Prompt',sans-serif; font-weight:700; font-size:13.5px;
     color:#fff; background:linear-gradient(90deg, var(--blue), var(--blue-2)); cursor:pointer;
     box-shadow:0 8px 18px rgba(47,107,255,.28); transition:transform .15s ease, filter .15s ease;
   }
   .btn-copy:hover{ transform:translateY(-2px); filter:brightness(1.06); }
   .btn-copy svg{ width:15px; height:15px; }
-
-  .btn-share {
-    display:flex; align-items:center; justify-content:center; padding:13px; width:45px;
-    border:1px solid var(--border); border-radius:12px; background:var(--pill-bg); color:var(--ink);
-    cursor:pointer; transition:transform .15s ease; flex-shrink: 0;
-  }
-  .btn-share:hover { transform:translateY(-2px); background:var(--border); }
-  .btn-share svg { width: 16px; height: 16px; }
 
   .btn-discord{ background:linear-gradient(90deg, #5865F2, #7c5cff); box-shadow:0 8px 18px rgba(88,101,242,.28); }
 
@@ -230,33 +253,55 @@
     box-shadow:none; background:#fafbfe;
   }
   .locked-inner{ display:flex; flex-direction:column; align-items:center; gap:8px; padding:30px 20px; color:var(--muted); }
-  
-  /* Skeleton Loading Styles */
-  .skeleton {
-    background: linear-gradient(90deg, var(--skeleton) 25%, var(--skeleton-shine) 50%, var(--skeleton) 75%);
-    background-size: 200% 100%;
-    animation: skeletonShimmer 1.5s infinite;
-    border-radius: 8px;
-  }
-  .skel-img { height: 170px; border-radius: 18px 18px 0 0; }
-  .skel-title { height: 24px; width: 80%; margin-bottom: 8px; }
-  .skel-avatar { width: 22px; height: 22px; border-radius: 50%; }
-  .skel-author { height: 16px; width: 40%; }
-  .skel-btn { height: 45px; width: 100%; border-radius: 12px; margin-top: 12px; }
+  .locked-inner .n{ font-family:'JetBrains Mono', monospace; font-size:11px; color:#b6bfd3; letter-spacing:1px; }
+  .locked-inner .t{ font-size:13px; font-weight:600; }
 
   .toast{
     position:fixed; top:20px; left:50%; transform:translate(-50%,-100px);
-    background:var(--ink); color:#fff; padding:14px 26px; border-radius:16px;
-    font-weight:500; font-size:13px; z-index:9999; opacity:0;
+    background:var(--ink); color:#fff; padding:12px 26px; border-radius:30px;
+    font-weight:600; font-size:13px; z-index:9999; opacity:0;
     transition:transform .3s ease, opacity .3s ease; box-shadow:0 10px 24px rgba(0,0,0,.25);
-    text-align: center; line-height: 1.5; min-width: 280px;
   }
   .toast.show{ transform:translate(-50%,0); opacity:1; }
 
   .view{ display:none; }
   .view.active{ display:block; }
-  .partner-grid { max-width:960px; margin:0 auto; padding:10px 20px 70px; display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:22px;}
-  .empty-msg { grid-column:1/-1; text-align:center; color:var(--muted); font-size:14px; padding:40px 0; }
+
+  .kicker.teal{ background:#e6faf7; color:#10a394; border-color:#c9f1ea; }
+  .kicker.teal .dot{ background:#10a394; }
+
+  .partner-grid{
+    max-width:960px; margin:0 auto; padding:10px 20px 70px; position:relative; z-index:2;
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:22px;
+  }
+  .partner-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:18px;
+    box-shadow:0 10px 28px rgba(16,24,40,.05); padding:26px 22px; display:flex; flex-direction:column; align-items:center; gap:12px;
+    text-align:center;
+  }
+  .partner-avatar{
+    width:88px; height:88px; border-radius:16px; object-fit:cover; border:2px solid var(--blue);
+    box-shadow:0 0 0 4px #eaf1ff;
+  }
+  .partner-avatar.fallback{
+    display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:800;
+    color:#fff; background:linear-gradient(135deg, var(--blue), var(--blue-2));
+  }
+  .partner-name{ font-size:16px; font-weight:700; }
+  .partner-tag{
+    display:inline-flex; align-items:center; gap:6px; background:#eef0ff; color:#5865F2;
+    font-size:12px; font-weight:600; padding:6px 14px; border-radius:999px;
+  }
+  .partner-meta{
+    display:flex; align-items:center; justify-content:center; gap:14px; width:100%;
+    border-top:1px solid var(--border); padding-top:12px; margin-top:4px;
+    font-size:12.5px; color:var(--muted); font-weight:600;
+  }
+  .partner-meta .active-dot{ color:var(--success); }
+  .partner-meta b{ color:var(--ink); }
+  .no-partners{
+    grid-column:1/-1; text-align:center; color:var(--muted); font-size:13.5px; padding:30px 0;
+  }
 
   @media (max-width:760px){
     .nav-pill{ display:none; }
@@ -264,19 +309,128 @@
     h1{ font-size:27px; }
   }
 
-  @keyframes fadeUp{ from{ opacity:0; transform:translateY(18px); } to{ opacity:1; transform:translateY(0); } }
-  @keyframes fadeIn{ from{ opacity:0; } to{ opacity:1; } }
-  @keyframes skeletonShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-  @keyframes popIn{ 0%{ opacity:0; transform:translate(-50%,-130px) scale(.9); } 100%{ opacity:1; transform:translate(-50%,0) scale(1); } }
-  @keyframes highlightCard { 0% { box-shadow: 0 0 0 4px var(--blue); transform: scale(1.02); } 100% { box-shadow: 0 10px 28px rgba(16,24,40,.05); transform: scale(1); } }
+  @keyframes fadeUp{
+    from{ opacity:0; transform:translateY(18px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  @keyframes fadeIn{
+    from{ opacity:0; }
+    to{ opacity:1; }
+  }
+  @keyframes floatY{
+    0%,100%{ transform:translateY(0); }
+    50%{ transform:translateY(-8px); }
+  }
+  @keyframes pulseDot{
+    0%,100%{ transform:scale(1); box-shadow:0 0 0 0 rgba(22,199,132,.5); }
+    50%{ transform:scale(1.15); box-shadow:0 0 0 4px rgba(22,199,132,0); }
+  }
+  @keyframes shimmer{
+    0%{ background-position:-200% 0; }
+    100%{ background-position:200% 0; }
+  }
+  @keyframes popIn{
+    0%{ opacity:0; transform:translate(-50%,-130px) scale(.9); }
+    100%{ opacity:1; transform:translate(-50%,0) scale(1); }
+  }
+  @keyframes spinSlow{
+    from{ transform:rotate(0deg); }
+    to{ transform:rotate(360deg); }
+  }
 
   body{ animation:fadeIn .5s ease both; }
+
+  .deco-dot{ animation:floatY 5s ease-in-out infinite; }
+  .deco-dot:nth-child(2){ animation-delay:.6s; }
+  .deco-dot:nth-child(3){ animation-delay:1.2s; }
+
+  .brand-mark{ transition:transform .35s ease; }
+  .brand:hover .brand-mark{ transform:rotate(-8deg) scale(1.06); }
+
+  .nav-item{ transition:background .25s ease, color .25s ease, transform .15s ease; }
+  .nav-item:active{ transform:scale(.95); }
+  .nav-item.active{ animation:fadeIn .3s ease; }
+
+  .btn-login{ transition:transform .2s ease, filter .2s ease; }
+  .btn-login:hover{ transform:translateY(-2px); filter:brightness(1.08); }
+
+  .hero .kicker{ animation:fadeUp .6s ease both; }
+  .hero h1{ animation:fadeUp .7s ease both .08s; }
+  .hero p{ animation:fadeUp .7s ease both .16s; }
+
+  .stat-card{
+    animation:fadeUp .6s ease both;
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .stat-card:nth-child(1){ animation-delay:.22s; }
+  .stat-card:nth-child(2){ animation-delay:.30s; }
+  .stat-card:nth-child(3){ animation-delay:.38s; }
+  .stat-card:hover{ transform:translateY(-4px); box-shadow:0 14px 30px rgba(16,24,40,.09); }
+
+  .stat-label .live{ animation:pulseDot 1.6s ease-in-out infinite; }
+
+  .stat-num{ transition:color .2s ease; }
+  .stat-num.bump{ animation:fadeUp .3s ease; }
+
+  .search-wrap{ animation:fadeUp .6s ease both .3s; }
+  .search-bar{ transition:box-shadow .25s ease, transform .25s ease; }
+  .search-bar:focus-within{ box-shadow:0 10px 28px rgba(47,107,255,.14); transform:translateY(-1px); }
+
+  .script-card{
+    opacity:0;
+    animation:fadeUp .55s cubic-bezier(.2,.7,.3,1) forwards;
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
   .script-card:hover{ transform:translateY(-6px); box-shadow:0 18px 36px rgba(16,24,40,.10); }
   .script-card:hover .thumb img{ transform:scale(1.06); }
   .thumb img{ transition:transform .4s ease; }
+  .thumb-partner{ animation:fadeIn .5s ease both .2s; }
+
+  .script-card.locked{ opacity:0; animation:fadeIn .5s ease forwards; }
+  .script-card.locked .n{ position:relative; }
+
+  .btn-copy{ position:relative; overflow:hidden; }
+  .btn-copy::after{
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(120deg, transparent 30%, rgba(255,255,255,.35) 50%, transparent 70%);
+    background-size:200% 100%; opacity:0; transition:opacity .2s ease;
+  }
+  .btn-copy:hover::after{ opacity:1; animation:shimmer 1.1s linear infinite; }
+  .btn-copy:active{ transform:scale(.97); }
+  .btn-copy.copied{ background:linear-gradient(90deg, var(--success), #12b3c9); }
+
+  .partner-card{
+    opacity:0; animation:fadeUp .6s ease forwards;
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .partner-card:hover{ transform:translateY(-5px); box-shadow:0 16px 34px rgba(16,24,40,.10); }
+  .partner-avatar{ transition:transform .3s ease; }
+  .partner-card:hover .partner-avatar{ transform:scale(1.05) rotate(-2deg); }
+  .partner-meta .active-dot,
+  .partner-meta span:last-child span:first-child{ animation:pulseDot 1.6s ease-in-out infinite; }
+
+  .view{ animation:fadeUp .4s ease both; }
+
+  .toast{ transition:none; }
+  .toast.show{ animation:popIn .4s cubic-bezier(.2,.8,.3,1.2) forwards; }
+
+  @media (prefers-reduced-motion: reduce){
+    *, *::before, *::after{
+      animation-duration:.001ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:.001ms !important;
+      scroll-behavior:auto !important;
+    }
+  }
 </style>
 </head>
 <body>
+
+  <div class="deco-dot" style="top:120px; left:6%;"></div>
+  <div class="deco-dot" style="top:230px; left:22%;"></div>
+  <div class="deco-dot" style="top:400px; left:3%;"></div>
+  <div class="deco-line" style="top:180px; left:8%; width:90px; transform:rotate(20deg);"></div>
+  <div class="deco-line" style="top:260px; left:15%; width:60px; transform:rotate(-15deg);"></div>
 
   <header class="topbar">
     <div class="brand">
@@ -292,8 +446,9 @@
     <nav class="nav-pill">
       <button class="nav-item active" id="btnTabScripts" onclick="switchTab('scripts')">&lt;/&gt; คลังสคริปต์</button>
       <button class="nav-item" id="btnTabFavorites" onclick="switchTab('favorites')">⭐ รายการโปรด</button>
-      <button class="nav-item" id="btnTabRecent" onclick="switchTab('recent')">🕒 ล่าสุด</button>
+      <button class="nav-item" id="btnTabRecent" onclick="switchTab('recent')">🕓 ดูล่าสุด</button>
       <button class="nav-item" id="btnTabPartners" onclick="switchTab('partners')">🎖 พาร์ทเนอร์</button>
+      <button class="nav-item" onclick="copyDiscordLink()">💬 Discord Community</button>
     </nav>
 
     <div class="topbar-actions">
@@ -313,15 +468,24 @@
   <div class="stats">
     <div class="stat-card">
       <div class="stat-icon blue"><svg viewBox="0 0 24 24" fill="none"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M15 4.2a4 4 0 0 1 0 7.6M21 20v-2a4 4 0 0 0-3-3.87" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="9" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/></svg></div>
-      <div><div class="stat-label"><span class="live"></span> ออนไลน์อยู่</div><div class="stat-num" id="statOnline">1</div></div>
+      <div>
+        <div class="stat-label"><span class="live"></span> ออนไลน์อยู่</div>
+        <div class="stat-num" id="statOnline">1</div>
+      </div>
     </div>
     <div class="stat-card">
       <div class="stat-icon cyan"><svg viewBox="0 0 24 24" fill="none"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/></svg></div>
-      <div><div class="stat-label">เข้าชมทั้งหมด</div><div class="stat-num" id="statViews">1</div></div>
+      <div>
+        <div class="stat-label">เข้าชมทั้งหมด</div>
+        <div class="stat-num" id="statViews">1</div>
+      </div>
     </div>
     <div class="stat-card">
       <div class="stat-icon violet"><svg viewBox="0 0 24 24" fill="none"><path d="M4 4h11l5 5v11H4V4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M15 4v5h5" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
-      <div><div class="stat-label">สคริปต์ทั้งหมด</div><div class="stat-num" id="statScripts">2</div></div>
+      <div>
+        <div class="stat-label">สคริปต์ทั้งหมด</div>
+        <div class="stat-num" id="statScripts">2</div>
+      </div>
     </div>
   </div>
 
@@ -332,239 +496,626 @@
         <input type="text" placeholder="ค้นหาชื่อเกม, ชื่อสคริปต์ หรือชื่อผู้พัฒนา..." id="searchInput">
       </div>
     </div>
-    
-    <!-- Filter Tags -->
-    <div class="filter-wrap" id="filterContainer">
-      <button class="kicker filter-btn active" onclick="applyFilter('all', this)">ทั้งหมด</button>
-      <button class="kicker filter-btn" onclick="applyFilter('speed', this)">⚡ ความเร็ว (Speed)</button>
-      <button class="kicker filter-btn" onclick="applyFilter('auto', this)">🚜 Auto-Farm</button>
-      <button class="kicker filter-btn" onclick="applyFilter('escape', this)">🏃 Escape</button>
-      <button class="kicker filter-btn" onclick="applyFilter('other', this)">📦 อื่นๆ</button>
-    </div>
-
+    <div class="filter-chips" id="filterChips"></div>
     <div class="grid" id="hubContainer"></div>
   </div>
 
   <div id="viewFavorites" class="view">
-    <section style="text-align:center; padding:20px 20px 20px;">
-      <h2 style="font-size:26px; font-weight:800; margin:0 0 10px;">⭐ รายการโปรดของคุณ</h2>
+    <section style="text-align:center; padding:20px 20px 20px; position:relative; z-index:2;">
+      <div class="kicker" style="margin-bottom:12px;"><span class="dot"></span> YOUR COLLECTION</div>
+      <h2 style="font-size:26px; font-weight:800; margin:0 0 10px; line-height:1.25;">รายการโปรดของคุณ</h2>
+      <p style="color:var(--muted); font-size:14.5px; font-weight:500; margin:0 auto;">กดรูปดาว ⭐ บนสคริปต์ที่ชอบเพื่อบันทึกไว้ที่นี่ (บันทึกในเครื่องนี้เท่านั้น)</p>
     </section>
     <div class="grid" id="favoritesContainer" style="padding-bottom:60px;"></div>
   </div>
 
   <div id="viewRecent" class="view">
-    <section style="text-align:center; padding:20px 20px 20px;">
-      <h2 style="font-size:26px; font-weight:800; margin:0 0 10px;">🕒 ดูล่าสุด</h2>
-      <p style="color:var(--muted); font-size:14px;">ประวัติสคริปต์ที่คุณเพิ่งคัดลอกหรือกดแชร์</p>
+    <section style="text-align:center; padding:20px 20px 20px; position:relative; z-index:2;">
+      <div class="kicker" style="margin-bottom:12px;"><span class="dot"></span> RECENTLY USED</div>
+      <h2 style="font-size:26px; font-weight:800; margin:0 0 10px; line-height:1.25;">ดูล่าสุด</h2>
+      <p style="color:var(--muted); font-size:14.5px; font-weight:500; margin:0 auto;">สคริปต์ที่คุณเพิ่งกด "คัดลอก" ไปล่าสุด 10 รายการ (บันทึกในเครื่องนี้เท่านั้น)</p>
     </section>
     <div class="grid" id="recentContainer" style="padding-bottom:60px;"></div>
   </div>
 
   <div id="viewPartners" class="view">
-    <section style="text-align:center; padding:20px 20px 40px;">
-      <h2 style="font-size:26px; font-weight:800; margin:0 0 10px;">นักพัฒนาพันธมิตร</h2>
+    <section style="text-align:center; padding:20px 20px 40px; position:relative; z-index:2;">
+      <div class="kicker teal" style="margin-bottom:12px;"><span class="dot"></span> OFFICIAL VERIFIED PARTNERS</div>
+      <h2 style="font-size:26px; font-weight:800; margin:0 0 10px; line-height:1.25;">นักพัฒนาพันธมิตร</h2>
+      <p style="color:var(--muted); font-size:14.5px; font-weight:500; margin:0 auto;">การันตีความปลอดภัย โค้ดเสถียร ไม่มีการแฝงมัลแวร์จากพาร์ทเนอร์ของเรา</p>
     </section>
+
     <div class="partner-grid">
-      <!-- พาร์ทเนอร์ -->
-      <div class="partner-card" style="background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:26px 22px; text-align:center;">
-        <div style="width:88px; height:88px; border-radius:16px; margin:0 auto 12px; display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:800; color:#fff; background:linear-gradient(135deg, var(--blue), var(--blue-2));">BOB</div>
-        <div style="font-size:16px; font-weight:700;">bob</div>
+      <div class="partner-card" style="animation-delay:.1s">
+        <div class="partner-avatar fallback">H</div>
+        <div class="partner-name">bob</div>
+        <div class="partner-tag">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.118.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+          bob_rbx
+        </div>
+        <div class="partner-meta">
+          <span>ผลงาน: <b>1</b> สคริปต์</span>
+          <span style="display:flex; align-items:center; gap:6px;">
+            <span style="width:7px; height:7px; border-radius:50%; background:var(--success);"></span> Active
+          </span>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="toast" id="toastBox"></div>
+  <div class="toast" id="toastBox">คัดลอกสำเร็จ!</div>
 
 <script>
-  // 1. Data[cite: 1] - เพิ่ม Category เข้าไปเพื่อใช้กรอง
-  const scriptsData = {
-    1: { type:"script", category:"escape", tag:"+1 Speed Keyboard: Escape the Backrooms", title:"+1 Speed Keyboard: Escape the Backrooms", author:"bob", code:`loadstring(game:HttpGet("https://raw.githubusercontent.com/oppw884-netizen/Nexus-Hub/refs/heads/main/%2B1%20Speed%20Keyboard%3A%20Escape%20the%20Backrooms.Lua"))()`, img:"https://tr.rbxcdn.com/180DAY-341b524768671042b4cd19d5fef00151/768/432/Image/Webp/noFilter" },
-    2: { type:"script", category:"speed", tag:"+1 Speed Moonwalk Escape🌙", title:"+1 Speed Moonwalk Escape🌙", author:"bob", code:`loadstring(game:HttpGet("https://raw.githubusercontent.com/oppw884-netizen/Nexus-Hub/refs/heads/main/%2B1%20Speed%20Moonwalk%20Escape.Lua"))()`, img:"https://tr.rbxcdn.com/180DAY-2f74ce9a6075079747459b8eaad881c2/768/432/Image/Webp/noFilter" },
-  };
-  const totalRealScripts = Object.keys(scriptsData).length;
-  const totalSlots = 20; 
+  const discordLink = "https://discord.gg/m56SY6PMyU";
 
-  // ระบบ Theme
+  // ========================================================
+  // ระบบสลับธีมมืด/สว่าง (Dark / Light Mode)
+  // ใช้ attribute data-theme บน <html> + จำค่าไว้ใน localStorage
+  // ========================================================
+  const THEME_KEY = 'nexushub_bob_rbx_v1_theme';
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+  }
+
   function toggleTheme() {
     const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-    document.documentElement.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+    const next = current === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    try { localStorage.setItem(THEME_KEY, next); } catch (e) { /* เงียบไว้ */ }
   }
 
-  // ระบบ Favorites และ Recent
-  function getList(key) { try { return JSON.parse(localStorage.getItem(key)) || []; } catch(e) { return []; } }
-  function saveList(key, list) { try { localStorage.setItem(key, JSON.stringify(list)); } catch(e){} }
-  
+  (function initTheme() {
+    let saved = null;
+    try { saved = localStorage.getItem(THEME_KEY); } catch (e) { /* เงียบไว้ */ }
+    if (saved === 'dark' || saved === 'light') {
+      applyTheme(saved);
+    } else {
+      // ไม่เคยตั้งค่าไว้ -> ใช้ตามค่าระบบของเครื่องผู้ใช้
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      applyTheme(prefersDark ? 'dark' : 'light');
+    }
+  })();
+  // ========================================================
+
+  // ========================================================
+  // ระบบรายการโปรด / บุ๊กมาร์ก (Bookmarks / Favorites)
+  // บันทึกเป็นรายการ id ของสคริปต์ไว้ใน localStorage (เก็บเฉพาะเครื่องนี้)
+  // ========================================================
+  const FAVORITES_KEY = 'nexushub_bob_rbx_v1_favorites';
+
+  function getFavorites() {
+    try {
+      const raw = localStorage.getItem(FAVORITES_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) { return []; }
+  }
+
+  function saveFavorites(list) {
+    try { localStorage.setItem(FAVORITES_KEY, JSON.stringify(list)); } catch (e) { /* เงียบไว้ */ }
+  }
+
+  function isFavorite(id) {
+    return getFavorites().includes(id);
+  }
+
   function toggleFavorite(id, btnEl) {
-    let list = getList('nx_fav');
+    let list = getFavorites();
     const active = list.includes(id);
-    if (active) list = list.filter(x => x !== id); else list.push(id);
-    saveList('nx_fav', list);
+    if (active) {
+      list = list.filter(x => x !== id);
+    } else {
+      list.push(id);
+    }
+    saveFavorites(list);
     if (btnEl) btnEl.classList.toggle('active', !active);
-    showToast(active ? '💔 นำออกจากรายการโปรดแล้ว' : '⭐ บันทึกลงรายการโปรดแล้ว!');
-    renderSpecialList('nx_fav', 'favoritesContainer', 'ยังไม่มีรายการโปรด');
-  }
 
-  function addRecent(id) {
-    let list = getList('nx_recent');
-    list = list.filter(x => x !== id); // Remove duplicate
-    list.unshift(id); // Add to top
-    if(list.length > 20) list.pop(); // Max 20
-    saveList('nx_recent', list);
-    renderSpecialList('nx_recent', 'recentContainer', 'ยังไม่มีประวัติการเข้าชม');
-  }
-
-  function showToast(htmlMsg) {
     const t = document.getElementById('toastBox');
-    t.innerHTML = htmlMsg;
+    t.innerText = active ? '💔 นำออกจากรายการโปรดแล้ว' : '⭐ บันทึกลงรายการโปรดแล้ว!';
     t.classList.remove('show'); void t.offsetWidth;
     t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3500);
+    setTimeout(() => t.classList.remove('show'), 1800);
+
+    renderFavorites();
   }
 
-  // คัดลอก & แจ้งเตือนแบบละเอียด
-  function doCopy(id){
-    navigator.clipboard.writeText(scriptsData[id].code).then(() => {
-      addRecent(id);
-      showToast(`
-        <span style="font-size:15px;">📋 คัดลอกสำเร็จ!</span><br>
-        <span style="color:var(--blue-2); font-weight:700;">${scriptsData[id].title}</span><br>
-        <span style="font-size:11px; font-weight:400; opacity:0.8;">(สคริปต์นี้เป็น 1 ใน ${totalRealScripts} สคริปต์ของระบบ)</span>
-      `);
-    });
-  }
-
-  // แชร์ลิงก์
-  function shareScript(id) {
-    addRecent(id);
-    const url = window.location.origin + window.location.pathname + "?script=" + id;
-    navigator.clipboard.writeText(url).then(() => {
-      showToast(`🔗 คัดลอกลิงก์แชร์แล้ว!<br><span style="font-size:11px; font-weight:400;">ส่งให้เพื่อน เมื่อเปิดลิงก์จะเลื่อนมาที่สคริปต์นี้ทันที</span>`);
-    });
-  }
-
-  // สร้าง HTML ของการ์ด
-  function generateCardHTML(id, data, isLocked = false) {
-    if (isLocked) {
-      return `<div class="script-card locked"><div class="locked-inner"><div class="n">#${String(id).padStart(2,'0')}</div><div class="t">⏳ รออัปเดต...</div></div></div>`;
-    }
-    const favActive = getList('nx_fav').includes(id) ? ' active' : '';
-    const btnFav = `<button class="btn-bookmark${favActive}" onclick="event.stopPropagation(); toggleFavorite(${id}, this)"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.2 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.2 5.9-.8L12 3.5Z"/></svg></button>`;
-    
+  function bookmarkBtnHtml(id) {
+    const active = isFavorite(id) ? ' active' : '';
     return `
-      <div class="script-card" id="script-card-${id}" data-cat="${data.category || 'other'}" data-title="${data.title.toLowerCase()}">
-        <div class="thumb">
-          <img src="${data.img}">
-          ${btnFav}
-          <div class="thumb-tag">${data.tag || 'สคริปต์'}</div>
-        </div>
-        <div class="card-body">
-          <div class="script-title">${data.title}</div>
-          <div class="author-row"><div class="author-avatar">🎮</div><div class="author-name">${data.author}</div></div>
-          <div class="action-row">
-            <button class="btn-copy" onclick="doCopy(${id})"><svg viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M5 15V5a2 2 0 0 1 2-2h10" stroke="currentColor" stroke-width="1.8"/></svg> คัดลอก</button>
-            <button class="btn-share" onclick="shareScript(${id})" title="แชร์สคริปต์นี้"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg></button>
-          </div>
-        </div>
-      </div>`;
+      <button class="btn-bookmark${active}" onclick="event.stopPropagation(); toggleFavorite(${id}, this)" title="บันทึกรายการโปรด">
+        <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.2 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.2 5.9-.8L12 3.5Z"/></svg>
+      </button>`;
   }
 
-  // Skeleton Loader
-  function renderSkeletons() {
-    const c = document.getElementById('hubContainer');
-    c.innerHTML = '';
-    for(let i=0; i<6; i++) {
-      c.innerHTML += `
-        <div class="script-card">
-          <div class="skeleton skel-img"></div>
+  // ========================================================
+  // ฟังก์ชันกลางสำหรับสร้างการ์ดสคริปต์ — ใช้ร่วมกันทั้งหน้าคลังสคริปต์,
+  // รายการโปรด และดูล่าสุด เพื่อไม่ให้โค้ดซ้ำซ้อน
+  // isMain = true จะใส่ id="script-{id}" ไว้เป็นเป้าหมายให้ระบบแชร์ลิงก์เลื่อนไปหาได้
+  // ========================================================
+  function scriptCardHTML(id, data, isMain) {
+    const wrapperId = isMain ? ` id="script-${id}"` : '';
+    const category = data.category || 'other';
+
+    if (data.type === 'script') {
+      return `
+        <div class="script-card"${wrapperId} data-category="${category}">
+          <div class="thumb">
+            <div class="thumb-skeleton" data-skeleton-for="${id}"></div>
+            ${data.img ? `<img src="${data.img}" loading="lazy" onload="hideSkeleton(${id})" onerror="hideSkeleton(${id})">` : ''}
+            ${bookmarkBtnHtml(id)}
+            <div class="thumb-tag">${data.tag || 'สคริปต์'}</div>
+            <div class="thumb-partner">✓ Partner</div>
+          </div>
           <div class="card-body">
-            <div class="skeleton skel-title"></div>
-            <div class="author-row"><div class="skeleton skel-avatar"></div><div class="skeleton skel-author"></div></div>
-            <div class="skeleton skel-btn"></div>
+            <div class="script-title">${data.title}</div>
+            <div class="author-row">
+              <div class="author-avatar">🎮</div>
+              <div class="author-name">${data.author}</div>
+            </div>
+            <div class="card-stats">
+              <span>❤️ ใช้ได้จริง <b class="js-like-count-${id}">0</b> โหวต</span>
+              <span>📋 คัดลอกไปแล้ว <b class="js-copy-count-${id}">0</b> ครั้ง</span>
+            </div>
+            <div class="action-row">
+              <button class="btn-copy" style="flex:1" onclick="doCopy(${id}, this)">
+                <svg viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M5 15V5a2 2 0 0 1 2-2h10" stroke="currentColor" stroke-width="1.8"/></svg>
+                คัดลอกสคริปต์
+              </button>
+              <button class="btn-like js-like-btn-${id}" onclick="likeScript(${id}, this)" title="โหวตว่าสคริปต์นี้ใช้งานได้จริง">
+                <svg viewBox="0 0 24 24"><path d="M12 20s-7-4.3-9.3-8.6C1.2 8 2.6 4.8 5.7 4.1c1.9-.4 3.7.5 4.7 2 .9 1.4.6 1.5 1.6 0 1-1.5 2.8-2.4 4.7-2 3.1.7 4.5 3.9 3 7.3C19 15.7 12 20 12 20Z"/></svg>
+              </button>
+              <button class="btn-share" onclick="shareScript(${id})" title="แชร์ลิงก์เฉพาะสคริปต์นี้">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.7l7.4-4.2M8.3 13.3l7.4 4.2"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>`;
+    } else {
+      return `
+        <div class="script-card"${wrapperId} data-category="${category}">
+          <div class="thumb" style="cursor:pointer" onclick="window.open('${data.code}','_blank')">
+            <div class="thumb-skeleton" data-skeleton-for="${id}"></div>
+            <img src="${data.img}" loading="lazy" onload="hideSkeleton(${id})" onerror="hideSkeleton(${id})">
+            ${bookmarkBtnHtml(id)}
+            <div class="thumb-partner">✓ Partner</div>
+          </div>
+          <div class="card-body">
+            <div class="script-title">${data.title}</div>
+            <a class="btn-copy btn-discord" href="${data.code}" target="_blank">
+              💬 เข้าร่วม Discord
+            </a>
           </div>
         </div>`;
     }
   }
 
-  // Render ข้อมูลจริง
-  function renderScripts() {
-    const c = document.getElementById('hubContainer');
-    c.innerHTML = '';
-    for (let i = 1; i <= totalSlots; i++) {
-      c.innerHTML += generateCardHTML(i, scriptsData[i], !scriptsData[i]);
+  function hideSkeleton(id) {
+    document.querySelectorAll(`[data-skeleton-for="${id}"]`).forEach(el => el.style.display = 'none');
+  }
+
+  function renderFavorites() {
+    const favContainer = document.getElementById('favoritesContainer');
+    if (!favContainer) return;
+    const favIds = getFavorites();
+
+    if (favIds.length === 0) {
+      favContainer.innerHTML = `
+        <div class="no-partners" style="grid-column:1/-1;">
+          ยังไม่มีรายการโปรด — กดปุ่ม ⭐ บนสคริปต์ที่ชอบในหน้าคลังสคริปต์เพื่อบันทึกไว้ที่นี่
+        </div>`;
+      return;
     }
-    document.getElementById('statScripts').textContent = totalRealScripts;
-    
-    // Check Deep Link (Share URL)
-    const urlParams = new URLSearchParams(window.location.search);
-    const targetId = urlParams.get('script');
-    if(targetId && scriptsData[targetId]) {
+
+    favContainer.innerHTML = favIds
+      .map(id => scriptsData[id] ? scriptCardHTML(id, scriptsData[id], false) : '')
+      .join('');
+    favIds.forEach(id => { loadCopyCount(id); loadLikeCount(id); });
+    markLikedButtons();
+  }
+
+  // ========================================================
+  // ระบบ "ดูล่าสุด" (Recently Viewed)
+  // บันทึกรายการ id ของสคริปต์ที่เพิ่งกด "คัดลอก" ไว้ล่าสุด 10 รายการ
+  // ========================================================
+  const RECENT_KEY = 'nexushub_bob_rbx_v1_recent';
+
+  function getRecentIds() {
+    try {
+      const raw = localStorage.getItem(RECENT_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) { return []; }
+  }
+
+  function addRecentlyViewed(id) {
+    let list = getRecentIds().filter(x => x !== id);
+    list.unshift(id);
+    list = list.slice(0, 10);
+    try { localStorage.setItem(RECENT_KEY, JSON.stringify(list)); } catch (e) { /* เงียบไว้ */ }
+  }
+
+  function renderRecent() {
+    const recentContainer = document.getElementById('recentContainer');
+    if (!recentContainer) return;
+    const ids = getRecentIds();
+
+    if (ids.length === 0) {
+      recentContainer.innerHTML = `
+        <div class="no-partners" style="grid-column:1/-1;">
+          ยังไม่มีประวัติการใช้งาน — พอคุณกด "คัดลอกสคริปต์" สคริปต์นั้นจะมาปรากฏที่นี่โดยอัตโนมัติ
+        </div>`;
+      return;
+    }
+
+    recentContainer.innerHTML = ids
+      .map(id => scriptsData[id] ? scriptCardHTML(id, scriptsData[id], false) : '')
+      .join('');
+    ids.forEach(id => { loadCopyCount(id); loadLikeCount(id); });
+    markLikedButtons();
+  }
+  // ========================================================
+
+  // ========================================================
+  // ระบบแชร์ลิงก์เฉพาะสคริปต์ (Share Link + Auto-scroll)
+  // กด "แชร์" -> คัดลอกลิงก์ที่มี #script-{id} ต่อท้าย
+  // พอเปิดลิงก์นั้น หน้าเว็บจะเลื่อนไปหาการ์ดนั้นและไฮไลต์ให้อัตโนมัติ
+  // ========================================================
+  function shareScript(id) {
+    const url = `${location.origin}${location.pathname}#script-${id}`;
+    navigator.clipboard.writeText(url).then(() => {
+      const t = document.getElementById('toastBox');
+      t.innerText = '🔗 คัดลอกลิงก์แชร์แล้ว!';
+      t.classList.remove('show'); void t.offsetWidth;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2000);
+    });
+  }
+
+  function checkShareHash() {
+    if (location.hash && location.hash.indexOf('#script-') === 0) {
+      switchTab('scripts');
       setTimeout(() => {
-        const el = document.getElementById(`script-card-${targetId}`);
-        if(el) {
+        const el = document.querySelector(location.hash);
+        if (el) {
           el.scrollIntoView({ behavior: 'smooth', block: 'center' });
           el.classList.add('highlight');
           setTimeout(() => el.classList.remove('highlight'), 2500);
         }
-      }, 500);
+      }, 300);
+    }
+  }
+  window.addEventListener('hashchange', checkShareHash);
+  // ========================================================
+
+  // ========================================================
+  // ระบบนับ "เข้าชมทั้งหมด" และ "ออนไลน์อยู่" แบบข้อมูลจริง (แก้ไขแล้ว)
+  // COUNTER_API ต้องเป็น "base URL" เฉยๆ ห้ามมี /shield หรือ query string ต่อท้าย
+  // เพราะโค้ดด้านล่างจะเอาไปต่อเป็น ${COUNTER_API}/hit/{key} และ ${COUNTER_API}/get/{key}
+  // คีย์ (VIEWS_KEY / ONLINE_JOIN_KEY / ONLINE_LEAVE_KEY) ต้องเป็นชื่อสั้นๆ ไม่ซ้ำใคร
+  // ห้ามใส่เป็น URL เด็ดขาด ไม่งั้น endpoint จะพังและ API จะไม่ตอบ JSON กลับมา
+  // ========================================================
+  const COUNTER_API = 'https://countapi.mileshilliard.com/api/v1';
+  const VIEWS_KEY = 'nexushub_bob_rbx_v1_views';
+  const ONLINE_JOIN_KEY = 'nexushub_bob_rbx_v1_online_join';
+  const ONLINE_LEAVE_KEY = 'nexushub_bob_rbx_v1_online_leave';
+
+  const statViewsEl = document.getElementById('statViews');
+  const statOnlineEl = document.getElementById('statOnline');
+  let hasJoined = false;
+
+  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function animateNumber(el, newValue){
+    const from = parseInt((el.dataset.raw || el.textContent).replace(/[^0-9-]/g, ''), 10) || 0;
+    const to = newValue;
+    el.dataset.raw = String(to);
+    if (reduceMotion || from === to) { el.textContent = to.toLocaleString(); return; }
+    const duration = 500;
+    const start = performance.now();
+    function step(now){
+      const p = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      const current = Math.round(from + (to - from) * eased);
+      el.textContent = current.toLocaleString();
+      if (p < 1) requestAnimationFrame(step);
+      else {
+        el.classList.add('bump');
+        setTimeout(() => el.classList.remove('bump'), 300);
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
+  async function trackTotalViews() {
+    try {
+      const res = await fetch(`${COUNTER_API}/hit/${VIEWS_KEY}`);
+      const data = await res.json();
+      if (data && typeof data.value !== 'undefined') animateNumber(statViewsEl, Number(data.value));
+    } catch (e) {
+      console.warn('นับเข้าชมไม่สำเร็จ', e);
     }
   }
 
-  function renderSpecialList(storageKey, containerId, emptyMsg) {
-    const c = document.getElementById(containerId);
-    if(!c) return;
-    const ids = getList(storageKey);
-    c.innerHTML = '';
-    if(ids.length === 0) { c.innerHTML = `<div class="empty-msg">${emptyMsg}</div>`; return; }
-    ids.forEach(id => { if(scriptsData[id]) c.innerHTML += generateCardHTML(id, scriptsData[id]); });
+  async function joinOnline() {
+    if (hasJoined) return;
+    hasJoined = true;
+    try {
+      await fetch(`${COUNTER_API}/hit/${ONLINE_JOIN_KEY}`);
+    } catch (e) {
+      console.warn('เข้าร่วมนับออนไลน์ไม่สำเร็จ', e);
+    }
+    pollOnline();
   }
 
-  // ระบบ Filter & Search
-  function applyFilter(cat, btnEl) {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btnEl.classList.add('active');
-    filterCards();
+  function leaveOnline() {
+    if (!hasJoined) return;
+    hasJoined = false;
+    try {
+      fetch(`${COUNTER_API}/hit/${ONLINE_LEAVE_KEY}`, { keepalive: true });
+    } catch (e) { /* เงียบไว้ ไม่ต้องแจ้งผู้ใช้ */ }
   }
 
-  document.getElementById('searchInput').addEventListener('input', filterCards);
-
-  function filterCards() {
-    const q = document.getElementById('searchInput').value.trim().toLowerCase();
-    const activeCat = document.querySelector('.filter-btn.active').innerText;
-    let catCode = 'all';
-    if(activeCat.includes('Speed')) catCode = 'speed';
-    else if(activeCat.includes('Auto')) catCode = 'auto';
-    else if(activeCat.includes('Escape')) catCode = 'escape';
-    else if(activeCat.includes('อื่น')) catCode = 'other';
-
-    document.querySelectorAll('#hubContainer .script-card').forEach(card => {
-      if(card.classList.contains('locked')) { card.style.display = (catCode === 'all' && q === '') ? '' : 'none'; return; }
-      const matchText = card.getAttribute('data-title').includes(q);
-      const matchCat = (catCode === 'all' || card.getAttribute('data-cat') === catCode);
-      card.style.display = (matchText && matchCat) ? '' : 'none';
-    });
+  async function pollOnline() {
+    try {
+      const [joinRes, leaveRes] = await Promise.all([
+        fetch(`${COUNTER_API}/get/${ONLINE_JOIN_KEY}`),
+        fetch(`${COUNTER_API}/get/${ONLINE_LEAVE_KEY}`)
+      ]);
+      const joinData = await joinRes.json();
+      const leaveData = await leaveRes.json();
+      const joins = joinData && typeof joinData.value !== 'undefined' ? Number(joinData.value) : 0;
+      const leaves = leaveData && typeof leaveData.value !== 'undefined' ? Number(leaveData.value) : 0;
+      animateNumber(statOnlineEl, Math.max(joins - leaves, 1));
+    } catch (e) {
+      console.warn('อัปเดตยอดออนไลน์ไม่สำเร็จ', e);
+    }
   }
 
-  // แท็บเมนู
-  function switchTab(viewName) {
-    ['Scripts', 'Favorites', 'Recent', 'Partners'].forEach(v => {
-      document.getElementById('view' + v).classList.remove('active');
-      const btn = document.getElementById('btnTab' + v);
-      if(btn) btn.classList.remove('active');
-    });
-    
-    document.getElementById('view' + viewName.charAt(0).toUpperCase() + viewName.slice(1)).classList.add('active');
-    document.getElementById('btnTab' + viewName.charAt(0).toUpperCase() + viewName.slice(1)).classList.add('active');
-    
-    if(viewName === 'favorites') renderSpecialList('nx_fav', 'favoritesContainer', 'ยังไม่มีรายการโปรด');
-    if(viewName === 'recent') renderSpecialList('nx_recent', 'recentContainer', 'ยังไม่มีประวัติการเข้าชม');
-  }
+  trackTotalViews();
+  joinOnline();
+  setInterval(pollOnline, 8000);
 
-  // On Load
-  window.onload = () => {
-    document.documentElement.setAttribute('data-theme', window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    renderSkeletons(); // โชว์โครงร่างก่อน
-    setTimeout(renderScripts, 1500); // ดีเลย์ 1.5 วิ แล้วโชว์ของจริง
+  window.addEventListener('pagehide', leaveOnline);
+  window.addEventListener('beforeunload', leaveOnline);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') leaveOnline();
+    else if (document.visibilityState === 'visible') joinOnline();
+  });
+  // ========================================================
+
+  const scriptsData = {
+    1: { type:"script", tag:"+1 Speed Keyboard: Escape the Backrooms", title:"+1 Speed Keyboard: Escape the Backrooms", author:"bob", category:"keyboard", categoryLabel:"คีย์บอร์ด", code:`loadstring(game:HttpGet("https://raw.githubusercontent.com/oppw884-netizen/Nexus-Hub/refs/heads/main/%2B1%20Speed%20Keyboard%3A%20Escape%20the%20Backrooms.Lua"))()`, img:"https://tr.rbxcdn.com/180DAY-341b524768671042b4cd19d5fef00151/768/432/Image/Webp/noFilter" },
+    2: { type:"script", tag:"+1 Speed Moonwalk Escape🌙", title:"+1 Speed Moonwalk Escape🌙", author:"bob", category:"moonwalk", categoryLabel:"มูนวอล์ก", code:`loadstring(game:HttpGet("https://raw.githubusercontent.com/oppw884-netizen/Nexus-Hub/refs/heads/main/%2B1%20Speed%20Moonwalk%20Escape.Lua"))()`, img:"https://tr.rbxcdn.com/180DAY-2f74ce9a6075079747459b8eaad881c2/768/432/Image/Webp/noFilter" },
   };
+
+  const totalSlots = 20;
+  const container = document.getElementById('hubContainer');
+  document.getElementById('statScripts').textContent = Object.keys(scriptsData).length;
+
+  // ========================================================
+  // ยอดคัดลอกละเอียด: นับ "จำนวนครั้งที่สคริปต์นี้ถูกคัดลอกไปแล้ว" ผ่าน CountAPI
+  // คีย์แยกตาม id ของสคริปต์ เช่น nexushub_bob_rbx_v1_copy_1, ..._copy_2
+  // ใช้ class .js-copy-count-{id} เพื่ออัปเดตทุกที่ที่การ์ดนี้ปรากฏพร้อมกัน
+  // (หน้าคลังสคริปต์ / รายการโปรด / ดูล่าสุด อาจโชว์การ์ดเดียวกันพร้อมกันได้)
+  // ========================================================
+  function copyCountKey(id) { return `nexushub_bob_rbx_v1_copy_${id}`; }
+
+  async function loadCopyCount(id) {
+    try {
+      const res = await fetch(`${COUNTER_API}/get/${copyCountKey(id)}`);
+      const data = await res.json();
+      const value = (data && typeof data.value !== 'undefined') ? data.value : 0;
+      document.querySelectorAll(`.js-copy-count-${id}`).forEach(el => el.textContent = value);
+    } catch (e) {
+      console.warn('โหลดยอดคัดลอกไม่สำเร็จ', e);
+    }
+  }
+
+  // ========================================================
+  // ระบบให้คะแนน/ไลค์สคริปต์ — โหวตว่าสคริปต์นี้ "ใช้งานได้จริง"
+  // ใช้ CountAPI เก็บยอดโหวตรวม (แบบเดียวกับยอดคัดลอก) คีย์แยกตาม id
+  // จำกัดให้โหวตได้แค่ครั้งเดียวต่อเครื่อง โดยเก็บรายการ id ที่เคยโหวตแล้วไว้ใน localStorage
+  // (CountAPI รองรับแค่ "บวกอย่างเดียว" ไม่มีฟังก์ชันยกเลิกโหวต จึงล็อกปุ่มไว้หลังโหวตสำเร็จ)
+  // ========================================================
+  const LIKED_IDS_KEY = 'nexushub_bob_rbx_v1_liked_ids';
+  function likeCountKey(id) { return `nexushub_bob_rbx_v1_like_${id}`; }
+
+  function getLikedIds() {
+    try {
+      const raw = localStorage.getItem(LIKED_IDS_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) { return []; }
+  }
+
+  function saveLikedIds(list) {
+    try { localStorage.setItem(LIKED_IDS_KEY, JSON.stringify(list)); } catch (e) { /* เงียบไว้ */ }
+  }
+
+  async function loadLikeCount(id) {
+    try {
+      const res = await fetch(`${COUNTER_API}/get/${likeCountKey(id)}`);
+      const data = await res.json();
+      const value = (data && typeof data.value !== 'undefined') ? data.value : 0;
+      document.querySelectorAll(`.js-like-count-${id}`).forEach(el => el.textContent = value);
+    } catch (e) {
+      console.warn('โหลดยอดไลค์ไม่สำเร็จ', e);
+    }
+  }
+
+  async function likeScript(id, btnEl) {
+    const likedIds = getLikedIds();
+    if (likedIds.includes(id)) return; // โหวตไปแล้ว ไม่ให้โหวตซ้ำจากเครื่องเดียวกัน
+
+    if (btnEl) btnEl.disabled = true;
+    try {
+      const res = await fetch(`${COUNTER_API}/hit/${likeCountKey(id)}`);
+      const data = await res.json();
+      const value = (data && typeof data.value !== 'undefined') ? data.value : 0;
+      document.querySelectorAll(`.js-like-count-${id}`).forEach(el => el.textContent = value);
+
+      likedIds.push(id);
+      saveLikedIds(likedIds);
+      document.querySelectorAll(`.js-like-btn-${id}`).forEach(btn => {
+        btn.classList.add('liked');
+        btn.disabled = true;
+      });
+
+      const t = document.getElementById('toastBox');
+      t.innerText = '❤️ ขอบคุณสำหรับการโหวต!';
+      t.classList.remove('show'); void t.offsetWidth;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 1800);
+    } catch (e) {
+      if (btnEl) btnEl.disabled = false;
+      console.warn('กดไลค์ไม่สำเร็จ', e);
+    }
+  }
+
+  function markLikedButtons() {
+    getLikedIds().forEach(id => {
+      document.querySelectorAll(`.js-like-btn-${id}`).forEach(btn => {
+        btn.classList.add('liked');
+        btn.disabled = true;
+      });
+    });
+  }
+  // ========================================================
+
+  function doCopy(id, btnEl){
+    navigator.clipboard.writeText(scriptsData[id].code).then(() => {
+      const t = document.getElementById('toastBox');
+      t.innerText = '📋 คัดลอกสคริปต์แล้ว!';
+      t.classList.remove('show'); void t.offsetWidth;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2000);
+
+      if (btnEl) {
+        btnEl.classList.add('copied');
+        setTimeout(() => btnEl.classList.remove('copied'), 900);
+      }
+
+      // นับยอดคัดลอกจริงผ่าน CountAPI แล้วอัปเดตตัวเลขทุกที่ที่แสดงการ์ดนี้อยู่
+      fetch(`${COUNTER_API}/hit/${copyCountKey(id)}`)
+        .then(res => res.json())
+        .then(data => {
+          const value = (data && typeof data.value !== 'undefined') ? data.value : 0;
+          document.querySelectorAll(`.js-copy-count-${id}`).forEach(el => el.textContent = value);
+        })
+        .catch(e => console.warn('นับยอดคัดลอกไม่สำเร็จ', e));
+
+      // บันทึกไว้ในระบบ "ดูล่าสุด" แล้วรีเฟรชแท็บนั้นถ้ากำลังเปิดอยู่
+      addRecentlyViewed(id);
+      renderRecent();
+    });
+  }
+
+  function copyDiscordLink() {
+    navigator.clipboard.writeText(discordLink).then(() => {
+      const t = document.getElementById('toastBox');
+      t.innerText = '📋 คัดลอกลิงก์ Discord แล้ว!';
+      t.classList.remove('show'); void t.offsetWidth;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2000);
+    });
+  }
+
+  function switchTab(viewName) {
+    ['viewScripts','viewFavorites','viewRecent','viewPartners'].forEach(id =>
+      document.getElementById(id).classList.remove('active'));
+    ['btnTabScripts','btnTabFavorites','btnTabRecent','btnTabPartners'].forEach(id =>
+      document.getElementById(id).classList.remove('active'));
+
+    if (viewName === 'scripts') {
+      const v = document.getElementById('viewScripts');
+      void v.offsetWidth;
+      v.classList.add('active');
+      document.getElementById('btnTabScripts').classList.add('active');
+    } else if (viewName === 'favorites') {
+      renderFavorites();
+      const v = document.getElementById('viewFavorites');
+      void v.offsetWidth;
+      v.classList.add('active');
+      document.getElementById('btnTabFavorites').classList.add('active');
+    } else if (viewName === 'recent') {
+      renderRecent();
+      const v = document.getElementById('viewRecent');
+      void v.offsetWidth;
+      v.classList.add('active');
+      document.getElementById('btnTabRecent').classList.add('active');
+    } else if (viewName === 'partners') {
+      const v = document.getElementById('viewPartners');
+      void v.offsetWidth;
+      v.classList.add('active');
+      document.getElementById('btnTabPartners').classList.add('active');
+    }
+  }
+
+  // ========================================================
+  // ตัวกรองหมวดหมู่ (Category Filter)
+  // สร้างปุ่มกรองอัตโนมัติจากหมวดหมู่ที่มีอยู่จริงใน scriptsData
+  // ทำงานร่วมกับช่องค้นหาได้พร้อมกัน (ต้องผ่านทั้งสองเงื่อนไข)
+  // ========================================================
+  let currentFilter = 'all';
+
+  function renderFilterChips() {
+    const chipsEl = document.getElementById('filterChips');
+    if (!chipsEl) return;
+    const labels = { all: 'ทั้งหมด' };
+    const order = ['all'];
+    Object.values(scriptsData).forEach(d => {
+      if (d.category && !order.includes(d.category)) {
+        order.push(d.category);
+        labels[d.category] = d.categoryLabel || d.category;
+      }
+    });
+    chipsEl.innerHTML = order.map(cat =>
+      `<button class="filter-chip${cat === currentFilter ? ' active' : ''}" onclick="setFilter('${cat}')">${labels[cat]}</button>`
+    ).join('');
+  }
+
+  function setFilter(cat) {
+    currentFilter = cat;
+    renderFilterChips();
+    applyFilters();
+  }
+
+  function applyFilters() {
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+    [...container.children].forEach(card => {
+      const matchesCategory = currentFilter === 'all' || card.dataset.category === currentFilter;
+      const matchesSearch = card.textContent.toLowerCase().includes(q);
+      card.style.display = (matchesCategory && matchesSearch) ? '' : 'none';
+    });
+  }
+  // ========================================================
+
+  for (let i = 1; i <= totalSlots; i++) {
+    const data = scriptsData[i];
+
+    if (data) {
+      container.insertAdjacentHTML('beforeend', scriptCardHTML(i, data, true));
+      const cardEl = container.lastElementChild;
+      cardEl.style.animationDelay = `${Math.min(i * 0.05, 0.6)}s`;
+    } else {
+      const card = document.createElement('div');
+      card.style.animationDelay = `${Math.min(i * 0.05, 0.6)}s`;
+      card.className = 'script-card locked';
+      card.innerHTML = `
+        <div class="locked-inner">
+          <div class="n">#${String(i).padStart(2,'0')}</div>
+          <div class="t">⏳ รออัปเดต...</div>
+        </div>`;
+      container.appendChild(card);
+    }
+  }
+
+  renderFilterChips();
+  applyFilters();
+  Object.keys(scriptsData).forEach(id => { loadCopyCount(id); loadLikeCount(id); });
+  markLikedButtons();
+  renderFavorites();
+  renderRecent();
+  checkShareHash();
+
+  document.getElementById('searchInput').addEventListener('input', applyFilters);
 </script>
 </body>
 </html>

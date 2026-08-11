@@ -103,6 +103,67 @@
   html[data-theme="dark"] .btn-theme .icon-moon{ display:none; }
   html[data-theme="dark"] .btn-theme .icon-sun{ display:block; }
 
+  .btn-settings{
+    width:40px; height:40px; border-radius:12px; border:1px solid var(--border);
+    background:var(--pill-bg); color:var(--ink); cursor:pointer;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    transition:background .2s ease, transform .3s ease;
+  }
+  .btn-settings:hover{ transform:rotate(35deg); }
+  .btn-settings svg{ width:19px; height:19px; }
+
+  .settings-overlay{
+    display:none; position:fixed; inset:0; z-index:9990; background:rgba(10,14,24,.55);
+    align-items:center; justify-content:center; padding:20px;
+  }
+  .settings-overlay.open{ display:flex; }
+  .settings-modal{
+    width:100%; max-width:420px; background:var(--surface); border:1px solid var(--border);
+    border-radius:20px; box-shadow:0 20px 50px rgba(0,0,0,.3); overflow:hidden;
+    animation:fadeUp .25s ease both;
+  }
+  .settings-header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 20px; border-bottom:1px solid var(--border);
+  }
+  .settings-header h3{ margin:0; font-size:17px; font-weight:800; }
+  .settings-close{
+    width:32px; height:32px; border-radius:10px; border:none; background:var(--pill-bg);
+    color:var(--ink); cursor:pointer; display:flex; align-items:center; justify-content:center;
+  }
+  .settings-close:hover{ background:var(--border); }
+  .settings-body{ padding:18px 20px 22px; display:flex; flex-direction:column; gap:18px; }
+  .settings-section-title{
+    font-size:11.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.6px;
+    margin-bottom:10px;
+  }
+  .settings-row{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:13px 14px; background:var(--pill-bg); border-radius:13px;
+  }
+  .settings-row-info{ display:flex; align-items:center; gap:10px; }
+  .settings-row-info .icon{
+    width:36px; height:36px; border-radius:10px; background:#5865F2; color:#fff;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .settings-row-info .icon svg{ width:18px; height:18px; }
+  .settings-row-text .t{ font-size:13.5px; font-weight:700; }
+  .settings-row-text .d{ font-size:11.5px; color:var(--muted); font-weight:500; }
+  .settings-row-actions{ display:flex; gap:6px; flex-shrink:0; }
+  .settings-btn{
+    padding:9px 14px; border-radius:10px; border:1px solid var(--border); background:var(--surface);
+    color:var(--ink); font-family:'Prompt',sans-serif; font-weight:700; font-size:12.5px; cursor:pointer;
+    white-space:nowrap; transition:background .2s ease, transform .15s ease;
+  }
+  .settings-btn:hover{ background:var(--border); transform:translateY(-2px); }
+  .settings-btn.primary{ background:linear-gradient(90deg,#5865F2,#7c5cff); color:#fff; border:none; }
+  .settings-btn.danger{ background:#ffe9ec; color:#d1223f; border-color:#ffc4cd; }
+  .settings-btn.danger:hover{ background:#ffd4da; }
+  html[data-theme="dark"] .settings-btn.danger{ background:rgba(239,68,99,.16); color:#ff7c92; border-color:transparent; }
+  .settings-row-full{ flex-direction:column; align-items:stretch; gap:10px; }
+  .settings-row-full .settings-row-actions{ width:100%; }
+  .settings-row-full .settings-btn{ flex:1; }
+
   .btn-bookmark{
     position:absolute; top:10px; left:10px; width:32px; height:32px; border-radius:9px;
     background:rgba(255,255,255,.92); border:none; cursor:pointer;
@@ -500,13 +561,15 @@
       <button class="nav-item" id="btnTabFavorites" onclick="switchTab('favorites')">⭐ รายการโปรด</button>
       <button class="nav-item" id="btnTabRecent" onclick="switchTab('recent')">🕓 ดูล่าสุด</button>
       <button class="nav-item" id="btnTabPartners" onclick="switchTab('partners')">🎖 พาร์ทเนอร์</button>
-      <button class="nav-item" onclick="copyDiscordLink()">💬 Discord Community</button>
     </nav>
 
     <div class="topbar-actions">
       <button class="btn-theme" id="btnTheme" onclick="toggleTheme()" title="สลับธีมมืด/สว่าง" aria-label="สลับธีมมืด/สว่าง">
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
         <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.2M12 19.8V22M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2 12h2.2M19.8 12H22M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6" stroke-linecap="round"/></svg>
+      </button>
+      <button class="btn-settings" onclick="openSettings()" title="การตั้งค่า" aria-label="เปิดการตั้งค่า">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
       </button>
       <button class="btn-menu" id="btnMobileMenu" onclick="toggleMobileMenu()" title="เมนู" aria-label="เปิด/ปิดเมนู">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
@@ -518,9 +581,69 @@
       <button class="nav-item" id="btnTabFavoritesMobile" onclick="switchTab('favorites'); closeMobileMenu();">⭐ รายการโปรด</button>
       <button class="nav-item" id="btnTabRecentMobile" onclick="switchTab('recent'); closeMobileMenu();">🕓 ดูล่าสุด</button>
       <button class="nav-item" id="btnTabPartnersMobile" onclick="switchTab('partners'); closeMobileMenu();">🎖 พาร์ทเนอร์</button>
-      <button class="nav-item" onclick="copyDiscordLink(); closeMobileMenu();">💬 Discord Community</button>
     </nav>
   </header>
+
+  <!-- ====== หน้าต่างการตั้งค่า (Settings Modal) ====== -->
+  <div class="settings-overlay" id="settingsOverlay" onclick="if(event.target===this) closeSettings();">
+    <div class="settings-modal" role="dialog" aria-label="การตั้งค่า">
+      <div class="settings-header">
+        <h3>⚙️ การตั้งค่า</h3>
+        <button class="settings-close" onclick="closeSettings()" aria-label="ปิดการตั้งค่า">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+      <div class="settings-body">
+        <div>
+          <div class="settings-section-title">ชุมชน</div>
+          <div class="settings-row">
+            <div class="settings-row-info">
+              <div class="icon">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.118.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+              </div>
+              <div class="settings-row-text">
+                <div class="t">Discord Community</div>
+                <div class="d">เข้าร่วมพูดคุย รับข่าวสาร และแจ้งปัญหา</div>
+              </div>
+            </div>
+            <div class="settings-row-actions">
+              <button class="settings-btn" onclick="copyDiscordLink()">คัดลอก</button>
+              <a class="settings-btn primary" href="https://discord.gg/m56SY6PMyU" target="_blank">เปิด</a>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="settings-section-title">ลักษณะการแสดงผล</div>
+          <div class="settings-row">
+            <div class="settings-row-text">
+              <div class="t">ธีมมืด / สว่าง</div>
+              <div class="d">สลับรูปแบบสีของเว็บไซต์</div>
+            </div>
+            <div class="settings-row-actions">
+              <button class="settings-btn" onclick="toggleTheme()">สลับธีม</button>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="settings-section-title">จัดการข้อมูลของคุณ</div>
+          <div class="settings-row settings-row-full">
+            <div class="settings-row-text">
+              <div class="t">ข้อมูลที่บันทึกในเครื่องนี้</div>
+              <div class="d">รายการโปรด, ประวัติดูล่าสุด, สถานะโหวต และการแจ้งปัญหา ถูกเก็บไว้เฉพาะเบราว์เซอร์นี้เท่านั้น ไม่ได้ส่งขึ้นเซิร์ฟเวอร์</div>
+            </div>
+            <div class="settings-row-actions">
+              <button class="settings-btn" onclick="clearFavoritesData()">ล้างรายการโปรด</button>
+              <button class="settings-btn" onclick="clearRecentData()">ล้างประวัติล่าสุด</button>
+              <button class="settings-btn danger" onclick="clearAllLocalData()">ล้างข้อมูลทั้งหมด</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- =============================== -->
 
   <section class="hero">
     <div class="kicker"><span class="dot"></span> CYBER SCRIPT PLATFORM</div>
@@ -590,14 +713,14 @@
 
     <div class="partner-grid">
       <div class="partner-card" style="animation-delay:.1s">
-        <div class="partner-avatar fallback">BOB</div>
+        <div class="partner-avatar fallback">B</div>
         <div class="partner-name">bob</div>
         <div class="partner-tag">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.118.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
           bob_rbx
         </div>
         <div class="partner-meta">
-          <span>ผลงาน: <b>1</b> สคริปต์</span>
+          <span>ผลงาน: <b>2</b> สคริปต์</span>
           <span style="display:flex; align-items:center; gap:6px;">
             <span style="width:7px; height:7px; border-radius:50%; background:var(--success);"></span> Active
           </span>
@@ -972,7 +1095,7 @@
       title: "+1 Speed Keyboard: Escape the Backrooms",
       author: "bob",
       category: "plus1",
-      categoryLabel: "+1 Escape 🚶🏻",
+      categoryLabel: "+1 Escape",
       status: "working", // เปลี่ยนได้: working / updating / patched
       code: `loadstring(game:HttpGet("https://raw.githubusercontent.com/oppw884-netizen/Nexus-Hub/refs/heads/main/%2B1%20Speed%20Keyboard%3A%20Escape%20the%20Backrooms.Lua"))()`,
       img: "https://tr.rbxcdn.com/180DAY-341b524768671042b4cd19d5fef00151/768/432/Image/Webp/noFilter"
@@ -983,7 +1106,7 @@
       title: "+1 Speed Moonwalk Escape🌙",
       author: "bob",
       category: "plus1",
-      categoryLabel: "+1 Escape 🚶🏻",
+      categoryLabel: "+1 Escape",
       status: "working", // เปลี่ยนได้: working / updating / patched
       code: `loadstring(game:HttpGet("https://raw.githubusercontent.com/oppw884-netizen/Nexus-Hub/refs/heads/main/%2B1%20Speed%20Moonwalk%20Escape.Lua"))()`,
       img: "https://tr.rbxcdn.com/180DAY-2f74ce9a6075079747459b8eaad881c2/768/432/Image/Webp/noFilter"
@@ -1219,6 +1342,69 @@
       closeMobileMenu();
     }
   });
+  // ========================================================
+
+  // ========================================================
+  // ระบบการตั้งค่า (Settings) — รวมทุกอย่างที่ไม่ใช่เนื้อหาหลักไว้ที่นี่
+  // ย้าย Discord Community มาไว้ในนี้แทนที่จะโชว์เป็นปุ่มลอยในเมนูหลัก
+  // ========================================================
+  function openSettings() {
+    closeMobileMenu();
+    document.getElementById('settingsOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeSettings() {
+    document.getElementById('settingsOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeSettings();
+  });
+  // ========================================================
+
+  // ========================================================
+  // จัดการข้อมูลที่บันทึกในเครื่อง (localStorage) จากหน้าตั้งค่า
+  // หมายเหตุ: ยอดไลค์/แจ้งปัญหารวมบน CountAPI เป็นข้อมูลส่วนกลาง ลบออกจากที่นี่ไม่ได้
+  // ปุ่มเหล่านี้ล้างแค่ "สถานะในเครื่องนี้" เท่านั้น (เช่น เคยกดโหวตไปแล้วหรือยัง)
+  // ========================================================
+  function showToast(message) {
+    const t = document.getElementById('toastBox');
+    t.innerText = message;
+    t.classList.remove('show'); void t.offsetWidth;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+  }
+
+  function clearFavoritesData() {
+    if (!confirm('ต้องการล้างรายการโปรดทั้งหมดในเครื่องนี้ใช่ไหม?')) return;
+    try { localStorage.removeItem(FAVORITES_KEY); } catch (e) { /* เงียบไว้ */ }
+    document.querySelectorAll('.btn-bookmark.active').forEach(btn => btn.classList.remove('active'));
+    renderFavorites();
+    showToast('🗑️ ล้างรายการโปรดแล้ว');
+  }
+
+  function clearRecentData() {
+    if (!confirm('ต้องการล้างประวัติดูล่าสุดทั้งหมดใช่ไหม?')) return;
+    try { localStorage.removeItem(RECENT_KEY); } catch (e) { /* เงียบไว้ */ }
+    renderRecent();
+    showToast('🗑️ ล้างประวัติดูล่าสุดแล้ว');
+  }
+
+  function clearAllLocalData() {
+    if (!confirm('ต้องการล้างข้อมูลทั้งหมดในเครื่องนี้ใช่ไหม? (รายการโปรด, ประวัติล่าสุด, สถานะโหวต/แจ้งปัญหา) การกระทำนี้ย้อนกลับไม่ได้')) return;
+    [FAVORITES_KEY, RECENT_KEY, LIKED_IDS_KEY, REPORTED_IDS_KEY].forEach(key => {
+      try { localStorage.removeItem(key); } catch (e) { /* เงียบไว้ */ }
+    });
+    document.querySelectorAll('.btn-bookmark.active').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.btn-like.liked').forEach(btn => { btn.classList.remove('liked'); btn.disabled = false; });
+    document.querySelectorAll('.btn-report.reported').forEach(btn => { btn.classList.remove('reported'); btn.disabled = false; });
+    renderFavorites();
+    renderRecent();
+    closeSettings();
+    showToast('🗑️ ล้างข้อมูลทั้งหมดในเครื่องนี้แล้ว');
+  }
   // ========================================================
 
   function switchTab(viewName) {

@@ -7,6 +7,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 
+<!-- Ace Editor สำหรับแท็บ Luau Studio -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ext-language_tools.js"></script>
+
 <style>
   :root{
     --bg:        #f3f6fc;
@@ -46,6 +50,14 @@
     overflow-x:hidden;
     transition:background .3s ease, color .3s ease;
   }
+
+  /* ขนาดตัวอักษร: ปรับผ่านการตั้งค่า (ใช้ zoom เพราะทั้งเว็บกำหนดขนาดเป็น px ไม่ใช่ rem) */
+  html[data-fontsize="sm"] body{ zoom:0.9; }
+  html[data-fontsize="lg"] body{ zoom:1.14; }
+
+  /* ซ่อนป้ายสถานะสคริปต์และคำเตือนแจ้งปัญหา ตามการตั้งค่าของผู้ใช้ */
+  html[data-hide-status="true"] .status-badge,
+  html[data-hide-status="true"] .report-warn{ display:none !important; }
 
   .deco-dot{ position:absolute; width:5px; height:5px; border-radius:50%; background:#c7d3ec; }
   .deco-line{ position:absolute; background:#d7e0f2; height:1px; transform-origin:left; }
@@ -163,6 +175,27 @@
   .settings-row-full{ flex-direction:column; align-items:stretch; gap:10px; }
   .settings-row-full .settings-row-actions{ width:100%; }
   .settings-row-full .settings-btn{ flex:1; }
+
+  .settings-btn.selected{ background:linear-gradient(90deg,var(--blue),var(--blue-2)); color:#fff; border-color:transparent; }
+
+  .settings-toggle{
+    width:46px; height:26px; border-radius:999px; border:none; background:var(--border);
+    cursor:pointer; position:relative; flex-shrink:0; transition:background .2s ease;
+  }
+  .settings-toggle::after{
+    content:''; position:absolute; top:3px; left:3px; width:20px; height:20px; border-radius:50%;
+    background:#fff; box-shadow:0 2px 4px rgba(0,0,0,.25); transition:transform .2s ease;
+  }
+  .settings-toggle.on{ background:var(--blue); }
+  .settings-toggle.on::after{ transform:translateX(20px); }
+
+  .settings-file-label{
+    display:inline-flex; align-items:center; justify-content:center; padding:9px 14px; border-radius:10px;
+    border:1px solid var(--border); background:var(--surface); color:var(--ink);
+    font-family:'Prompt',sans-serif; font-weight:700; font-size:12.5px; cursor:pointer; white-space:nowrap;
+    transition:background .2s ease, transform .15s ease; flex:1; text-align:center;
+  }
+  .settings-file-label:hover{ background:var(--border); transform:translateY(-2px); }
 
   .btn-bookmark{
     position:absolute; top:10px; left:10px; width:32px; height:32px; border-radius:9px;
@@ -395,6 +428,57 @@
     grid-column:1/-1; text-align:center; color:var(--muted); font-size:13.5px; padding:30px 0;
   }
 
+  /* ========== หน้า Luau Studio (Editor) ========== */
+  .editor-wrap{ max-width:960px; margin:0 auto; padding:14px 20px 60px; position:relative; z-index:2; }
+
+  .editor-intro{ text-align:center; padding:20px 0 24px; }
+
+  .editor-toolbar{
+    display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    padding:0 2px 14px;
+  }
+  .editor-toolbar-left{ font-size:13px; font-weight:700; color:var(--muted); }
+  .editor-toolbar-actions{ display:flex; gap:8px; }
+  .editor-btn{
+    padding:9px 16px; border-radius:10px; border:1px solid var(--border); background:var(--pill-bg);
+    color:var(--ink); font-family:'Prompt',sans-serif; font-weight:700; font-size:12.5px; cursor:pointer;
+    transition:background .2s ease, transform .15s ease;
+  }
+  .editor-btn:hover{ background:var(--border); transform:translateY(-2px); }
+  .editor-btn.danger{ background:#ffe9ec; color:#d1223f; border-color:#ffc4cd; }
+  html[data-theme="dark"] .editor-btn.danger{ background:rgba(239,68,99,.16); color:#ff7c92; border-color:transparent; }
+
+  .editor-workspace{
+    border-radius:16px 16px 0 0; overflow:hidden; border:1px solid var(--border);
+    box-shadow:0 10px 28px rgba(16,24,40,.08);
+  }
+  #luauEditor{ width:100%; height:58vh; min-height:400px; font-size:14px; }
+
+  .editor-statusbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:10px 16px; font-size:11.5px; color:var(--muted); font-weight:600;
+    background:var(--pill-bg); border:1px solid var(--border); border-top:none; border-radius:0 0 16px 16px;
+  }
+  .editor-statusbar-right{ display:flex; align-items:center; gap:14px; }
+  .editor-save-indicator{ opacity:0; transition:opacity .3s ease; color:var(--success); font-weight:700; }
+  .editor-save-indicator.show{ opacity:1; }
+
+  .editor-symbol-bar{
+    display:none; gap:6px; overflow-x:auto; padding:12px 2px 2px; -webkit-overflow-scrolling:touch;
+  }
+  .editor-symbol-bar::-webkit-scrollbar{ display:none; }
+  .editor-sym-btn{
+    flex-shrink:0; padding:8px 13px; border-radius:8px; border:1px solid var(--border); background:var(--surface);
+    color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:600; cursor:pointer;
+  }
+  .editor-sym-btn:active{ color:var(--ink); border-color:var(--muted); }
+
+  @media (max-width:760px){
+    .editor-symbol-bar{ display:flex; }
+    #luauEditor{ height:50vh; min-height:320px; }
+  }
+  /* ================================================ */
+
   /* ปุ่มแฮมเบอร์เกอร์ + เมนูมือถือ (แสดงเฉพาะจอเล็ก) */
   .btn-menu{
     display:none; width:40px; height:40px; border-radius:12px; border:1px solid var(--border);
@@ -560,6 +644,9 @@
       <button class="nav-item active" id="btnTabScripts" onclick="switchTab('scripts')">&lt;/&gt; คลังสคริปต์</button>
       <button class="nav-item" id="btnTabFavorites" onclick="switchTab('favorites')">⭐ รายการโปรด</button>
       <button class="nav-item" id="btnTabRecent" onclick="switchTab('recent')">🕓 ดูล่าสุด</button>
+      <button class="nav-item" id="btnTabEditor" onclick="window.open('https://b62082826-gif.github.io/Nexus-AI-Studio.github.io/', '_blank')">✨ AI Editor</button>
+
+<!-- ส่วนของเมนูมือถือ -->
       <button class="nav-item" id="btnTabPartners" onclick="switchTab('partners')">🎖 พาร์ทเนอร์</button>
     </nav>
 
@@ -580,6 +667,7 @@
       <button class="nav-item active" id="btnTabScriptsMobile" onclick="switchTab('scripts'); closeMobileMenu();">&lt;/&gt; คลังสคริปต์</button>
       <button class="nav-item" id="btnTabFavoritesMobile" onclick="switchTab('favorites'); closeMobileMenu();">⭐ รายการโปรด</button>
       <button class="nav-item" id="btnTabRecentMobile" onclick="switchTab('recent'); closeMobileMenu();">🕓 ดูล่าสุด</button>
+      <button class="nav-item" id="btnTabEditorMobile" onclick="window.open('https://b62082826-gif.github.io/Nexus-AI-Studio.github.io/', '_blank'); closeMobileMenu();">✨ AI Editor</button>
       <button class="nav-item" id="btnTabPartnersMobile" onclick="switchTab('partners'); closeMobileMenu();">🎖 พาร์ทเนอร์</button>
     </nav>
   </header>
@@ -611,6 +699,15 @@
               <a class="settings-btn primary" href="https://discord.gg/m56SY6PMyU" target="_blank">เปิด</a>
             </div>
           </div>
+          <div class="settings-row" style="margin-top:10px;">
+            <div class="settings-row-text">
+              <div class="t">🐞 แจ้งบั๊ก / ข้อเสนอแนะเว็บไซต์</div>
+              <div class="d">พบปัญหาการใช้งานเว็บ หรือมีไอเดียอยากให้เพิ่ม? แจ้งผ่าน Discord ได้เลย</div>
+            </div>
+            <div class="settings-row-actions">
+              <a class="settings-btn" href="https://discord.gg/m56SY6PMyU" target="_blank">แจ้งเลย</a>
+            </div>
+          </div>
         </div>
 
         <div>
@@ -622,6 +719,48 @@
             </div>
             <div class="settings-row-actions">
               <button class="settings-btn" onclick="toggleTheme()">สลับธีม</button>
+            </div>
+          </div>
+
+          <div class="settings-row settings-row-full" style="margin-top:10px;">
+            <div class="settings-row-text">
+              <div class="t">ขนาดตัวอักษร</div>
+              <div class="d">ปรับขนาดตัวอักษรทั้งเว็บให้อ่านง่ายขึ้น</div>
+            </div>
+            <div class="settings-row-actions" id="fontSizeButtons"></div>
+          </div>
+
+          <div class="settings-row" style="margin-top:10px;">
+            <div class="settings-row-text">
+              <div class="t">ป้ายสถานะสคริปต์</div>
+              <div class="d">ซ่อนป้าย 🟢/🟡/🔴 และคำเตือนแจ้งปัญหาบนการ์ด</div>
+            </div>
+            <button class="settings-toggle" id="hideStatusToggle" onclick="toggleHideStatus()" aria-label="ซ่อน/แสดงป้ายสถานะสคริปต์"></button>
+          </div>
+        </div>
+
+        <div>
+          <div class="settings-section-title">แท็บเริ่มต้น</div>
+          <div class="settings-row settings-row-full">
+            <div class="settings-row-text">
+              <div class="t">หน้าที่จะเห็นตอนเปิดเว็บ</div>
+              <div class="d">เลือกแท็บที่อยากให้ขึ้นมาก่อนทุกครั้งที่เข้าเว็บนี้</div>
+            </div>
+            <div class="settings-row-actions" id="defaultTabButtons"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="settings-section-title">นำเข้า / ส่งออกรายการโปรด</div>
+          <div class="settings-row settings-row-full">
+            <div class="settings-row-text">
+              <div class="t">ย้ายรายการโปรดข้ามเครื่อง/เบราว์เซอร์</div>
+              <div class="d">รายการโปรดเก็บไว้ในเครื่องนี้เท่านั้น ดาวน์โหลดเป็นไฟล์เพื่อนำไปใช้ที่เครื่องอื่นได้</div>
+            </div>
+            <div class="settings-row-actions">
+              <button class="settings-btn" onclick="exportFavorites()">📤 ส่งออกเป็นไฟล์</button>
+              <label class="settings-file-label" for="importFavoritesInput">📥 นำเข้าไฟล์</label>
+              <input type="file" id="importFavoritesInput" accept="application/json" style="display:none" onchange="importFavoritesFile(event)">
             </div>
           </div>
         </div>
@@ -704,6 +843,55 @@
     <div class="grid" id="recentContainer" style="padding-bottom:60px;"></div>
   </div>
 
+  <div id="viewEditor" class="view">
+    <div class="editor-wrap">
+      <section class="editor-intro">
+        <div class="kicker" style="margin-bottom:12px;"><span class="dot"></span> LUAU STUDIO</div>
+        <h2 style="font-size:26px; font-weight:800; margin:0 0 10px; line-height:1.25;">เขียนและทดสอบโค้ด Luau</h2>
+        <p style="color:var(--muted); font-size:14.5px; font-weight:500; margin:0 auto;">แก้ไขโค้ดในเบราว์เซอร์ บันทึกอัตโนมัติในเครื่องนี้ ไม่หายแม้ปิดแท็บ</p>
+      </section>
+
+      <div class="editor-toolbar">
+        <div class="editor-toolbar-left">📄 script.lua</div>
+        <div class="editor-toolbar-actions">
+          <button class="editor-btn" onclick="copyAllCode()">📋 คัดลอก</button>
+          <button class="editor-btn" onclick="downloadLuaFile()">💾 ดาวน์โหลด</button>
+          <button class="editor-btn danger" onclick="clearEditorStorage()">🗑️ รีเซ็ต</button>
+        </div>
+      </div>
+
+      <div class="editor-workspace">
+        <div id="luauEditor"></div>
+      </div>
+      <div class="editor-statusbar">
+        <div>Luau</div>
+        <div class="editor-statusbar-right">
+          <span class="editor-save-indicator" id="editorSaveIndicator">บันทึกแล้ว</span>
+          <span id="editorCursorPos">Ln 1, Col 1</span>
+        </div>
+      </div>
+
+      <!-- แถบปุ่มลัดสัญลักษณ์สำหรับมือถือ -->
+      <div class="editor-symbol-bar" id="editorSymbolBar">
+        <button class="editor-sym-btn" onclick="insertEditorSymbol('    ')">Tab</button>
+        <button class="editor-sym-btn" onclick="insertEditorSymbol('<')">&lt;</button>
+        <button class="editor-sym-btn" onclick="insertEditorSymbol('>')">&gt;</button>
+        <button class="editor-sym-btn" onclick="insertEditorSymbol('(')">(</button>
+        <button class="editor-sym-btn" onclick="insertEditorSymbol(')')">)</button>
+        <button class="editor-sym-btn" onclick="insertEditorSymbol('[')">[</button>
+        <button class="editor-sym-btn" onclick="insertEditorSymbol(']')">]</button>
+        <button class="editor-sym-btn" onclick="insertEditorSymbol('{')">{</button>
+        <button class="editor-sym-btn" onclick="insertEditorSymbol('}')">}</button>
+        <button class="editor-sym-btn" onclick="insertEditorSymbol('=')">=</button>
+        <button class="editor-sym-btn" onclick="insertEditorSymbol('&quot;')">"</button>
+        <button class="editor-sym-btn" onclick="insertEditorSymbol('\'')">'</button>
+        <button class="editor-sym-btn" onclick="insertEditorSymbol('_')">_</button>
+        <button class="editor-sym-btn" onclick="insertEditorSymbol('.')">.</button>
+        <button class="editor-sym-btn" onclick="insertEditorSymbol(':')">:</button>
+      </div>
+    </div>
+  </div>
+
   <div id="viewPartners" class="view">
     <section style="text-align:center; padding:20px 20px 40px; position:relative; z-index:2;">
       <div class="kicker teal" style="margin-bottom:12px;"><span class="dot"></span> OFFICIAL VERIFIED PARTNERS</div>
@@ -713,14 +901,14 @@
 
     <div class="partner-grid">
       <div class="partner-card" style="animation-delay:.1s">
-        <div class="partner-avatar fallback">B</div>
+        <div class="partner-avatar fallback">H</div>
         <div class="partner-name">bob</div>
         <div class="partner-tag">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.118.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
           bob_rbx
         </div>
         <div class="partner-meta">
-          <span>ผลงาน: <b>2</b> สคริปต์</span>
+          <span>ผลงาน: <b>1</b> สคริปต์</span>
           <span style="display:flex; align-items:center; gap:6px;">
             <span style="width:7px; height:7px; border-radius:50%; background:var(--success);"></span> Active
           </span>
@@ -1095,7 +1283,7 @@
       title: "+1 Speed Keyboard: Escape the Backrooms",
       author: "bob",
       category: "plus1",
-      categoryLabel: "+1 Escape",
+      categoryLabel: "+1",
       status: "working", // เปลี่ยนได้: working / updating / patched
       code: `loadstring(game:HttpGet("https://raw.githubusercontent.com/oppw884-netizen/Nexus-Hub/refs/heads/main/%2B1%20Speed%20Keyboard%3A%20Escape%20the%20Backrooms.Lua"))()`,
       img: "https://tr.rbxcdn.com/180DAY-341b524768671042b4cd19d5fef00151/768/432/Image/Webp/noFilter"
@@ -1106,7 +1294,7 @@
       title: "+1 Speed Moonwalk Escape🌙",
       author: "bob",
       category: "plus1",
-      categoryLabel: "+1 Escape",
+      categoryLabel: "+1",
       status: "working", // เปลี่ยนได้: working / updating / patched
       code: `loadstring(game:HttpGet("https://raw.githubusercontent.com/oppw884-netizen/Nexus-Hub/refs/heads/main/%2B1%20Speed%20Moonwalk%20Escape.Lua"))()`,
       img: "https://tr.rbxcdn.com/180DAY-2f74ce9a6075079747459b8eaad881c2/768/432/Image/Webp/noFilter"
@@ -1365,6 +1553,159 @@
   // ========================================================
 
   // ========================================================
+  // ขนาดตัวอักษร (Font Size)
+  // ========================================================
+  const FONT_SIZE_KEY = 'nexushub_bob_rbx_v1_fontsize';
+  const FONT_SIZE_OPTIONS = [
+    { id: 'sm', label: 'เล็ก' },
+    { id: 'md', label: 'กลาง' },
+    { id: 'lg', label: 'ใหญ่' },
+  ];
+
+  function applyFontSize(size) {
+    document.documentElement.setAttribute('data-fontsize', size);
+  }
+
+  function setFontSize(size) {
+    applyFontSize(size);
+    try { localStorage.setItem(FONT_SIZE_KEY, size); } catch (e) { /* เงียบไว้ */ }
+    renderFontSizeButtons();
+  }
+
+  function renderFontSizeButtons() {
+    const el = document.getElementById('fontSizeButtons');
+    if (!el) return;
+    let current = 'md';
+    try { current = localStorage.getItem(FONT_SIZE_KEY) || 'md'; } catch (e) { /* เงียบไว้ */ }
+    el.innerHTML = FONT_SIZE_OPTIONS.map(opt =>
+      `<button class="settings-btn${opt.id === current ? ' selected' : ''}" onclick="setFontSize('${opt.id}')">${opt.label}</button>`
+    ).join('');
+  }
+
+  (function initFontSize() {
+    let saved = 'md';
+    try { saved = localStorage.getItem(FONT_SIZE_KEY) || 'md'; } catch (e) { /* เงียบไว้ */ }
+    applyFontSize(saved);
+  })();
+  // ========================================================
+
+  // ========================================================
+  // ซ่อน/แสดงป้ายสถานะสคริปต์ (Status Badge Visibility)
+  // ========================================================
+  const HIDE_STATUS_KEY = 'nexushub_bob_rbx_v1_hide_status';
+
+  function applyHideStatus(hide) {
+    document.documentElement.setAttribute('data-hide-status', hide ? 'true' : 'false');
+    const toggle = document.getElementById('hideStatusToggle');
+    if (toggle) toggle.classList.toggle('on', hide);
+  }
+
+  function toggleHideStatus() {
+    let current = false;
+    try { current = localStorage.getItem(HIDE_STATUS_KEY) === 'true'; } catch (e) { /* เงียบไว้ */ }
+    const next = !current;
+    applyHideStatus(next);
+    try { localStorage.setItem(HIDE_STATUS_KEY, String(next)); } catch (e) { /* เงียบไว้ */ }
+  }
+
+  (function initHideStatus() {
+    let saved = false;
+    try { saved = localStorage.getItem(HIDE_STATUS_KEY) === 'true'; } catch (e) { /* เงียบไว้ */ }
+    applyHideStatus(saved);
+  })();
+  // ========================================================
+
+  // ========================================================
+  // แท็บเริ่มต้น (Default Tab)
+  // ========================================================
+  const DEFAULT_TAB_KEY = 'nexushub_bob_rbx_v1_default_tab';
+  const DEFAULT_TAB_OPTIONS = [
+    { id: 'scripts', label: '</> คลังสคริปต์' },
+    { id: 'favorites', label: '⭐ รายการโปรด' },
+    { id: 'recent', label: '🕓 ดูล่าสุด' },
+  ];
+
+  function getSavedDefaultTab() {
+    try { return localStorage.getItem(DEFAULT_TAB_KEY) || 'scripts'; } catch (e) { return 'scripts'; }
+  }
+
+  function setDefaultTab(tab) {
+    try { localStorage.setItem(DEFAULT_TAB_KEY, tab); } catch (e) { /* เงียบไว้ */ }
+    renderDefaultTabButtons();
+    showToast('✅ ตั้งค่าแท็บเริ่มต้นแล้ว');
+  }
+
+  function renderDefaultTabButtons() {
+    const el = document.getElementById('defaultTabButtons');
+    if (!el) return;
+    const current = getSavedDefaultTab();
+    el.innerHTML = DEFAULT_TAB_OPTIONS.map(opt =>
+      `<button class="settings-btn${opt.id === current ? ' selected' : ''}" onclick="setDefaultTab('${opt.id}')">${opt.label}</button>`
+    ).join('');
+  }
+  // ========================================================
+
+  // ========================================================
+  // นำเข้า / ส่งออกรายการโปรด (Export / Import Favorites)
+  // ส่งออกเป็นไฟล์ .json ดาวน์โหลดได้ทันที และนำเข้าไฟล์กลับมารวมกับรายการเดิม
+  // ========================================================
+  function exportFavorites() {
+    const favIds = getFavorites();
+    if (favIds.length === 0) {
+      showToast('⚠️ ยังไม่มีรายการโปรดให้ส่งออก');
+      return;
+    }
+    const payload = {
+      app: 'nexushub_bob_rbx_v1',
+      exportedAt: new Date().toISOString(),
+      favorites: favIds,
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'nexushub-favorites.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('📤 ส่งออกรายการโปรดแล้ว');
+  }
+
+  function importFavoritesFile(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(reader.result);
+        const incomingIds = Array.isArray(parsed.favorites)
+          ? parsed.favorites.filter(id => scriptsData[id])
+          : [];
+
+        if (incomingIds.length === 0) {
+          showToast('⚠️ ไฟล์ไม่ถูกต้องหรือไม่มีรายการที่ตรงกัน');
+          return;
+        }
+
+        const merged = Array.from(new Set([...getFavorites(), ...incomingIds]));
+        saveFavorites(merged);
+        incomingIds.forEach(id => syncBookmarkButtons(id));
+        renderFavorites();
+        showToast(`📥 นำเข้ารายการโปรดแล้ว ${incomingIds.length} รายการ`);
+      } catch (e) {
+        showToast('⚠️ อ่านไฟล์ไม่สำเร็จ ตรวจสอบว่าเป็นไฟล์ที่ส่งออกจากเว็บนี้');
+        console.warn('นำเข้ารายการโปรดไม่สำเร็จ', e);
+      } finally {
+        event.target.value = '';
+      }
+    };
+    reader.readAsText(file);
+  }
+  // ========================================================
+
+  // ========================================================
   // จัดการข้อมูลที่บันทึกในเครื่อง (localStorage) จากหน้าตั้งค่า
   // หมายเหตุ: ยอดไลค์/แจ้งปัญหารวมบน CountAPI เป็นข้อมูลส่วนกลาง ลบออกจากที่นี่ไม่ได้
   // ปุ่มเหล่านี้ล้างแค่ "สถานะในเครื่องนี้" เท่านั้น (เช่น เคยกดโหวตไปแล้วหรือยัง)
@@ -1376,6 +1717,89 @@
     t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 2000);
   }
+
+  // ========================================================
+  // Luau Studio — ตัวแก้ไขโค้ด Lua ในเบราว์เซอร์ (ใช้ Ace Editor)
+  // เริ่มสร้าง editor แบบ lazy ตอนผู้ใช้เปิดแท็บนี้ครั้งแรกเท่านั้น
+  // (ต้องรอให้ view มองเห็นก่อน ไม่งั้น Ace คำนวณขนาดผิดเป็น 0)
+  // บันทึกโค้ดอัตโนมัติลง localStorage ทุกครั้งที่พิมพ์
+  // ========================================================
+  const LUAU_STORAGE_KEY = 'nexushub_bob_rbx_v1_luau_code';
+  const LUAU_DEFAULT_CODE = `-- Luau Script Template\nlocal Players = game:GetService("Players")\nlocal localPlayer = Players.LocalPlayer\n\nprint("Hello, " .. localPlayer.Name)\n`;
+  let luauEditorInstance = null;
+
+  function initLuauEditorOnce() {
+    if (luauEditorInstance) return;
+
+    ace.require('ace/ext/language_tools');
+    luauEditorInstance = ace.edit('luauEditor');
+    luauEditorInstance.setTheme('ace/theme/one_dark');
+    luauEditorInstance.session.setMode('ace/mode/lua');
+    luauEditorInstance.setOptions({
+      fontSize: '14px',
+      enableBasicAutocompletion: true,
+      enableLiveAutocompletion: true,
+      enableSnippets: true,
+      showPrintMargin: false,
+      highlightActiveLine: true
+    });
+
+    let savedCode = null;
+    try { savedCode = localStorage.getItem(LUAU_STORAGE_KEY); } catch (e) { /* เงียบไว้ */ }
+    luauEditorInstance.setValue(savedCode !== null ? savedCode : LUAU_DEFAULT_CODE, -1);
+
+    const saveIndicator = document.getElementById('editorSaveIndicator');
+    let saveTimeout;
+    luauEditorInstance.session.on('change', () => {
+      try { localStorage.setItem(LUAU_STORAGE_KEY, luauEditorInstance.getValue()); } catch (e) { /* เงียบไว้ */ }
+      saveIndicator.classList.add('show');
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(() => saveIndicator.classList.remove('show'), 900);
+    });
+
+    const cursorPosEl = document.getElementById('editorCursorPos');
+    luauEditorInstance.session.selection.on('changeCursor', () => {
+      const pos = luauEditorInstance.getCursorPosition();
+      cursorPosEl.textContent = `Ln ${pos.row + 1}, Col ${pos.column + 1}`;
+    });
+  }
+
+  function insertEditorSymbol(symbol) {
+    if (!luauEditorInstance) return;
+    luauEditorInstance.insert(symbol);
+    luauEditorInstance.focus();
+  }
+
+  function copyAllCode() {
+    if (!luauEditorInstance) return;
+    const code = luauEditorInstance.getValue();
+    navigator.clipboard.writeText(code)
+      .then(() => showToast('📋 คัดลอกโค้ดทั้งหมดเรียบร้อยแล้ว'))
+      .catch(() => showToast('⚠️ คัดลอกไม่สำเร็จ'));
+  }
+
+  function downloadLuaFile() {
+    if (!luauEditorInstance) return;
+    const code = luauEditorInstance.getValue();
+    const blob = new Blob([code], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'script.lua';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('💾 ดาวน์โหลดไฟล์แล้ว');
+  }
+
+  function clearEditorStorage() {
+    if (!confirm('ต้องการรีเซ็ตโค้ดทั้งหมดกลับเป็นค่าเริ่มต้นหรือไม่?')) return;
+    try { localStorage.removeItem(LUAU_STORAGE_KEY); } catch (e) { /* เงียบไว้ */ }
+    if (luauEditorInstance) luauEditorInstance.setValue(LUAU_DEFAULT_CODE, -1);
+    showToast('🔄 รีเซ็ตแล้ว');
+  }
+  // ========================================================
 
   function clearFavoritesData() {
     if (!confirm('ต้องการล้างรายการโปรดทั้งหมดในเครื่องนี้ใช่ไหม?')) return;
@@ -1408,9 +1832,9 @@
   // ========================================================
 
   function switchTab(viewName) {
-    ['viewScripts','viewFavorites','viewRecent','viewPartners'].forEach(id =>
+    ['viewScripts','viewFavorites','viewRecent','viewEditor','viewPartners'].forEach(id =>
       document.getElementById(id).classList.remove('active'));
-    ['btnTabScripts','btnTabFavorites','btnTabRecent','btnTabPartners'].forEach(id => {
+    ['btnTabScripts','btnTabFavorites','btnTabRecent','btnTabEditor','btnTabPartners'].forEach(id => {
       document.getElementById(id).classList.remove('active');
       const mobileBtn = document.getElementById(id + 'Mobile');
       if (mobileBtn) mobileBtn.classList.remove('active');
@@ -1433,6 +1857,10 @@
     } else if (viewName === 'recent') {
       renderRecent();
       activate('viewRecent', 'btnTabRecent');
+    } else if (viewName === 'editor') {
+      activate('viewEditor', 'btnTabEditor');
+      initLuauEditorOnce();
+      setTimeout(() => { if (luauEditorInstance) luauEditorInstance.resize(); }, 50);
     } else if (viewName === 'partners') {
       activate('viewPartners', 'btnTabPartners');
     }

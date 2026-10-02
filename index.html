@@ -1,2269 +1,250 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BObs Hub — ร้าน Script Roblox</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>เรียน HTML + CSS</title>
 <style>
-  :root {
-    --red:#FF4757; --orange:#FF6B35; --yellow:#FFD93D;
-    --green:#6BCB77; --blue:#4D96FF; --purple:#845EF7; --pink:#F06595;
-    --bg:#F8F9FF; --text:#1a1a2e; --muted:#7b7f9e; --border:#e8eaf6;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+:root{--bg:#0a0a0a;--panel:#0f0f0f;--line:#232323;--hover:#1c1c1c;--act:#1f1f1f;--tx:#fafafa;--mu:#a1a1a1;--ac:#2cf0a0;--code:#050505;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme=light]{--bg:#fff;--panel:#fafafa;--line:#e4e4e7;--hover:#f0f0f2;--act:#ececef;--tx:#09090b;--mu:#63636b;--ac:#0a9f66;--code:#f4f4f5}
+*{box-sizing:border-box}html{scroll-padding-top:20px}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.7 Inter,"Noto Sans Thai",system-ui,sans-serif}
+a{color:inherit;text-decoration:none}button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.pill{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:8px 16px;font-weight:600;font-size:13px}
+.pill.on{background:#4a4a4a;color:#fff;border-color:#4a4a4a}
+.tg{display:flex;border:1px solid var(--line);border-radius:999px;padding:2px;background:var(--panel)}
+.tg span{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;opacity:.5}
+.tg span.s{background:var(--act);opacity:1}
+.lucide{width:16px;height:16px;flex:none}
+.tg .lucide{width:13px;height:13px}
+.lg,.pill,.tags span,.cb .h button,.nav a,.note b,.pn small,.toc div{display:inline-flex;align-items:center;gap:7px}
+.nav a{display:flex}.note b,.pn small,.toc div{display:flex}
+.top b.lg{font-size:18px}.lg .lucide{width:20px;height:20px}
+.nav a .lucide{width:15px;height:15px}
+.ls{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:3px 10px;color:var(--mu)}.ls select{background:transparent;color:var(--tx);border:0;font:inherit;font-size:13px;cursor:pointer}.ls option{background:var(--panel);color:var(--tx)}
+.pn .nx{text-align:right;grid-column:2}.pn .nx small{justify-content:flex-end}
+/* landing */
+#home{min-height:100vh;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;gap:24px;padding:22px 7%}
+.top b{font-size:18px}.top .sp{flex:1}.top a{color:var(--mu);font-size:14px}
+.hero{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 7%;max-width:900px;margin-left:calc(7% + 5vw)}
+h1{font-size:clamp(34px,5vw,50px);line-height:1.2;margin:0 0 12px;letter-spacing:-.02em}
+h1 em{font-style:normal;background:linear-gradient(90deg,#2cf0a0,#35d3ee);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--mu);font-size:17px;margin:0 0 28px}.hero div{display:flex;gap:8px;flex-wrap:wrap}
+.soon{text-align:center;color:var(--mu);font-size:13px;padding:18px}
+/* docs */
+#docs{display:none}
+.side{position:fixed;inset:0 auto 0 0;width:300px;background:var(--bg);border-right:1px solid var(--line);display:flex;flex-direction:column;z-index:5;padding-top:env(safe-area-inset-top,0px);transition:transform .2s}
+.side header{display:flex;justify-content:space-between;align-items:center;padding:16px 14px}
+.side header a{font-weight:700;font-size:18px}
+.nav{flex:1;overflow:auto;padding:0 14px 16px}
+.nav h4{margin:20px 8px 6px;font-size:13px}
+.nav a{display:block;padding:6px 8px;border-radius:12px;color:var(--mu);font-size:13.5px}
+.nav a:hover{background:var(--hover);color:var(--tx)}
+.nav a.on{background:var(--act);color:var(--tx);font-weight:500}
+.side footer{border-top:1px solid var(--line);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;color:var(--mu);font-size:13px}
+.mb{display:none;position:fixed;top:calc(10px + env(safe-area-inset-top,0px));left:10px;z-index:4;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:6px 10px}
+main{margin-left:300px;padding:44px 60px 60px;max-width:calc(100% - 0px);display:grid;grid-template-columns:minmax(0,1050px) 190px;gap:40px}
+article h1{font-size:30px;margin:0 0 20px}
+article h2{font-size:21px;margin:34px 0 12px}
+article p{margin:0 0 14px;max-width:75ch}
+.ban{border-radius:16px;padding:36px 34px;min-height:260px;display:flex;flex-direction:column;justify-content:space-between;color:#fff;font-size:clamp(36px,6vw,64px);font-weight:600;line-height:1.1;background:linear-gradient(135deg,#1590ff,#2dd3ee 55%,#2de8a8);margin-bottom:28px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 22px}
+.tags span{border-radius:999px;padding:5px 14px;font-size:13px;font-weight:600;color:#06230f}
+.note{border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:14px 18px;margin:18px 0}
+.note b{font-size:14px}.note span{color:var(--mu);font-size:13.5px}
+.cb{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:14px 0}
+.cb .h{display:flex;justify-content:space-between;align-items:center;padding:6px 12px;background:var(--panel);border-bottom:1px solid var(--line);font-size:12px;color:var(--mu)}
+.cb .h button{background:none;border:1px solid var(--line);border-radius:8px;padding:2px 10px;font-size:12px}
+pre{margin:0;padding:14px 16px;background:var(--code);overflow-x:auto;font:13px/1.6 ui-monospace,Menlo,Consolas,monospace;tab-size:2}
+iframe{display:block;width:100%;height:170px;border:0;background:#fff}
+.pn{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:40px}
+.pn a{border:1px solid var(--line);border-radius:12px;padding:14px 18px;background:var(--panel)}
+.pn a:hover{background:var(--hover)}.pn small{display:block;color:var(--mu)}
 
-  /* ── PROMO BANNER ── */
-  .promo-banner{
-    background:linear-gradient(90deg,#b8860b,#FFD700,#FFF0a0,#FFD700,#b8860b);
-    background-size:300% 100%;
-    animation:goldShine 4s linear infinite;
-    padding:10px 20px;text-align:center;position:relative;
-    border-bottom:2px solid #c9a227;
-  }
-  @keyframes goldShine{0%{background-position:0% 50%;}100%{background-position:300% 50%;}}
-  .promo-inner{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;}
-  .promo-text{font-family:'Nunito',sans-serif;font-weight:800;font-size:0.92rem;color:#3a2500;
-    letter-spacing:0.01em;line-height:1.4;}
-  .promo-text b{font-size:1rem;}
-  .promo-edit-btn{background:rgba(0,0,0,0.12);border:1.5px solid rgba(0,0,0,0.2);
-    color:#3a2500;padding:4px 14px;border-radius:100px;font-family:'Nunito',sans-serif;
-    font-weight:800;font-size:0.75rem;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
-  .promo-edit-btn:hover{background:rgba(0,0,0,0.22);}
-  /* Edit popup */
-  .promo-popup{display:none;position:fixed;inset:0;z-index:500;
-    background:rgba(0,0,0,0.45);backdrop-filter:blur(4px);align-items:center;justify-content:center;}
-  .promo-popup.show{display:flex;}
-  .promo-box{background:white;border-radius:20px;padding:32px;max-width:440px;width:90%;
-    box-shadow:0 20px 60px rgba(0,0,0,0.2);animation:popIn 0.3s ease;}
-  .promo-box h4{font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:800;margin-bottom:6px;}
-  .promo-box p{font-size:0.83rem;color:var(--muted);margin-bottom:18px;}
-  .promo-field{width:100%;padding:12px 16px;border:2px solid var(--border);border-radius:12px;
-    font-family:'Nunito',sans-serif;font-size:0.9rem;outline:none;resize:none;
-    transition:border 0.2s;color:var(--text);}
-  .promo-field:focus{border-color:#c9a227;}
-  .promo-save{background:linear-gradient(135deg,#c9a227,#FFD700);color:#3a2500;border:none;
-    padding:11px 28px;border-radius:100px;font-family:'Nunito',sans-serif;font-weight:800;
-    font-size:0.9rem;cursor:pointer;transition:all 0.2s;margin-top:14px;
-    box-shadow:0 4px 15px rgba(201,162,39,0.35);}
-  .promo-save:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(201,162,39,0.5);}
-  .promo-cancel{background:var(--bg);border:2px solid var(--border);padding:11px 22px;
-    border-radius:100px;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.9rem;
-    cursor:pointer;transition:all 0.2s;margin-top:14px;margin-left:8px;}
-  .promo-cancel:hover{background:var(--border);}
-
-  /* ── NAV ── */
-  nav{display:flex;align-items:center;justify-content:space-between;padding:16px 48px;
-    background:white;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:100;
-    box-shadow:0 2px 20px rgba(0,0,0,0.06);}
-  .logo{font-family:'Baloo 2',cursive;font-size:1.6rem;font-weight:800;
-    background:linear-gradient(135deg,var(--blue),var(--purple));
-    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-  .logo span{background:linear-gradient(135deg,var(--red),var(--orange));
-    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-  nav ul{display:flex;gap:28px;list-style:none;}
-  nav ul a{color:var(--muted);text-decoration:none;font-weight:700;font-size:0.9rem;transition:color 0.2s;}
-  nav ul a:hover{color:var(--purple);}
-  .nav-cta{background:linear-gradient(135deg,var(--blue),var(--purple));color:white;border:none;
-    padding:10px 24px;border-radius:100px;font-family:'Nunito',sans-serif;font-weight:800;
-    font-size:0.9rem;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 15px rgba(77,150,255,0.35);}
-  .nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(77,150,255,0.45);}
-
-  /* ── HERO ── */
-  .hero{padding:80px 48px 60px;text-align:center;position:relative;overflow:hidden;}
-  .hero-bg{position:absolute;inset:0;z-index:0;
-    background:radial-gradient(circle at 20% 50%,rgba(77,150,255,0.12) 0%,transparent 50%),
-               radial-gradient(circle at 80% 20%,rgba(132,94,247,0.12) 0%,transparent 50%),
-               radial-gradient(circle at 60% 80%,rgba(255,71,87,0.08) 0%,transparent 50%);}
-  .shape{position:absolute;border-radius:50%;animation:floatAnim linear infinite;opacity:0.15;}
-  .s1{width:80px;height:80px;background:var(--blue);top:10%;left:8%;animation-duration:8s;}
-  .s2{width:50px;height:50px;background:var(--yellow);top:20%;right:12%;animation-duration:6s;animation-delay:-2s;}
-  .s3{width:100px;height:100px;background:var(--purple);bottom:10%;left:15%;animation-duration:10s;animation-delay:-4s;border-radius:30% 70% 70% 30%/30% 30% 70% 70%;}
-  .s4{width:60px;height:60px;background:var(--pink);bottom:20%;right:8%;animation-duration:7s;animation-delay:-1s;}
-  .s5{width:40px;height:40px;background:var(--green);top:50%;left:5%;animation-duration:9s;animation-delay:-3s;}
-  @keyframes floatAnim{0%,100%{transform:translateY(0) rotate(0deg);}33%{transform:translateY(-20px) rotate(120deg);}66%{transform:translateY(10px) rotate(240deg);}}
-  .hero-inner{position:relative;z-index:1;}
-  .hero-badge{display:inline-flex;align-items:center;gap:8px;background:white;
-    border:2px solid var(--border);padding:8px 20px;border-radius:100px;
-    font-size:0.8rem;font-weight:800;color:var(--purple);margin-bottom:28px;
-    box-shadow:0 4px 15px rgba(0,0,0,0.08);animation:slideUp 0.5s ease both;}
-  .dot{width:8px;height:8px;background:var(--green);border-radius:50%;animation:blink 1.5s infinite;}
-  @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
-  h1{font-family:'Baloo 2',cursive;font-size:clamp(2.4rem,6vw,4.5rem);font-weight:800;
-    line-height:1.1;margin-bottom:20px;animation:slideUp 0.6s 0.1s ease both;}
-  .grad1{background:linear-gradient(135deg,var(--blue),var(--purple));
-    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-  .grad2{background:linear-gradient(135deg,var(--orange),var(--red));
-    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-  .hero-sub{font-size:1.05rem;color:var(--muted);max-width:480px;margin:0 auto 36px;
-    line-height:1.7;font-weight:600;animation:slideUp 0.6s 0.2s ease both;}
-  .hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;animation:slideUp 0.6s 0.3s ease both;}
-  .btn-main{background:linear-gradient(135deg,var(--blue),var(--purple));color:white;border:none;
-    padding:14px 32px;border-radius:100px;font-family:'Nunito',sans-serif;font-weight:800;
-    font-size:1rem;cursor:pointer;box-shadow:0 6px 20px rgba(132,94,247,0.35);transition:all 0.2s;}
-  .btn-main:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(132,94,247,0.45);}
-  .btn-outline{background:white;color:var(--purple);border:2px solid var(--purple);
-    padding:14px 32px;border-radius:100px;font-family:'Nunito',sans-serif;font-weight:800;
-    font-size:1rem;cursor:pointer;transition:all 0.2s;}
-  .btn-outline:hover{background:var(--purple);color:white;transform:translateY(-3px);}
-  .btn-credit{background:linear-gradient(135deg,#845EF7,#4D96FF);color:white;border:none;
-    padding:14px 32px;border-radius:100px;font-family:'Nunito',sans-serif;font-weight:800;
-    font-size:1rem;cursor:pointer;box-shadow:0 6px 20px rgba(132,94,247,0.4);transition:all 0.2s;}
-  .btn-credit:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(132,94,247,0.5);}
-
-  /* Credit/Spin Popup */
-  .credit-popup{display:none;position:fixed;inset:0;z-index:500;
-    background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);align-items:center;justify-content:center;}
-  .credit-popup.show{display:flex;}
-  .credit-box{background:white;border-radius:28px;padding:36px;max-width:400px;width:92%;
-    box-shadow:0 24px 60px rgba(132,94,247,0.2);animation:popIn 0.35s ease;text-align:center;}
-  .credit-box-title{font-family:'Baloo 2',cursive;font-size:1.4rem;font-weight:800;margin-bottom:6px;}
-  .credit-box-sub{color:var(--muted);font-size:0.85rem;margin-bottom:22px;}
-  .credit-lookup-row{display:flex;gap:8px;margin-bottom:14px;}
-  .credit-lookup-input{flex:1;padding:12px 16px;border:2px solid var(--border);border-radius:14px;
-    font-family:'Nunito',sans-serif;font-size:0.9rem;outline:none;transition:border 0.2s;background:var(--bg);}
-  .credit-lookup-input:focus{border-color:var(--purple);}
-  .credit-lookup-btn{background:linear-gradient(135deg,#845EF7,#4D96FF);color:white;border:none;
-    padding:12px 20px;border-radius:14px;font-family:'Nunito',sans-serif;font-weight:800;
-    font-size:0.85rem;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
-  .credit-lookup-btn:hover{opacity:0.88;}
-  .credit-result{display:none;margin-top:4px;}
-  .credit-cards{display:flex;gap:14px;margin-top:16px;}
-  .credit-card{flex:1;border-radius:20px;padding:22px 16px;text-align:center;
-    border:2px solid var(--border);transition:all 0.2s;animation:popIn 0.3s ease;}
-  .credit-card:hover{transform:translateY(-3px);}
-  .credit-card.c-credits{background:linear-gradient(135deg,rgba(132,94,247,0.08),rgba(77,150,255,0.08));border-color:rgba(132,94,247,0.2);}
-  .credit-card.c-spins{background:linear-gradient(135deg,rgba(255,180,0,0.08),rgba(255,107,53,0.08));border-color:rgba(255,180,0,0.25);}
-  .cc-icon{font-size:2.2rem;margin-bottom:8px;}
-  .cc-val{font-family:'Baloo 2',cursive;font-size:2rem;font-weight:800;color:#6c6ef7;line-height:1;}
-  .credit-card.c-spins .cc-val{color:#e07800;}
-  .cc-lbl{font-size:0.78rem;font-weight:800;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:0.08em;}
-  .credit-err{color:var(--red);font-size:0.85rem;font-weight:700;margin-top:8px;display:none;}
-  .credit-close{margin-top:20px;background:var(--bg);border:2px solid var(--border);
-    padding:10px 28px;border-radius:100px;font-family:'Nunito',sans-serif;font-weight:800;
-    font-size:0.9rem;cursor:pointer;transition:all 0.2s;}
-  .credit-close:hover{background:var(--border);}
-
-  /* ── STATS — ตัวเลขสีม่วงอมฟ้า ── */
-  .stats-bar{display:flex;justify-content:center;background:white;border-radius:20px;
-    box-shadow:0 4px 30px rgba(0,0,0,0.08);max-width:700px;margin:56px auto 0;
-    overflow:hidden;border:2px solid var(--border);animation:slideUp 0.6s 0.4s ease both;}
-  .stat-item{flex:1;padding:24px 16px;text-align:center;border-right:2px solid var(--border);transition:background 0.2s;}
-  .stat-item:last-child{border-right:none;}
-  .stat-item:hover{background:var(--bg);}
-  .stat-num{font-family:'Baloo 2',cursive;font-size:1.8rem;font-weight:800;color:#6c6ef7;line-height:1;}
-  .stat-label{font-size:0.76rem;color:var(--muted);font-weight:700;margin-top:4px;}
-
-  /* ── SECTION WRAP + SEARCH ── */
-  .section-wrap{padding:72px 48px 0;max-width:1200px;margin:0 auto;}
-  .section-header{text-align:center;margin-bottom:36px;}
-  .section-tag{display:inline-block;background:linear-gradient(135deg,rgba(77,150,255,0.12),rgba(132,94,247,0.12));
-    color:var(--purple);font-weight:800;font-size:0.78rem;letter-spacing:0.12em;text-transform:uppercase;
-    padding:6px 16px;border-radius:100px;margin-bottom:12px;}
-  .section-title{font-family:'Baloo 2',cursive;font-size:clamp(1.8rem,3vw,2.5rem);font-weight:800;}
-
-  /* Search Bar */
-  .search-wrap{max-width:520px;margin:0 auto 28px;}
-  .search-bar{display:flex;background:white;border:2px solid var(--border);
-    border-radius:100px;overflow:hidden;transition:border-color 0.2s,box-shadow 0.2s;
-    box-shadow:0 4px 16px rgba(0,0,0,0.06);}
-  .search-bar:focus-within{border-color:var(--purple);box-shadow:0 4px 20px rgba(132,94,247,0.2);}
-  .search-bar input{flex:1;border:none;outline:none;padding:13px 20px;
-    font-family:'Nunito',sans-serif;font-size:0.95rem;color:var(--text);background:transparent;}
-  .search-bar input::placeholder{color:var(--muted);}
-  .search-bar button{background:linear-gradient(135deg,var(--blue),var(--purple));border:none;
-    padding:10px 22px;cursor:pointer;display:flex;align-items:center;transition:opacity 0.2s;}
-  .search-bar button:hover{opacity:0.85;}
-  .no-result{text-align:center;padding:52px 20px;color:var(--muted);display:none;}
-  .no-result .ni{font-size:2.5rem;margin-bottom:10px;}
-
-  /* Category Buttons */
-  .cat-grid{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:0;}
-  .cat-btn{padding:10px 22px;border-radius:100px;font-family:'Nunito',sans-serif;font-weight:800;
-    font-size:0.9rem;cursor:pointer;border:2px solid var(--border);background:white;
-    color:var(--muted);transition:all 0.2s;}
-  .cat-btn:hover,.cat-btn.active{border-color:var(--purple);color:var(--purple);
-    background:rgba(132,94,247,0.06);transform:translateY(-2px);box-shadow:0 4px 15px rgba(132,94,247,0.15);}
-
-  /* ── PRODUCTS ── */
-  .products{padding:44px 48px 80px;max-width:1200px;margin:0 auto;}
-  .product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;}
-  .product-card{background:white;border-radius:20px;border:2px solid var(--border);
-    overflow:hidden;transition:all 0.25s;position:relative;}
-  .product-card:hover{transform:translateY(-6px);box-shadow:0 20px 40px rgba(0,0,0,0.1);border-color:transparent;}
-  .card-banner{height:130px;position:relative;display:flex;align-items:center;
-    justify-content:center;overflow:hidden;}
-  .card-banner::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,0.06);}
-  .card-banner img{width:80px;height:80px;object-fit:contain;position:relative;z-index:1;
-    filter:drop-shadow(0 8px 16px rgba(0,0,0,0.25));transition:transform 0.3s;}
-  .product-card:hover .card-banner img{transform:scale(1.12) translateY(-4px);}
-  .card-badge{position:absolute;top:12px;left:12px;z-index:2;padding:4px 12px;
-    border-radius:100px;font-size:0.7rem;font-weight:800;color:white;}
-  .hot{background:var(--red);}.new{background:var(--green);}.free-b{background:var(--orange);}.sale{background:var(--purple);}
-  .card-body{padding:20px;}
-  .card-tag{font-size:0.72rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
-  .card-name{font-family:'Baloo 2',cursive;font-size:1.15rem;font-weight:700;margin-bottom:8px;line-height:1.2;}
-  .card-desc{font-size:0.83rem;color:var(--muted);line-height:1.6;margin-bottom:14px;}
-  .card-features{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
-  .ftag{padding:3px 10px;border-radius:100px;font-size:0.72rem;font-weight:700;
-    background:var(--bg);color:var(--muted);border:1px solid var(--border);}
-  .card-footer{display:flex;align-items:center;justify-content:space-between;
-    padding-top:14px;border-top:2px solid var(--border);}
-  .card-price{font-family:'Baloo 2',cursive;font-size:1.4rem;font-weight:800;}
-  .old-p{font-size:0.83rem;color:var(--muted);text-decoration:line-through;margin-right:4px;font-family:'Nunito',sans-serif;}
-  .price-free{color:var(--green);}
-  .price-paid{color:var(--purple);}
-  .buy-btn{padding:10px 20px;border-radius:100px;font-family:'Nunito',sans-serif;font-weight:800;
-    font-size:0.85rem;cursor:pointer;border:none;transition:all 0.2s;}
-  .btn-p{background:linear-gradient(135deg,var(--blue),var(--purple));color:white;box-shadow:0 4px 12px rgba(132,94,247,0.3);}
-  .btn-p:hover{transform:scale(1.05);box-shadow:0 6px 20px rgba(132,94,247,0.4);}
-  .btn-g{background:linear-gradient(135deg,#6BCB77,#4CAF50);color:white;box-shadow:0 4px 12px rgba(107,203,119,0.3);}
-  .btn-g:hover{transform:scale(1.05);}
-
-  /* ── SCRIPT MANAGER ── */
-  .script-section{padding:72px 48px 80px;background:white;border-top:2px solid var(--border);}
-  .script-inner{max-width:900px;margin:0 auto;}
-  .script-form{background:var(--bg);border-radius:20px;border:2px solid var(--border);padding:28px;margin-top:40px;}
-  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
-  .form-group{display:flex;flex-direction:column;gap:6px;}
-  .form-group.full{grid-column:1/-1;}
-  .form-label{font-size:0.76rem;font-weight:800;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;}
-  .form-input{padding:11px 16px;border:2px solid var(--border);border-radius:12px;
-    font-family:'Nunito',sans-serif;font-size:0.9rem;outline:none;transition:border 0.2s;background:white;color:var(--text);}
-  .form-input:focus{border-color:var(--purple);}
-  .form-textarea{padding:12px 16px;border:2px solid var(--border);border-radius:12px;
-    font-family:'Courier New',monospace;font-size:0.8rem;outline:none;transition:border 0.2s;
-    background:#1a1a2e;color:#e2e4f0;resize:vertical;min-height:100px;line-height:1.6;}
-  .form-textarea:focus{border-color:var(--purple);}
-  .form-textarea::placeholder{color:#5a5f7a;}
-  .add-script-btn{background:linear-gradient(135deg,var(--blue),var(--purple));color:white;border:none;
-    padding:12px 28px;border-radius:100px;font-family:'Nunito',sans-serif;font-weight:800;
-    font-size:0.9rem;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 15px rgba(132,94,247,0.3);margin-top:6px;}
-  .add-script-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(132,94,247,0.4);}
-  /* Script cards */
-  .script-list{display:flex;flex-direction:column;gap:12px;margin-top:28px;}
-  .script-card{background:var(--bg);border-radius:16px;border:2px solid var(--border);
-    padding:18px 20px;transition:all 0.2s;animation:popIn 0.3s ease;}
-  .script-card:hover{border-color:var(--purple);box-shadow:0 6px 20px rgba(132,94,247,0.08);}
-  .sc-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
-  .sc-name{font-family:'Baloo 2',cursive;font-weight:800;font-size:1rem;flex:1;}
-  .sc-game{font-size:0.72rem;color:white;background:var(--purple);padding:3px 10px;border-radius:100px;font-weight:700;}
-  .sc-price{font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;color:#6c6ef7;}
-  .sc-cat{font-size:0.72rem;color:var(--muted);font-weight:700;margin-bottom:8px;}
-  .sc-code{background:#1a1a2e;border-radius:10px;padding:12px 14px;
-    font-family:'Courier New',monospace;font-size:0.75rem;color:#e2e4f0;
-    white-space:pre-wrap;word-break:break-all;max-height:72px;overflow:hidden;
-    transition:max-height 0.3s;line-height:1.6;}
-  .sc-code.open{max-height:400px;}
-  .sc-actions{display:flex;gap:8px;margin-top:8px;align-items:center;flex-wrap:wrap;}
-  .sc-btn{padding:5px 14px;border-radius:100px;font-size:0.72rem;font-weight:800;
-    cursor:pointer;border:none;font-family:'Nunito',sans-serif;transition:all 0.2s;}
-  .sc-copy{background:rgba(132,94,247,0.1);color:var(--purple);border:1px solid rgba(132,94,247,0.25);}
-  .sc-copy:hover{background:var(--purple);color:white;}
-  .sc-expand{background:rgba(0,0,0,0.05);color:var(--muted);border:1px solid var(--border);}
-  .sc-expand:hover{background:var(--border);}
-  .sc-del{margin-left:auto;background:rgba(255,71,87,0.08);color:var(--red);
-    border:1px solid rgba(255,71,87,0.2);padding:5px 14px;border-radius:100px;
-    font-size:0.72rem;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:all 0.2s;}
-  .sc-del:hover{background:var(--red);color:white;}
-  .sc-empty{text-align:center;padding:40px;color:var(--muted);}
-  .sc-empty .sc-ei{font-size:2.5rem;margin-bottom:10px;}
-
-  /* ── HOW TO ── */
-  .howto{background:white;padding:80px 48px;border-top:2px solid var(--border);border-bottom:2px solid var(--border);}
-  .howto-inner{max-width:900px;margin:0 auto;}
-  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:28px;margin-top:44px;}
-  .step{text-align:center;padding:32px 20px;border-radius:20px;background:var(--bg);
-    border:2px solid var(--border);transition:all 0.2s;}
-  .step:hover{transform:translateY(-4px);border-color:var(--purple);box-shadow:0 12px 30px rgba(132,94,247,0.1);}
-  .step-num{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-    font-family:'Baloo 2',cursive;font-size:1.4rem;font-weight:800;color:white;margin:0 auto 16px;}
-  .step-title{font-weight:800;font-size:1rem;margin-bottom:8px;}
-  .step-desc{font-size:0.83rem;color:var(--muted);line-height:1.6;}
-
-  /* ── CONTACT + DISCORD INPUT ── */
-  .contact-section{padding:80px 48px;text-align:center;
-    background:linear-gradient(135deg,rgba(77,150,255,0.06),rgba(132,94,247,0.08));}
-  .contact-card{background:white;border-radius:24px;padding:48px;border:2px solid var(--border);
-    box-shadow:0 8px 40px rgba(0,0,0,0.08);max-width:540px;margin:36px auto 0;}
-  .contact-icon{font-size:3rem;margin-bottom:14px;}
-  .contact-title{font-family:'Baloo 2',cursive;font-size:1.5rem;font-weight:800;margin-bottom:8px;}
-  .contact-sub{color:var(--muted);font-size:0.9rem;line-height:1.6;margin-bottom:24px;}
-  .contact-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
-  .cbtn{display:flex;align-items:center;gap:8px;padding:12px 24px;border-radius:100px;
-    font-family:'Nunito',sans-serif;font-weight:800;font-size:0.9rem;cursor:pointer;border:none;
-    transition:all 0.2s;text-decoration:none;}
-  .discord{background:#5865F2;color:white;box-shadow:0 4px 15px rgba(88,101,242,0.35);}
-  .discord:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(88,101,242,0.45);}
-  /* Discord link input */
-  .dc-input-wrap{margin-top:20px;text-align:left;width:100%;}
-  .dc-label{display:block;font-size:0.78rem;font-weight:800;color:var(--muted);margin-bottom:8px;}
-  .dc-row{display:flex;gap:8px;}
-  .dc-field{flex:1;padding:11px 16px;border:2px solid var(--border);border-radius:12px;
-    font-family:'Nunito',sans-serif;font-size:0.9rem;outline:none;transition:border 0.2s;
-    background:var(--bg);color:var(--text);}
-  .dc-field:focus{border-color:#5865F2;}
-  .dc-save{background:#5865F2;color:white;border:none;padding:11px 20px;border-radius:12px;
-    font-family:'Nunito',sans-serif;font-weight:800;font-size:0.85rem;cursor:pointer;
-    transition:all 0.2s;white-space:nowrap;}
-  .dc-save:hover{background:#4752c4;transform:translateY(-1px);}
-  .dc-status{display:none;margin-top:8px;padding:9px 14px;border-radius:10px;font-size:0.82rem;font-weight:700;}
-
-  /* ── FOOTER ── */
-  footer{padding:36px 48px;background:var(--text);color:rgba(255,255,255,0.55);
-    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
-  .footer-logo{font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:800;
-    background:linear-gradient(135deg,var(--blue),var(--purple));
-    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-  footer p{font-size:0.82rem;}
-
-  /* ── MODAL ── */
-  .modal-overlay{display:none;position:fixed;inset:0;z-index:200;
-    background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);align-items:center;justify-content:center;}
-  .modal-overlay.show{display:flex;}
-  .modal{background:white;border-radius:24px;padding:40px;max-width:420px;width:90%;
-    text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);animation:popIn 0.3s ease;}
-  .modal-icon{font-size:2.8rem;margin-bottom:14px;}
-  .modal h3{font-family:'Baloo 2',cursive;font-size:1.4rem;font-weight:800;margin-bottom:8px;}
-  .modal p{color:var(--muted);font-size:0.9rem;line-height:1.6;margin-bottom:24px;}
-  .modal-close{background:var(--bg);border:2px solid var(--border);padding:10px 28px;
-    border-radius:100px;font-family:'Nunito',sans-serif;font-weight:800;cursor:pointer;
-    font-size:0.9rem;transition:all 0.2s;margin-top:12px;}
-  .modal-close:hover{background:var(--purple);color:white;border-color:var(--purple);}
-
-  /* ── ANIMATIONS ── */
-  @keyframes popIn{from{opacity:0;transform:scale(0.85);}to{opacity:1;transform:scale(1);}}
-  @keyframes slideUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
-
-  /* ── TOAST ── */
-  .toast{position:fixed;bottom:24px;right:24px;background:#6c6ef7;color:white;
-    padding:10px 22px;border-radius:100px;font-weight:800;font-size:0.85rem;
-    z-index:999;animation:slideUp 0.3s ease;pointer-events:none;}
-
-  /* ── RESPONSIVE ── */
-  @media(max-width:768px){
-    nav{padding:14px 20px;}nav ul{display:none;}
-    .hero,.section-wrap,.products,.howto,.contact-section,.script-section{padding-left:20px;padding-right:20px;}
-    footer{padding:28px 20px;}
-    .form-row{grid-template-columns:1fr;}
-
-    /* CardNav — mobile menu (ported from CardNav.jsx) */
-    .card-nav-container{display:block;position:sticky;top:0;z-index:99;width:100%;}
-    .card-nav{position:relative;background:#fff;border-radius:0 0 18px 18px;
-      box-shadow:0 8px 24px rgba(0,0,0,0.1);}
-    .card-nav-top{height:56px;display:flex;align-items:center;justify-content:space-between;
-      padding:0 16px;position:relative;z-index:2;}
-    .hamburger-menu{width:24px;height:18px;display:flex;flex-direction:column;
-      justify-content:space-between;cursor:pointer;}
-    .hamburger-line{height:2.5px;width:100%;background:var(--text);border-radius:2px;
-      transition:transform 0.3s ease;}
-    .hamburger-menu.open .hamburger-line:first-child{transform:translateY(7.5px) rotate(45deg);}
-    .hamburger-menu.open .hamburger-line:last-child{transform:translateY(-7.5px) rotate(-45deg);}
-    .card-nav .logo-container .logo{font-family:'Baloo 2',cursive;font-weight:800;font-size:1.05rem;
-      background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;background-clip:text;}
-    .card-nav .logo-container .logo span{background:linear-gradient(135deg,var(--red),var(--orange));
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-    .card-nav-cta-button{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;
-      border:none;padding:8px 16px;border-radius:100px;font-family:'Nunito',sans-serif;
-      font-weight:800;font-size:0.76rem;cursor:pointer;white-space:nowrap;}
-    .card-nav-content{max-height:0;overflow:hidden;display:flex;flex-direction:column;gap:10px;
-      padding:0 16px;transition:max-height 0.4s cubic-bezier(0.83,0,0.17,1),padding 0.4s ease;}
-    .card-nav.open .card-nav-content{max-height:640px;padding:8px 16px 16px;}
-    .nav-card{border-radius:14px;padding:16px;opacity:0;transform:translateY(20px);
-      transition:opacity 0.35s ease,transform 0.35s ease;}
-    .card-nav.open .nav-card{opacity:1;transform:translateY(0);}
-    .card-nav.open .nav-card:nth-child(1){transition-delay:0.05s;}
-    .card-nav.open .nav-card:nth-child(2){transition-delay:0.12s;}
-    .card-nav.open .nav-card:nth-child(3){transition-delay:0.19s;}
-    .nav-card-label{font-family:'Baloo 2',cursive;font-weight:800;font-size:1rem;margin-bottom:10px;}
-    .nav-card-links{display:flex;flex-direction:column;gap:6px;}
-    .nav-card-link{display:flex;align-items:center;gap:6px;color:inherit;text-decoration:none;
-      font-weight:700;font-size:0.88rem;opacity:0.95;}
-    .nav-card-link:hover{opacity:1;text-decoration:underline;}
-  }
-  @media(min-width:769px){.card-nav-container{display:none;}}
-  /* ── FOLDER (ported from React Folder component) ── */
-  .folder-demo-wrap{margin:36px auto 0;display:flex;flex-direction:column;align-items:center;gap:10px;
-    animation:slideUp 0.6s 0.45s ease both;}
-  .folder-demo-label{font-size:0.8rem;font-weight:800;color:var(--muted);}
-  .folder-scene{transform:scale(1.1);padding:20px 0 34px;}
-  .folder{position:relative;width:100px;height:76px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
-  .folder:focus-visible{outline:3px solid var(--purple);outline-offset:6px;border-radius:10px;}
-  .folder__back{position:absolute;inset:0;top:6px;background:var(--folder-back-color,var(--purple));
-    border-radius:4px 10px 10px 10px;box-shadow:0 10px 24px rgba(0,0,0,0.18);}
-  .folder__back::before{content:'';position:absolute;top:-10px;left:0;width:44%;height:14px;
-    background:var(--folder-back-color,var(--purple));border-radius:8px 8px 0 0;}
-  .paper{position:absolute;left:10%;right:10%;bottom:4px;height:64%;border-radius:8px;
-    box-shadow:0 3px 10px rgba(0,0,0,0.18);display:flex;align-items:center;justify-content:center;
-    font-size:1.3rem;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);}
-  .paper-1{background:var(--paper-1,#eee);z-index:1;}
-  .paper-2{background:var(--paper-2,#f5f5f5);z-index:2;}
-  .paper-3{background:var(--paper-3,#fff);z-index:3;}
-  .folder.open .paper-1{transform:translate(calc(-16px + var(--magnet-x,0px)),calc(-20px + var(--magnet-y,0px))) rotate(-9deg);}
-  .folder.open .paper-2{transform:translate(var(--magnet-x,0px),calc(-30px + var(--magnet-y,0px))) rotate(2deg);}
-  .folder.open .paper-3{transform:translate(calc(16px + var(--magnet-x,0px)),calc(-20px + var(--magnet-y,0px))) rotate(9deg);}
-  .folder__front{position:absolute;bottom:0;left:0;width:100%;height:62%;
-    background:var(--folder-color,var(--purple));border-radius:4px 10px 10px 10px;
-    transform-origin:bottom;transition:transform 0.3s ease;z-index:4;box-shadow:0 6px 16px rgba(0,0,0,0.15);}
-  .folder__front.right{clip-path:polygon(0 0,100% 0,100% 100%,0 100%);opacity:0.18;background:#000;
-    border-radius:4px 10px 10px 10px;}
-  .folder.open .folder__front{transform:perspective(300px) rotateX(38deg) translateY(3px);}
-  .folder.open .folder__front.right{transform:perspective(300px) rotateX(38deg) translateY(3px);}
-
-  /* ── DOCK (ported from React Dock component) ── */
-  .dock-outer{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:150;
-    scrollbar-width:none;}
-  .dock-panel{display:flex;align-items:flex-end;gap:10px;background:rgba(255,255,255,0.78);
-    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:2px solid var(--border);
-    border-radius:26px;padding:10px 16px;box-shadow:0 14px 40px rgba(0,0,0,0.18);}
-  .dock-item{position:relative;width:50px;height:50px;border-radius:14px;cursor:pointer;
-    background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;
-    justify-content:center;transition:width 0.15s ease,height 0.15s ease,box-shadow 0.15s ease;
-    box-shadow:0 4px 12px rgba(132,94,247,0.3);flex-shrink:0;}
-  .dock-item:hover,.dock-item:focus-visible{box-shadow:0 8px 22px rgba(132,94,247,0.45);outline:none;}
-  .dock-icon{font-size:1.35rem;pointer-events:none;}
-  .dock-label{position:absolute;bottom:calc(100% + 12px);left:50%;transform:translateX(-50%);
-    background:var(--text);color:#fff;padding:5px 12px;border-radius:9px;font-size:0.72rem;
-    font-weight:800;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity 0.15s ease;}
-  .dock-item.hovered .dock-label{opacity:1;}
-  @media(max-width:768px){.dock-outer{display:none;}}
-
-  /* ── FUSE BUTTON (ported from FuseButton.jsx — used for "ลบ" with undo) ── */
-  @property --pct{syntax:'<percentage>';inherits:false;initial-value:100%;}
-  .fuse-button{position:relative;display:inline-grid;isolation:isolate;vertical-align:middle;}
-  .fuse-button__face{grid-area:1/1;display:inline-flex;align-items:center;justify-content:center;
-    gap:6px;height:34px;padding:0 14px;border-radius:100px;font-family:'Nunito',sans-serif;
-    font-weight:800;font-size:0.8rem;border:none;cursor:pointer;white-space:nowrap;
-    background:var(--fb-bg,rgba(255,71,87,0.08));color:var(--fb-ink,var(--red));
-    opacity:0;visibility:hidden;pointer-events:none;transition:opacity 0.2s ease;}
-  .fuse-button[data-phase="idle"] .fuse-button__idle,
-  .fuse-button[data-phase="armed"] .fuse-button__undo,
-  .fuse-button[data-phase="settled"] .fuse-button__settled{opacity:1;visibility:visible;pointer-events:auto;}
-  .fuse-button__idle:hover{background:var(--red);color:white;}
-  .fuse-button__undo{background:rgba(0,0,0,0.06);color:var(--text);}
-  .fuse-button__undo:hover{background:rgba(0,0,0,0.1);}
-  .fuse-button__settled{background:rgba(107,203,119,0.12);color:#3a9b45;}
-  .fuse-button__rim{position:absolute;inset:-3px;border-radius:26px;pointer-events:none;
-    opacity:0;transition:opacity 0.15s ease;
-    background:conic-gradient(var(--fb-fuse,var(--red)) var(--pct,100%),transparent 0);
-    -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 3px));
-    mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 3px));}
-  .fuse-button[data-phase="armed"] .fuse-button__rim{opacity:1;}
-
-  /* ── BEAMS (ported from Beams.jsx — WebGL background, three.js) ── */
-  .beams-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;
-    pointer-events:none;opacity:0.5;display:block;}
-
-  /* ── GLASS ICONS (ported from GlassIcons.jsx — used for the category filter) ── */
-  .icon-btns{display:flex;flex-wrap:wrap;gap:22px;justify-content:center;padding:8px 0 4px;}
-  .icon-btn{position:relative;background:transparent;border:none;cursor:pointer;
-    width:64px;height:64px;border-radius:20px;-webkit-tap-highlight-color:transparent;}
-  .icon-btn__back{position:absolute;inset:0;border-radius:20px;transform:rotate(12deg);
-    transform-origin:100% 100%;transition:transform 0.4s cubic-bezier(0.83,0,0.17,1),opacity 0.4s;
-    box-shadow:0 8px 20px rgba(0,0,0,0.18);}
-  .icon-btn:hover .icon-btn__back,.icon-btn.active .icon-btn__back{transform:rotate(20deg) scale(1.08);}
-  .icon-btn__front{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-    border-radius:20px;background:rgba(255,255,255,0.35);backdrop-filter:blur(3px);
-    -webkit-backdrop-filter:blur(3px);border:1px solid rgba(255,255,255,0.5);
-    box-shadow:0 2px 6px rgba(0,0,0,0.08) inset;transition:transform 0.4s cubic-bezier(0.83,0,0.17,1);}
-  .icon-btn:hover .icon-btn__front{transform:scale(0.94) translateY(-2px);}
-  .icon-btn.active .icon-btn__front{background:rgba(255,255,255,0.55);}
-  .icon-btn__icon{font-size:1.5rem;filter:drop-shadow(0 2px 3px rgba(0,0,0,0.25));}
-  .icon-btn__label{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);
-    font-size:0.72rem;font-weight:800;color:var(--muted);white-space:nowrap;transition:color 0.2s;}
-  .icon-btn:hover .icon-btn__label,.icon-btn.active .icon-btn__label{color:var(--purple);}
-
-  .icon-btn.cat-btn{padding:0;border:none;background:none;transform:none;box-shadow:none;}
-  .icon-btn.cat-btn:hover,.icon-btn.cat-btn.active{border:none;background:none;transform:none;box-shadow:none;}
-
-  /* ── HAMBURGER + SIDEBAR ── */
-  .hamburger{background:none;border:none;cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px;z-index:201;}
-  .hamburger span{display:block;width:24px;height:2.5px;background:var(--text);border-radius:2px;transition:all 0.3s;}
-  .hamburger.open span:nth-child(1){transform:translateY(7.5px) rotate(45deg);}
-  .hamburger.open span:nth-child(2){opacity:0;}
-  .hamburger.open span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg);}
-
-  .sidebar-overlay{display:none;position:fixed;inset:0;z-index:199;background:rgba(0,0,0,0.4);backdrop-filter:blur(2px);}
-  .sidebar-overlay.show{display:block;}
-  .sidebar{position:fixed;left:0;top:0;bottom:0;width:320px;max-width:90vw;z-index:200;
-    background:white;box-shadow:8px 0 40px rgba(0,0,0,0.15);
-    transform:translateX(-100%);transition:transform 0.32s cubic-bezier(0.4,0,0.2,1);
-    overflow-y:auto;display:flex;flex-direction:column;}
-  .sidebar.open{transform:translateX(0);}
-
-  /* Sidebar header */
-  .sb-header{padding:20px 20px 16px;border-bottom:2px solid var(--border);
-    background:linear-gradient(135deg,rgba(77,150,255,0.06),rgba(132,94,247,0.08));
-    display:flex;align-items:center;justify-content:space-between;}
-  .sb-logo{font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:800;
-    background:linear-gradient(135deg,var(--blue),var(--purple));
-    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-  .sb-close{background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--muted);padding:4px;}
-  .sb-close:hover{color:var(--text);}
-
-  /* Register / Login panel */
-  .sb-auth{padding:20px;}
-  .sb-auth-title{font-family:'Baloo 2',cursive;font-size:1.05rem;font-weight:800;margin-bottom:14px;}
-  /* Auth tabs */
-  .auth-tabs{display:flex;background:var(--bg);border-radius:14px;padding:4px;gap:4px;margin-bottom:20px;border:2px solid var(--border);}
-  .auth-tab{flex:1;padding:10px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;
-    font-weight:800;font-size:0.88rem;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.2s;}
-  .auth-tab.active{background:white;color:var(--purple);box-shadow:0 2px 8px rgba(0,0,0,0.08);}
-  .auth-icon{font-size:2.4rem;text-align:center;margin-bottom:8px;}
-  .auth-desc{font-size:0.83rem;color:var(--muted);text-align:center;line-height:1.6;margin-bottom:18px;}
-  .auth-label{display:block;font-size:0.75rem;font-weight:800;color:var(--muted);text-transform:uppercase;
-    letter-spacing:0.08em;margin-bottom:6px;}
-  .auth-switch{text-align:center;font-size:0.8rem;color:var(--muted);margin-top:14px;font-weight:600;}
-  .auth-switch span{color:var(--purple);font-weight:800;cursor:pointer;text-decoration:underline;}
-  .pw-wrap{position:relative;margin-bottom:0;}
-  .pw-wrap .sb-input{width:100%;}
-  .pw-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);
-    background:none;border:none;cursor:pointer;font-size:1rem;padding:4px;opacity:0.6;}
-  .pw-eye:hover{opacity:1;}
-  .sb-input{width:100%;padding:11px 16px;border:2px solid var(--border);border-radius:12px;
-    font-family:'Nunito',sans-serif;font-size:0.9rem;outline:none;transition:border 0.2s;
-    background:var(--bg);color:var(--text);margin-bottom:10px;}
-  .sb-input:focus{border-color:var(--purple);}
-  .sb-btn{width:100%;padding:12px;border:none;border-radius:12px;font-family:'Nunito',sans-serif;
-    font-weight:800;font-size:0.95rem;cursor:pointer;transition:all 0.2s;}
-  .sb-btn-main{background:linear-gradient(135deg,var(--blue),var(--purple));color:white;
-    box-shadow:0 4px 15px rgba(132,94,247,0.3);}
-  .sb-btn-main:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(132,94,247,0.4);}
-  .sb-btn-main:disabled{opacity:0.6;transform:none;cursor:not-allowed;}
-  .sb-err{font-size:0.8rem;color:var(--red);font-weight:700;margin-top:6px;display:none;}
-
-  /* Profile panel */
-  .sb-profile{padding:20px;display:none;}
-  .sb-avatar-wrap{display:flex;align-items:center;gap:14px;margin-bottom:20px;
-    background:var(--bg);border-radius:16px;padding:14px;border:2px solid var(--border);}
-  .sb-avatar{width:70px;height:70px;border-radius:50%;object-fit:cover;
-    border:3px solid var(--purple);background:#ddd;}
-  .sb-avatar-init{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));
-    color:white;font-family:'Baloo 2',cursive;font-size:1.5rem;font-weight:800;
-    display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-  .sb-uname{font-family:'Baloo 2',cursive;font-size:1.15rem;font-weight:800;}
-  .sb-uid{font-size:0.78rem;color:var(--muted);font-weight:700;margin-top:2px;}
-  .sb-logout{font-size:0.75rem;color:var(--red);font-weight:700;cursor:pointer;
-    background:none;border:none;padding:0;margin-top:4px;text-decoration:underline;}
-
-  /* Stats row */
-  .sb-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
-  .sb-stat{background:var(--bg);border:2px solid var(--border);border-radius:14px;
-    padding:14px;text-align:center;}
-  .sb-stat-val{font-family:'Baloo 2',cursive;font-size:1.4rem;font-weight:800;color:#6c6ef7;}
-  .sb-stat-lbl{font-size:0.72rem;color:var(--muted);font-weight:700;margin-top:2px;}
-
-  /* Gift box section */
-  .sb-section-title{font-family:'Baloo 2',cursive;font-size:0.95rem;font-weight:800;
-    margin-bottom:10px;display:flex;align-items:center;gap:6px;}
-  .sb-gift{background:linear-gradient(135deg,rgba(255,215,0,0.12),rgba(255,107,53,0.1));
-    border:2px solid rgba(255,215,0,0.4);border-radius:14px;padding:14px;margin-bottom:16px;text-align:center;}
-  .sb-gift-icon{font-size:2rem;margin-bottom:6px;}
-  .sb-gift-text{font-size:0.82rem;color:var(--muted);font-weight:700;}
-  .sb-spin-btn{background:linear-gradient(135deg,#FFD700,#FF6B35);color:white;border:none;
-    padding:10px 22px;border-radius:100px;font-family:'Nunito',sans-serif;font-weight:800;
-    font-size:0.85rem;cursor:pointer;transition:all 0.2s;margin-top:8px;
-    box-shadow:0 4px 15px rgba(255,107,53,0.3);}
-  .sb-spin-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(255,107,53,0.4);}
-  .sb-spin-btn:disabled{opacity:0.5;transform:none;cursor:not-allowed;}
-
-  /* Redeem code */
-  .sb-code-wrap{margin-bottom:16px;}
-  .sb-code-row{display:flex;gap:8px;}
-  .sb-code-input{flex:1;padding:10px 14px;border:2px solid var(--border);border-radius:12px;
-    font-family:'Nunito',sans-serif;font-size:0.88rem;outline:none;transition:border 0.2s;
-    background:var(--bg);color:var(--text);text-transform:uppercase;letter-spacing:0.05em;}
-  .sb-code-input:focus{border-color:var(--purple);}
-  .sb-redeem-btn{background:var(--purple);color:white;border:none;padding:10px 16px;
-    border-radius:12px;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.82rem;
-    cursor:pointer;transition:all 0.2s;white-space:nowrap;}
-  .sb-redeem-btn:hover{background:#6e4fd4;transform:translateY(-1px);}
-  .sb-code-status{font-size:0.78rem;font-weight:700;margin-top:6px;display:none;}
-
-  /* Code history */
-  .sb-history{display:flex;flex-direction:column;gap:6px;max-height:140px;overflow-y:auto;}
-  .sb-hist-item{display:flex;justify-content:space-between;align-items:center;
-    background:var(--bg);border-radius:10px;padding:8px 12px;font-size:0.78rem;}
-  .sb-hist-code{font-weight:800;color:var(--purple);}
-  .sb-hist-reward{color:var(--green);font-weight:700;}
-
-  /* Spin result popup */
-  .spin-popup{display:none;position:fixed;inset:0;z-index:400;
-    background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);align-items:center;justify-content:center;}
-  .spin-popup.show{display:flex;}
-  .spin-box{background:white;border-radius:24px;padding:36px;max-width:320px;width:90%;
-    text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);animation:popIn 0.4s ease;}
-  .spin-icon{font-size:3.5rem;margin-bottom:10px;animation:spinBounce 0.6s ease;}
-  @keyframes spinBounce{0%{transform:scale(0);}70%{transform:scale(1.2);}100%{transform:scale(1);}}
-  .spin-result{font-family:'Baloo 2',cursive;font-size:1.5rem;font-weight:800;margin-bottom:6px;}
-  .spin-close{background:linear-gradient(135deg,var(--blue),var(--purple));color:white;border:none;
-    padding:10px 28px;border-radius:100px;font-family:'Nunito',sans-serif;font-weight:800;
-    font-size:0.9rem;cursor:pointer;margin-top:14px;transition:all 0.2s;}
-  .spin-close:hover{transform:translateY(-2px);}
-
-  /* ── SCRIPT REWARD POPUP ── */
-  .sr-popup{display:none;position:fixed;inset:0;z-index:600;
-    background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);align-items:center;justify-content:center;}
-  .sr-popup.show{display:flex;}
-  .sr-box{background:white;border-radius:24px;padding:32px;max-width:500px;width:92%;
-    box-shadow:0 20px 60px rgba(0,0,0,0.25);animation:popIn 0.35s ease;}
-  .sr-box h3{font-family:'Baloo 2',cursive;font-size:1.4rem;font-weight:800;margin-bottom:4px;}
-  .sr-box p{color:var(--muted);font-size:0.85rem;margin-bottom:16px;}
-  .sr-code-block{background:#1a1a2e;border-radius:14px;padding:16px;
-    font-family:'Courier New',monospace;font-size:0.8rem;color:#e2e4f0;
-    white-space:pre-wrap;word-break:break-all;max-height:220px;overflow-y:auto;line-height:1.7;margin-bottom:14px;}
-  .sr-actions{display:flex;gap:10px;flex-wrap:wrap;}
-  .sr-copy-btn{background:linear-gradient(135deg,var(--blue),var(--purple));color:white;border:none;
-    padding:11px 24px;border-radius:100px;font-family:'Nunito',sans-serif;font-weight:800;
-    font-size:0.9rem;cursor:pointer;transition:all 0.2s;flex:1;}
-  .sr-copy-btn:hover{transform:translateY(-2px);}
-  .sr-close-btn{background:var(--bg);border:2px solid var(--border);padding:11px 20px;
-    border-radius:100px;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.9rem;
-    cursor:pointer;transition:all 0.2s;}
-  .sr-close-btn:hover{background:var(--border);}
-
-  /* ── ADMIN PANEL ── */
-  .admin-toggle{position:fixed;bottom:20px;left:20px;z-index:300;
-    background:rgba(26,26,46,0.85);color:rgba(255,255,255,0.5);border:1.5px solid rgba(255,255,255,0.1);
-    padding:8px 14px;border-radius:100px;font-size:0.72rem;font-weight:800;cursor:pointer;
-    font-family:'Nunito',sans-serif;backdrop-filter:blur(4px);transition:all 0.2s;}
-  .admin-toggle:hover{background:rgba(132,94,247,0.8);color:white;}
-  .admin-panel{display:none;position:fixed;inset:0;z-index:700;
-    background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);align-items:center;justify-content:center;}
-  .admin-panel.open{display:flex;}
-  .admin-box{background:white;border-radius:24px;padding:32px;max-width:520px;width:92%;
-    max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.25);animation:popIn 0.3s ease;}
-  .admin-box h3{font-family:'Baloo 2',cursive;font-size:1.4rem;font-weight:800;margin-bottom:20px;
-    display:flex;align-items:center;justify-content:space-between;}
-  .admin-close-btn{background:var(--bg);border:2px solid var(--border);width:34px;height:34px;
-    border-radius:50%;cursor:pointer;font-size:1rem;font-weight:800;display:flex;align-items:center;justify-content:center;}
-  .admin-close-btn:hover{background:var(--red);color:white;border-color:var(--red);}
-  .adm-row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
-  .adm-input{flex:1;min-width:100px;padding:10px 14px;border:2px solid var(--border);border-radius:12px;
-    font-family:'Nunito',sans-serif;font-size:0.9rem;outline:none;transition:border 0.2s;background:var(--bg);}
-  .adm-input:focus{border-color:var(--purple);}
-  .adm-select{padding:10px 14px;border:2px solid var(--border);border-radius:12px;
-    font-family:'Nunito',sans-serif;font-size:0.9rem;outline:none;background:var(--bg);cursor:pointer;}
-  .adm-add-btn{background:linear-gradient(135deg,var(--blue),var(--purple));color:white;border:none;
-    padding:10px 20px;border-radius:12px;font-family:'Nunito',sans-serif;font-weight:800;
-    font-size:0.9rem;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
-  .adm-add-btn:hover{transform:translateY(-1px);}
-  .adm-textarea{width:100%;padding:10px 14px;border:2px solid var(--border);border-radius:12px;
-    font-family:'Courier New',monospace;font-size:0.8rem;background:#1a1a2e;color:#e2e4f0;
-    resize:vertical;min-height:80px;outline:none;margin-bottom:10px;}
-  .adm-textarea:focus{border-color:var(--purple);}
-  .adm-code-list{display:flex;flex-direction:column;gap:8px;margin-top:16px;max-height:240px;overflow-y:auto;}
-  .adm-code-row{display:flex;align-items:center;gap:10px;background:var(--bg);
-    border-radius:12px;padding:10px 14px;border:2px solid var(--border);}
-  .adm-code-key{font-family:'Baloo 2',cursive;font-weight:800;font-size:0.95rem;color:var(--purple);flex:0 0 auto;}
-  .adm-code-reward{flex:1;font-size:0.78rem;color:var(--muted);font-weight:700;}
-  .adm-del-btn{background:rgba(255,71,87,0.1);color:var(--red);border:1px solid rgba(255,71,87,0.3);
-    padding:4px 12px;border-radius:100px;font-size:0.72rem;font-weight:800;cursor:pointer;
-    font-family:'Nunito',sans-serif;transition:all 0.2s;white-space:nowrap;}
-  .adm-del-btn:hover{background:var(--red);color:white;}
-  .adm-divider{height:2px;background:var(--border);border-radius:2px;margin:16px 0;}
-  .adm-label{font-size:0.78rem;font-weight:800;color:var(--muted);text-transform:uppercase;
-    letter-spacing:0.08em;margin-bottom:8px;display:block;}
-
-  /* ── REDEEM SECTION ── */
-  .redeem-section{padding:72px 48px 80px;background:linear-gradient(135deg,rgba(132,94,247,0.05),rgba(77,150,255,0.05));
-    border-top:2px solid var(--border);}
-  .redeem-inner{max-width:560px;margin:0 auto;}
-  .redeem-card{background:white;border-radius:24px;padding:40px;border:2px solid var(--border);
-    box-shadow:0 8px 40px rgba(132,94,247,0.1);}
-  .redeem-icon{font-size:2.8rem;margin-bottom:12px;text-align:center;}
-  .redeem-title{font-family:'Baloo 2',cursive;font-size:1.5rem;font-weight:800;text-align:center;margin-bottom:6px;}
-  .redeem-sub{color:var(--muted);font-size:0.88rem;text-align:center;margin-bottom:28px;line-height:1.6;}
-  .redeem-row{display:flex;gap:10px;}
-  .redeem-input{flex:1;padding:14px 18px;border:2px solid var(--border);border-radius:14px;
-    font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;outline:none;
-    transition:border 0.2s;background:var(--bg);color:var(--text);letter-spacing:0.05em;text-transform:uppercase;}
-  .redeem-input:focus{border-color:var(--purple);background:white;}
-  .redeem-input::placeholder{text-transform:none;font-weight:600;color:var(--muted);}
-  .redeem-btn{background:linear-gradient(135deg,var(--blue),var(--purple));color:white;border:none;
-    padding:14px 26px;border-radius:14px;font-family:'Nunito',sans-serif;font-weight:800;
-    font-size:0.95rem;cursor:pointer;transition:all 0.2s;white-space:nowrap;
-    box-shadow:0 4px 15px rgba(132,94,247,0.3);}
-  .redeem-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(132,94,247,0.4);}
-  .redeem-btn:active{transform:scale(0.97);}
-  .redeem-status{margin-top:14px;padding:12px 18px;border-radius:12px;font-size:0.88rem;
-    font-weight:700;display:none;text-align:center;}
-  .redeem-status.ok{background:rgba(107,203,119,0.12);color:#3a8c44;border:1.5px solid rgba(107,203,119,0.3);}
-  .redeem-status.err{background:rgba(255,71,87,0.08);color:var(--red);border:1.5px solid rgba(255,71,87,0.2);}
-  /* Script reward box inside redeem */
-  .redeem-script-box{display:none;margin-top:20px;background:#1a1a2e;border-radius:14px;
-    padding:16px 18px;font-family:'Courier New',monospace;font-size:0.8rem;color:#e2e4f0;
-    white-space:pre-wrap;word-break:break-all;line-height:1.7;max-height:180px;overflow-y:auto;}
-  .redeem-copy-btn{display:none;width:100%;margin-top:10px;background:linear-gradient(135deg,var(--blue),var(--purple));
-    color:white;border:none;padding:12px;border-radius:12px;font-family:'Nunito',sans-serif;
-    font-weight:800;font-size:0.9rem;cursor:pointer;transition:all 0.2s;}
-  .redeem-copy-btn:hover{opacity:0.9;transform:translateY(-1px);}
-  /* reward box */
-  .redeem-reward-box{display:none;margin-top:16px;background:linear-gradient(135deg,rgba(132,94,247,0.08),rgba(77,150,255,0.08));
-    border:2px solid rgba(132,94,247,0.2);border-radius:16px;padding:20px 24px;
-    align-items:center;gap:18px;animation:popIn 0.4s ease;}
-  .reward-icon{font-size:2.8rem;animation:spinBounce 0.6s ease;}
-  .reward-info{flex:1;}
-  .reward-amt{font-family:'Baloo 2',cursive;font-size:2rem;font-weight:800;color:#6c6ef7;line-height:1;}
-  .reward-lbl{font-size:0.85rem;font-weight:700;color:var(--muted);margin-top:2px;}
-  .redeem-divider{border:none;border-top:2px dashed var(--border);margin:24px 0;}
-  .redeem-codes-title{font-size:0.78rem;font-weight:800;color:var(--muted);letter-spacing:0.1em;
-    text-transform:uppercase;margin-bottom:12px;}
-  .redeem-codes-grid{display:flex;flex-wrap:wrap;gap:8px;}
-  .redeem-code-chip{background:var(--bg);border:1.5px solid var(--border);border-radius:100px;
-    padding:5px 14px;font-size:0.78rem;font-weight:800;color:var(--text);
-    display:flex;align-items:center;gap:6px;}
-  .redeem-code-chip .rcc-reward{color:var(--muted);font-weight:600;}
+.toc{position:sticky;top:44px;align-self:start;font-size:13.5px;color:var(--mu)}
+.toc a{display:block;border-left:1px solid var(--line);padding:2px 12px;margin-left:4px}
+.toc a:hover{color:var(--tx);border-color:var(--tx)}
+.toc div{margin-bottom:8px;color:var(--tx)}
+@media(max-width:1180px){main{grid-template-columns:minmax(0,1fr)}.toc{display:none}}
+@media(max-width:900px){.side{transform:translateX(-100%)}.side.open{transform:none}.mb{display:block}main{margin-left:0;padding:60px 18px 40px}.hero{margin-left:0}}
 </style>
 </head>
 <body>
-
-<!-- SIDEBAR OVERLAY -->
-<div class="sidebar-overlay" id="sbOverlay" onclick="closeSidebar()"></div>
-
-<!-- SIDEBAR -->
-<div class="sidebar" id="sidebar">
-  <div class="sb-header">
-    <div class="sb-logo">🎮 RBXScripts</div>
-    <button class="sb-close" onclick="closeSidebar()">✕</button>
+<section id="home">
+  <div class="top"><b class="lg"><i data-lucide="code-xml"></i>WebLearn</b><a href="#/0">Documentation</a><span class="sp"></span><label class="ls"><i data-lucide="globe"></i><select data-lang aria-label="Language"><option value="th">ไทย</option><option value="en">English</option></select></label><span class="tg" data-tg><span><i data-lucide="sun"></i></span><span class="s"><i data-lucide="moon"></i></span></span></div>
+  <div class="hero">
+    <h1 data-i="h1">เรียนเขียนเว็บ<br>ด้วย <em>HTML + CSS</em></h1>
+    <p data-i="sub">บทเรียนสั้น เข้าใจง่าย พร้อมตัวอย่างโค้ดที่กดรันดูผลได้ทันที</p>
+    <div><a class="pill on" href="#/0"><i data-lucide="book-open"></i>Documentation</a><a class="pill" href="#/2"><i data-lucide="play"></i><span data-i="start">เริ่มที่ HTML</span></a></div>
   </div>
+  <div class="soon" data-i="soon">More Soon</div>
+</section>
 
-  <!-- AUTH PANEL (before login) -->
-  <div class="sb-auth" id="sbAuth">
-    <!-- Tabs -->
-    <div class="auth-tabs">
-      <button class="auth-tab active" id="tabRegister" onclick="switchTab('register')">สมัครสมาชิก</button>
-      <button class="auth-tab" id="tabLogin" onclick="switchTab('login')">เข้าสู่ระบบ</button>
-    </div>
+<section id="docs">
+  <button class="mb" id="mb" aria-label="เมนู"><i data-lucide="menu"></i></button>
+  <aside class="side" id="side">
+    <header><a class="lg" href="#/"><i data-lucide="code-xml"></i>WebLearn</a><button class="pill" style="padding:4px 10px" id="cl" aria-label="ปิด"><i data-lucide="x"></i></button></header>
+    <nav class="nav" id="nav"></nav>
+    <footer><label class="ls"><i data-lucide="globe"></i><select data-lang aria-label="Language"><option value="th">ไทย</option><option value="en">English</option></select></label><span class="tg" data-tg><span><i data-lucide="sun"></i></span><span class="s"><i data-lucide="moon"></i></span></span></footer>
+  </aside>
+  <main><article id="art"></article><aside class="toc" id="toc"></aside></main>
+</section>
 
-    <!-- REGISTER -->
-    <div id="panelRegister">
-      <div class="auth-icon">🎮</div>
-      <div class="auth-desc">สร้างบัญชีใหม่ รับ <b>1 Spin ฟรี</b> ทันที!</div>
-      <label class="auth-label">ชื่อที่แสดง</label>
-      <input class="sb-input" id="regName" type="text" placeholder="ชื่อของคุณ" maxlength="20">
-      <label class="auth-label">อีเมล</label>
-      <input class="sb-input" id="regEmail" type="email" placeholder="example@email.com">
-      <label class="auth-label">รหัสผ่าน</label>
-      <div class="pw-wrap">
-        <input class="sb-input" id="regPass" type="password" placeholder="อย่างน้อย 6 ตัวอักษร" style="margin-bottom:0;padding-right:44px">
-        <button class="pw-eye" onclick="togglePw('regPass',this)" tabindex="-1">👁</button>
-      </div>
-      <label class="auth-label" style="margin-top:10px">ยืนยันรหัสผ่าน</label>
-      <div class="pw-wrap">
-        <input class="sb-input" id="regPass2" type="password" placeholder="พิมพ์รหัสผ่านอีกครั้ง" style="margin-bottom:0;padding-right:44px"
-          onkeydown="if(event.key==='Enter')emailRegister()">
-        <button class="pw-eye" onclick="togglePw('regPass2',this)" tabindex="-1">👁</button>
-      </div>
-      <button class="sb-btn sb-btn-main" id="sbRegBtn" onclick="emailRegister()" style="margin-top:14px">✨ สมัครสมาชิก</button>
-      <div class="sb-err" id="sbRegErr"></div>
-      <div class="auth-switch">มีบัญชีแล้ว? <span onclick="switchTab('login')">เข้าสู่ระบบ</span></div>
-    </div>
-
-    <!-- LOGIN -->
-    <div id="panelLogin" style="display:none">
-      <div class="auth-icon">👋</div>
-      <div class="auth-desc">ยินดีต้อนรับกลับมา!</div>
-      <label class="auth-label">อีเมล</label>
-      <input class="sb-input" id="loginEmail" type="email" placeholder="example@email.com">
-      <label class="auth-label">รหัสผ่าน</label>
-      <div class="pw-wrap">
-        <input class="sb-input" id="loginPass" type="password" placeholder="รหัสผ่านของคุณ" style="margin-bottom:0;padding-right:44px"
-          onkeydown="if(event.key==='Enter')emailLogin()">
-        <button class="pw-eye" onclick="togglePw('loginPass',this)" tabindex="-1">👁</button>
-      </div>
-      <button class="sb-btn sb-btn-main" id="sbLoginBtn" onclick="emailLogin()" style="margin-top:14px">🔑 เข้าสู่ระบบ</button>
-      <div class="sb-err" id="sbErr"></div>
-      <div class="auth-switch">ยังไม่มีบัญชี? <span onclick="switchTab('register')">สมัครสมาชิก</span></div>
-    </div>
-
-    <!-- hidden input kept for compatibility -->
-    <input type="hidden" id="rbxUsername" value="">
-    <input type="hidden" id="rbxRegName" value="">
-
-    <div style="margin-top:16px;padding:12px;background:var(--bg);border-radius:12px;border:2px solid var(--border);">
-      <div style="font-size:0.78rem;font-weight:800;color:var(--muted);margin-bottom:6px;">📋 โค้ดที่มีอยู่:</div>
-      <div id="codeListDisplay" style="font-size:0.8rem;font-weight:700;line-height:1.8;color:var(--text);">
-        🎁 <b>NEW</b> = +5 เครดิต<br>🎰 <b>BOB</b> = +1 Spin<br>🎁 <b>SRD</b> = +5 เครดิต<br>🎁 <b>SCRIPTNEW</b> = +10 เครดิต
-      </div>
-    </div>
-  </div>
-
-  <!-- PROFILE PANEL (after login) -->
-  <div class="sb-profile" id="sbProfile">
-    <!-- Avatar -->
-    <div class="sb-avatar-wrap">
-      <div class="sb-avatar-init" id="sbAvatarInit">?</div>
-      <div>
-        <div class="sb-uname" id="sbUname">—</div>
-        <div class="sb-uid" id="sbUid" style="font-size:0.72rem;color:var(--muted);font-weight:600;margin-top:2px">—</div>
-        <button class="sb-logout" onclick="rbxLogout()">ออกจากระบบ</button>
-      </div>
-    </div>
-
-    <!-- Stats -->
-    <div class="sb-stats">
-      <div class="sb-stat">
-        <div class="sb-stat-val" id="sbCredits">0</div>
-        <div class="sb-stat-lbl">💰 เครดิต</div>
-      </div>
-      <div class="sb-stat">
-        <div class="sb-stat-val" id="sbSpins">0</div>
-        <div class="sb-stat-lbl">🎰 Spin</div>
-      </div>
-    </div>
-
-    <!-- Roblox Info -->
-    <div class="sb-section-title">👤 ข้อมูลบัญชี</div>
-    <div style="background:var(--bg);border:2px solid var(--border);border-radius:14px;padding:14px;margin-bottom:16px;font-size:0.83rem;line-height:2;">
-      <div>🎮 <b>ชื่อ:</b> <span id="infoName">—</span></div>
-      <div>🆔 <b>User ID:</b> <span id="infoId">—</span></div>
-      <div>📅 <b>สมัครเมื่อ:</b> <span id="infoJoin">—</span></div>
-      <div>👥 <b>Followers:</b> <span id="infoFollow">—</span></div>
-    </div>
-
-    <!-- Gift Box -->
-    <div class="sb-section-title">🎁 กองของขวัญ</div>
-    <div class="sb-gift">
-      <div class="sb-gift-icon">🎁</div>
-      <div class="sb-gift-text">กดรับของขวัญสุ่มรางวัล!<br><span style="font-size:0.72rem">(เครดิต / Spin / โบนัส)</span></div>
-      <br>
-      <button class="sb-spin-btn" id="sbSpinBtn" onclick="doSpin()">🎰 หมุน Spin!</button>
-    </div>
-
-    <!-- Redeem Code -->
-    <div class="sb-section-title">🏷️ กรอกโค้ด</div>
-    <div class="sb-code-wrap">
-      <div class="sb-code-row">
-        <input class="sb-code-input" id="sbCodeInput" type="text" placeholder="CODE..." maxlength="20">
-        <button class="sb-redeem-btn" onclick="redeemCode()">แลก</button>
-      </div>
-      <div class="sb-code-status" id="sbCodeStatus"></div>
-    </div>
-
-    <!-- Code history -->
-    <div class="sb-section-title">📜 ประวัติโค้ด</div>
-    <div class="sb-history" id="sbHistory">
-      <div style="font-size:0.8rem;color:var(--muted);text-align:center;padding:12px">ยังไม่เคยใช้โค้ด</div>
-    </div>
-  </div>
-</div>
-
-<!-- SPIN RESULT POPUP -->
-<div class="spin-popup" id="spinPopup">
-  <div class="spin-box">
-    <div class="spin-icon" id="spinIcon">🎁</div>
-    <div class="spin-result" id="spinResult">ยินดีด้วย!</div>
-    <div style="color:var(--muted);font-size:0.9rem" id="spinDesc"></div>
-    <button class="spin-close" onclick="document.getElementById('spinPopup').classList.remove('show')">เยี่ยม! 🎉</button>
-  </div>
-</div>
-
-<!-- PROMO BANNER -->
-<div class="promo-banner" id="promoBanner">
-  <div class="promo-inner">
-    <span class="promo-text" id="promoText">🎉 <b>โปรพิเศษ!</b> ซื้อสคริปต์วันนี้ลด 20% — ใช้โค้ด <b>RBX20</b> ✨ จำกัดเวลา!</span>
-    <button class="promo-edit-btn" onclick="openPromoEdit()">✏️ แก้ข้อความ</button>
-  </div>
-</div>
-
-<!-- PROMO EDIT POPUP -->
-<div class="promo-popup" id="promoPopup" onclick="closePromoEdit(event)">
-  <div class="promo-box">
-    <h4>✏️ แก้ไขโปรโมชั่น</h4>
-    <p>ใส่ข้อความโปรโมชั่นที่ต้องการแสดงบนแบนเนอร์</p>
-    <textarea class="promo-field" id="promoField" rows="3" placeholder="เช่น 🎉 ลด 20% วันนี้เท่านั้น!"></textarea>
-    <br>
-    <button class="promo-save" onclick="savePromo()">💾 บันทึก</button>
-    <button class="promo-cancel" onclick="closePromoEdit()">ยกเลิก</button>
-  </div>
-</div>
-
-<!-- NAV -->
-<nav>
-  <div style="display:flex;align-items:center;gap:14px;">
-    <button class="hamburger" id="hamburgerBtn" onclick="toggleSidebar()" aria-label="เมนู">
-      <span></span><span></span><span></span>
-    </button>
-    <div class="logo">BObs<span>Hub</span></div>
-  </div>
-  <ul>
-    <li><a href="#products">สคริปต์</a></li>
-    <li><a href="#redeem">Redeem</a></li>
-    <li><a href="#scripts">เพิ่ม Script</a></li>
-    <li><a href="#howto">วิธีใช้</a></li>
-    <li><a href="#contact">ติดต่อ</a></li>
-  </ul>
-  <button class="nav-cta" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">ดูสคริปต์</button>
-</nav>
-
-<!-- CARD NAV (ported from CardNav.jsx — mobile menu, replaces the nav links hidden on small screens) -->
-<div class="card-nav-container">
-  <nav class="card-nav" id="cardNav">
-    <div class="card-nav-top">
-      <div class="hamburger-menu" id="cardNavHamburger" onclick="toggleCardNav()"
-        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCardNav();}"
-        role="button" tabindex="0" aria-label="เปิดเมนู" aria-expanded="false">
-        <div class="hamburger-line"></div>
-        <div class="hamburger-line"></div>
-      </div>
-      <div class="logo-container">
-        <div class="logo" style="font-size:1.05rem">BObs<span>Hub</span></div>
-      </div>
-      <button type="button" class="card-nav-cta-button"
-        onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">ดูสคริปต์</button>
-    </div>
-    <div class="card-nav-content" id="cardNavContent" aria-hidden="true">
-      <div class="nav-card" style="background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff">
-        <div class="nav-card-label">🛒 ร้านค้า</div>
-        <div class="nav-card-links">
-          <a class="nav-card-link" href="#products" onclick="closeCardNavAfterClick()">↗ สคริปต์ทั้งหมด</a>
-          <a class="nav-card-link" href="#redeem" onclick="closeCardNavAfterClick()">↗ แลกโค้ด Redeem</a>
-        </div>
-      </div>
-      <div class="nav-card" style="background:linear-gradient(135deg,var(--orange),var(--red));color:#fff">
-        <div class="nav-card-label">📜 จัดการ</div>
-        <div class="nav-card-links">
-          <a class="nav-card-link" href="#scripts" onclick="closeCardNavAfterClick()">↗ เพิ่ม Script</a>
-          <a class="nav-card-link" href="#howto" onclick="closeCardNavAfterClick()">↗ วิธีใช้งาน</a>
-        </div>
-      </div>
-      <div class="nav-card" style="background:linear-gradient(135deg,#6BCB77,#4CAF50);color:#fff">
-        <div class="nav-card-label">💬 ติดต่อ</div>
-        <div class="nav-card-links">
-          <a class="nav-card-link" href="#contact" onclick="closeCardNavAfterClick()">↗ ติดต่อทีมงาน</a>
-        </div>
-      </div>
-    </div>
-  </nav>
-</div>
-
-<!-- HERO -->
-<div class="hero">
-  <canvas id="beamsCanvas" class="beams-canvas" aria-hidden="true"></canvas>
-  <div class="hero-bg"></div>
-  <div class="shape s1"></div><div class="shape s2"></div><div class="shape s3"></div>
-  <div class="shape s4"></div><div class="shape s5"></div>
-  <div class="hero-inner">
-    <div class="hero-badge"><span class="dot"></span> เปิดให้บริการ 24/7</div>
-    <h1>BObs Hub<br><span class="grad1">Script คุณภาพสูง</span> ราคา<span class="grad2">คุ้มค่า</span></h1>
-    <p class="hero-sub">สคริปต์อัปเดตสม่ำเสมอ ไม่โดนแบน ใช้ง่าย รองรับหลายเกม บริการหลังการขายตลอด</p>
-    <div class="hero-btns">
-      <button class="btn-main" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">ดูสคริปต์ทั้งหมด</button>
-      <button class="btn-outline" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">ติดต่อเรา</button>
-      <button class="btn-credit" onclick="openCreditPopup()">💰 ดูเครดิต & Spin</button>
-    </div>
-    <div class="stats-bar">
-      <div class="stat-item"><div class="stat-num">500+</div><div class="stat-label">ลูกค้า</div></div>
-      <div class="stat-item"><div class="stat-num">50+</div><div class="stat-label">สคริปต์</div></div>
-      <div class="stat-item"><div class="stat-num">24/7</div><div class="stat-label">บริการ</div></div>
-      <div class="stat-item"><div class="stat-num">99%</div><div class="stat-label">ไม่โดนแบน</div></div>
-    </div>
-
-    <!-- FOLDER WIDGET -->
-    <div class="folder-demo-wrap">
-      <div class="folder-demo-label">👆 กดเปิดโฟลเดอร์ดูหมวดสคริปต์ยอดฮิต</div>
-      <div class="folder-scene">
-        <div class="folder" id="scriptFolder" tabindex="0" role="button" aria-expanded="false"
-          aria-label="เปิดโฟลเดอร์ดูหมวดสคริปต์" onclick="toggleFolder()"
-          onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFolder();}">
-          <div class="folder__back">
-            <div class="paper paper-1" onmousemove="folderPaperMove(event,0)" onmouseleave="folderPaperLeave(0)">🌾</div>
-            <div class="paper paper-2" onmousemove="folderPaperMove(event,1)" onmouseleave="folderPaperLeave(1)">👁️</div>
-            <div class="paper paper-3" onmousemove="folderPaperMove(event,2)" onmouseleave="folderPaperLeave(2)">⚡</div>
-            <div class="folder__front"></div>
-            <div class="folder__front right"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- FILTER + SEARCH -->
-<div class="section-wrap" id="products">
-  <div class="section-header">
-    <div class="section-tag">🎯 หมวดหมู่</div>
-    <h2 class="section-title">เลือกสคริปต์ที่ต้องการ</h2>
-  </div>
-
-  <div class="search-wrap">
-    <div class="search-bar">
-      <input type="text" id="searchInput" placeholder="🔍 ค้นหาสคริปต์... เช่น Blox Fruits, ESP" oninput="searchCards(this.value)" onkeydown="if(event.key==='Escape'){this.value='';searchCards('');}">
-      <button onclick="searchCards(document.getElementById('searchInput').value)" aria-label="ค้นหา">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-      </button>
-    </div>
-  </div>
-
-  <div class="icon-btns cat-grid">
-    <button class="icon-btn cat-btn active" onclick="filterCards('all',this)" aria-label="ทั้งหมด">
-      <span class="icon-btn__back" style="background:linear-gradient(hsl(268,90%,50%),hsl(283,90%,50%))"></span>
-      <span class="icon-btn__front"><span class="icon-btn__icon">🌟</span></span>
-      <span class="icon-btn__label">ทั้งหมด</span>
-    </button>
-    <button class="icon-btn cat-btn" onclick="filterCards('auto',this)" aria-label="Auto Farm">
-      <span class="icon-btn__back" style="background:linear-gradient(hsl(43,90%,50%),hsl(28,90%,50%))"></span>
-      <span class="icon-btn__front"><span class="icon-btn__icon">⚡</span></span>
-      <span class="icon-btn__label">Auto Farm</span>
-    </button>
-    <button class="icon-btn cat-btn" onclick="filterCards('combat',this)" aria-label="Combat">
-      <span class="icon-btn__back" style="background:linear-gradient(hsl(3,90%,50%),hsl(348,90%,50%))"></span>
-      <span class="icon-btn__front"><span class="icon-btn__icon">⚔️</span></span>
-      <span class="icon-btn__label">Combat</span>
-    </button>
-    <button class="icon-btn cat-btn" onclick="filterCards('utility',this)" aria-label="Utility">
-      <span class="icon-btn__back" style="background:linear-gradient(hsl(223,90%,50%),hsl(208,90%,50%))"></span>
-      <span class="icon-btn__front"><span class="icon-btn__icon">🔧</span></span>
-      <span class="icon-btn__label">Utility</span>
-    </button>
-    <button class="icon-btn cat-btn" onclick="filterCards('free',this)" aria-label="ฟรี">
-      <span class="icon-btn__back" style="background:linear-gradient(hsl(123,90%,40%),hsl(108,90%,40%))"></span>
-      <span class="icon-btn__front"><span class="icon-btn__icon">🆓</span></span>
-      <span class="icon-btn__label">ฟรี</span>
-    </button>
-  </div>
-  <div class="no-result" id="noResult"><div class="ni">🔍</div><p style="font-size:0.9rem;font-weight:700">ไม่พบสคริปต์ — ลองคำอื่นดูครับ</p></div>
-</div>
-
-<!-- PRODUCTS -->
-<div class="products">
-  <div class="product-grid" id="productGrid">
-
-    <div class="product-card" data-cat="auto">
-      <div class="card-banner" style="background:linear-gradient(135deg,#4D96FF,#845EF7)">
-        <img src="https://em-content.zobj.net/source/microsoft/378/zap_26a1.png" alt="Auto Farm">
-        <div class="card-badge hot">🔥 HOT</div></div>
-      <div class="card-body">
-        <div class="card-tag">Auto Farm</div>
-        <div class="card-name">Blox Fruits Auto Farm Pro</div>
-        <div class="card-desc">ฟาร์มอัตโนมัติ ได้ Exp เร็วสุด รองรับทุก Race และ Fruit</div>
-        <div class="card-features"><span class="ftag">Auto Quest</span><span class="ftag">Fruit Sniper</span><span class="ftag">Anti-AFK</span><span class="ftag">ESP</span></div>
-        <div class="card-footer">
-          <div class="card-price"><span class="old-p">฿150</span><span class="price-paid">฿89</span></div>
-          <button class="buy-btn btn-p" onclick="openModal('Blox Fruits Auto Farm Pro','฿89')">ซื้อเลย</button>
-        </div>
-      </div></div>
-    </div>
-
-    <div class="product-card" data-cat="combat">
-      <div class="card-banner" style="background:linear-gradient(135deg,#FF4757,#FF6B35)">
-        <img src="https://em-content.zobj.net/source/microsoft/378/dagger_1f5e1-fe0f.png" alt="Combat">
-        <div class="card-badge new">✨ NEW</div></div>
-      <div class="card-body">
-        <div class="card-tag">Combat</div>
-        <div class="card-name">Arsenal Aimbot + ESP</div>
-        <div class="card-desc">เล็งแม่น Top Rank ทุกรอบ เห็น Player ผ่านกำแพงได้</div>
-        <div class="card-features"><span class="ftag">Aimbot</span><span class="ftag">ESP</span><span class="ftag">Wallhack</span><span class="ftag">Auto Reload</span></div>
-        <div class="card-footer">
-          <div class="card-price"><span class="price-paid">฿120</span></div>
-          <button class="buy-btn btn-p" onclick="openModal('Arsenal Aimbot + ESP','฿120')">ซื้อเลย</button>
-        </div>
-      </div></div>
-    </div>
-
-    <div class="product-card" data-cat="utility free">
-      <div class="card-banner" style="background:linear-gradient(135deg,#845EF7,#F06595)">
-        <img src="https://em-content.zobj.net/source/microsoft/378/joystick_1f579-fe0f.png" alt="Utility">
-        <div class="card-badge free-b">FREE</div></div>
-      <div class="card-body">
-        <div class="card-tag">Utility — ฟรี</div>
-        <div class="card-name">Universal GUI Hub</div>
-        <div class="card-desc">GUI รวมฟีเจอร์ครบ ใช้ได้กับหลายเกม อัปเดตสม่ำเสมอ</div>
-        <div class="card-features"><span class="ftag">Multi-Game</span><span class="ftag">Auto Update</span><span class="ftag">GUI Clean</span></div>
-        <div class="card-footer">
-          <div class="card-price"><span class="price-free">ฟรี!</span></div>
-          <button class="buy-btn btn-g" onclick="openModal('Universal GUI Hub','ฟรี')">รับฟรี</button>
-        </div>
-      </div></div>
-    </div>
-
-    <div class="product-card" data-cat="auto">
-      <div class="card-banner" style="background:linear-gradient(135deg,#FFD93D,#FF6B35)">
-        <img src="https://em-content.zobj.net/source/microsoft/378/paw-prints_1f43e.png" alt="Pet">
-        <div class="card-badge sale">💥 SALE</div></div>
-      <div class="card-body">
-        <div class="card-tag">Auto Farm</div>
-        <div class="card-name">Pet Simulator X Auto</div>
-        <div class="card-desc">ฟาร์ม Pet อัตโนมัติ เก็บ Coin และ Gem ไม่หยุด</div>
-        <div class="card-features"><span class="ftag">Auto Hatch</span><span class="ftag">Auto Collect</span><span class="ftag">Anti-Ban</span></div>
-        <div class="card-footer">
-          <div class="card-price"><span class="old-p">฿120</span><span class="price-paid">฿79</span></div>
-          <button class="buy-btn btn-p" onclick="openModal('Pet Simulator X Auto','฿79')">ซื้อเลย</button>
-        </div>
-      </div></div>
-    </div>
-
-    <div class="product-card" data-cat="utility">
-      <div class="card-banner" style="background:linear-gradient(135deg,#43c6ac,#4D96FF)">
-        <img src="https://em-content.zobj.net/source/microsoft/378/gear_2699-fe0f.png" alt="Admin">
-        <div class="card-badge new">✨ NEW</div></div>
-      <div class="card-body">
-        <div class="card-tag">Utility</div>
-        <div class="card-name">Admin Commands Unlocker</div>
-        <div class="card-desc">ปลดล็อค Admin Commands ในเกมส่วนใหญ่ ใช้งานง่าย</div>
-        <div class="card-features"><span class="ftag">Teleport</span><span class="ftag">God Mode</span><span class="ftag">Kill All</span></div>
-        <div class="card-footer">
-          <div class="card-price"><span class="old-p">฿100</span><span class="price-paid">฿59</span></div>
-          <button class="buy-btn btn-p" onclick="openModal('Admin Commands Unlocker','฿59')">ซื้อเลย</button>
-        </div>
-      </div></div>
-    </div>
-
-    <div class="product-card" data-cat="combat free">
-      <div class="card-banner" style="background:linear-gradient(135deg,#4D96FF,#06C755)">
-        <img src="https://em-content.zobj.net/source/microsoft/378/eye_1f441-fe0f.png" alt="ESP">
-        <div class="card-badge free-b">FREE</div></div>
-      <div class="card-body">
-        <div class="card-tag">Combat — ฟรี</div>
-        <div class="card-name">Murder Mystery 2 ESP</div>
-        <div class="card-desc">เห็น Murderer & Sheriff ผ่านกำแพง ชนะทุกรอบ</div>
-        <div class="card-features"><span class="ftag">Role ESP</span><span class="ftag">Item ESP</span><span class="ftag">Auto Win</span></div>
-        <div class="card-footer">
-          <div class="card-price"><span class="price-free">ฟรี!</span></div>
-          <button class="buy-btn btn-g" onclick="openModal('Murder Mystery 2 ESP','ฟรี')">รับฟรี</button>
-        </div>
-      </div></div>
-    </div>
-
-  </div>
-</div>
-
-<!-- SCRIPT MANAGER -->
-<div class="script-section" id="scripts">
-  <div class="script-inner">
-    <div class="section-header">
-      <div class="section-tag">📜 Scripts</div>
-      <h2 class="section-title">เพิ่ม Script ของร้าน</h2>
-    </div>
-
-    <div class="script-form">
-      <div style="font-family:'Baloo 2',cursive;font-size:1.05rem;font-weight:800;margin-bottom:18px;color:var(--text)">➕ เพิ่มสคริปต์ใหม่</div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">ชื่อสคริปต์</label>
-          <input class="form-input" id="sName" placeholder="เช่น Blox Fruits Auto Farm">
-        </div>
-        <div class="form-group">
-          <label class="form-label">เกม</label>
-          <input class="form-input" id="sGame" placeholder="เช่น Blox Fruits">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">ราคา</label>
-          <input class="form-input" id="sPrice" placeholder="เช่น ฿89 หรือ ฟรี">
-        </div>
-        <div class="form-group">
-          <label class="form-label">หมวดหมู่</label>
-          <input class="form-input" id="sCat" placeholder="เช่น Auto Farm">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group full">
-          <label class="form-label">โค้ดสคริปต์</label>
-          <textarea class="form-textarea" id="sCode" placeholder="วางโค้ด Lua Script ที่นี่..."></textarea>
-        </div>
-      </div>
-      <button class="add-script-btn" onclick="addScript()">➕ เพิ่มสคริปต์</button>
-    </div>
-
-    <div class="script-list" id="scriptList">
-      <div class="sc-empty" id="scEmpty">
-        <div class="sc-ei">📭</div>
-        <div>ยังไม่มีสคริปต์ — เพิ่มได้เลย!</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- HOW TO -->
-<div class="howto" id="howto">
-  <div class="howto-inner">
-    <div class="section-header">
-      <div class="section-tag">📖 วิธีใช้งาน</div>
-      <h2 class="section-title">ใช้งานง่าย แค่ 4 ขั้นตอน</h2>
-    </div>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num" style="background:linear-gradient(135deg,#4D96FF,#845EF7)">1</div>
-        <div class="step-title">เลือกสคริปต์</div>
-        <div class="step-desc">เลือกสคริปต์ที่ต้องการ แล้วกดซื้อหรือรับฟรี</div>
-      </div>
-      <div class="step">
-        <div class="step-num" style="background:linear-gradient(135deg,#FF6B35,#FF4757)">2</div>
-        <div class="step-title">ชำระเงิน</div>
-        <div class="step-desc">โอนเงิน แล้วส่งสลิปผ่าน Discord</div>
-      </div>
-      <div class="step">
-        <div class="step-num" style="background:linear-gradient(135deg,#6BCB77,#4CAF50)">3</div>
-        <div class="step-title">รับสคริปต์</div>
-        <div class="step-desc">รับโค้ดสคริปต์ทันที ภายใน 5 นาที</div>
-      </div>
-      <div class="step">
-        <div class="step-num" style="background:linear-gradient(135deg,#845EF7,#F06595)">4</div>
-        <div class="step-title">ใช้งาน</div>
-        <div class="step-desc">เปิด Executor → วางโค้ด → Execute → เสร็จ!</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- REDEEM SECTION -->
-<div class="redeem-section" id="redeem">
-  <div class="redeem-inner">
-    <div class="section-header">
-      <div class="section-tag">🎁 Redeem</div>
-      <h2 class="section-title">กรอกโค้ดรับ Script</h2>
-    </div>
-    <div class="redeem-card">
-      <div class="redeem-icon">🎟️</div>
-      <div class="redeem-title">มีโค้ดอยู่ใช่ไหม?</div>
-      <div class="redeem-sub">กรอกโค้ดที่ได้รับจากร้าน แล้วกดแลก<br>ระบบจะแสดง Script ให้ทันทีเลย</div>
-      <div class="redeem-row">
-        <input class="redeem-input" id="redeemMainInput" placeholder="กรอกโค้ดที่นี่..." maxlength="30"
-          onkeydown="if(event.key==='Enter') redeemMain()">
-        <button class="redeem-btn" onclick="redeemMain()">แลกโค้ด</button>
-      </div>
-      <div class="redeem-status" id="redeemStatus"></div>
-      <div class="redeem-script-box" id="redeemScriptBox"></div>
-      <div class="redeem-reward-box" id="redeemRewardBox">
-        <div class="reward-icon" id="rewardIcon">💰</div>
-        <div class="reward-info">
-          <div class="reward-amt" id="rewardAmt">+0</div>
-          <div class="reward-lbl" id="rewardLabel">เครดิต</div>
-        </div>
-      </div>
-      <button class="redeem-copy-btn" id="redeemCopyBtn" onclick="copyRedeemScript()">⎘ Copy Script ไปวางใน Executor</button>
-
-      <hr class="redeem-divider">
-      <div class="redeem-codes-title">โค้ดที่ใช้ได้ตอนนี้</div>
-      <div class="redeem-codes-grid" id="redeemCodesGrid"></div>
-    </div>
-  </div>
-</div>
-
-<!-- CONTACT -->
-<div class="contact-section" id="contact">
-  <div class="section-tag">💬 ติดต่อเรา</div>
-  <h2 class="section-title" style="margin-top:10px">พร้อมช่วยเหลือ 24/7</h2>
-  <div class="contact-card">
-    <div class="contact-icon">🤝</div>
-    <div class="contact-title">ติดต่อสั่งซื้อได้เลย</div>
-    <div class="contact-sub">มีคำถามหรืออยากสั่งซื้อสคริปต์?<br>ทีมงานพร้อมตอบทุกวัน ไม่มีวันหยุด</div>
-    <div class="contact-btns">
-      <a id="discordBtn" href="#" target="_blank" class="cbtn discord">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.003.028.018.054.038.068A20.044 20.044 0 0 0 6.13 20.34a.077.077 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.201 13.201 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 20.067 20.067 0 0 0 6.015-3.215.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
-        เข้าร่วม Discord
-      </a>
-    </div>
-    <!-- Discord link input -->
-    <div class="dc-input-wrap">
-      <label class="dc-label">🔗 ลิงก์กลุ่ม Discord ของร้าน</label>
-      <div class="dc-row">
-        <input class="dc-field" id="dcField" type="text" placeholder="https://discord.gg/xxxxxxx">
-        <button class="dc-save" onclick="saveDiscord()">บันทึก</button>
-      </div>
-      <div class="dc-status" id="dcStatus"></div>
-    </div>
-  </div>
-</div>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo">BObs Hub</div>
-  <p>© 2026 BObs Hub — Script Roblox คุณภาพสูง</p>
-  <p>⚠️ ใช้เพื่อความบันเทิงส่วนตัวเท่านั้น</p>
-</footer>
-
-<!-- DOCK NAV -->
-<div class="dock-outer" id="dockOuter">
-  <div class="dock-panel" id="dockPanel">
-    <div class="dock-item" data-target=".hero" title="หน้าแรก"><div class="dock-icon">🏠</div><div class="dock-label">หน้าแรก</div></div>
-    <div class="dock-item" data-target="#products" title="สคริปต์"><div class="dock-icon">🛒</div><div class="dock-label">สคริปต์</div></div>
-    <div class="dock-item" data-target="#redeem" title="Redeem"><div class="dock-icon">🎁</div><div class="dock-label">Redeem</div></div>
-    <div class="dock-item" data-target="#scripts" title="เพิ่ม Script"><div class="dock-icon">📜</div><div class="dock-label">เพิ่ม Script</div></div>
-    <div class="dock-item" data-target="#howto" title="วิธีใช้"><div class="dock-icon">📖</div><div class="dock-label">วิธีใช้</div></div>
-    <div class="dock-item" data-target="#contact" title="ติดต่อ"><div class="dock-icon">💬</div><div class="dock-label">ติดต่อ</div></div>
-  </div>
-</div>
-
-<!-- MODAL -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
-  <div class="modal">
-    <div class="modal-icon">🛒</div>
-    <h3 id="modalTitle"></h3>
-    <p>ราคา: <strong id="modalPrice"></strong><br><br>ติดต่อผ่าน Discord ทีมงานจะส่งสคริปต์ให้ภายใน 5 นาที!</p>
-    <div style="display:flex;gap:10px;justify-content:center;margin-top:8px">
-      <a id="modalDcBtn" href="#" target="_blank" class="cbtn discord" style="font-size:0.85rem;padding:10px 20px">Discord</a>
-    </div>
-    <button class="modal-close" onclick="closeModal()">ปิด</button>
-  </div>
-</div>
-
-<!-- SCRIPT REWARD POPUP -->
-<div class="sr-popup" id="scriptRewardPopup">
-  <div class="sr-box">
-    <h3>🎉 รับ Script สำเร็จ!</h3>
-    <p>โค้ด <b id="srCodeName"></b> — คัดลอกสคริปต์ด้านล่างแล้ววางใน Executor ได้เลย</p>
-    <div class="sr-code-block" id="srScriptBox"></div>
-    <div class="sr-actions">
-      <button class="sr-copy-btn" onclick="copyScriptReward()">⎘ Copy Script</button>
-      <button class="sr-close-btn" onclick="document.getElementById('scriptRewardPopup').classList.remove('show')">ปิด</button>
-    </div>
-  </div>
-</div>
-
-<!-- ADMIN PANEL -->
-<button class="admin-toggle" onclick="toggleAdminPanel()">⚙️ Admin</button>
-
-<div class="admin-panel" id="adminPanel" onclick="if(event.target===this)toggleAdminPanel()">
-  <div class="admin-box">
-    <h3>
-      ⚙️ จัดการโค้ด
-      <button class="admin-close-btn" onclick="toggleAdminPanel()">✕</button>
-    </h3>
-
-    <!-- Add new code -->
-    <label class="adm-label">➕ เพิ่มโค้ดใหม่</label>
-    <div class="adm-row">
-      <input class="adm-input" id="admCodeKey" placeholder="ชื่อโค้ด เช่น SUMMER24" style="text-transform:uppercase">
-      <select class="adm-select" id="admCodeType" onchange="showAdmCodeScript(this.value)">
-        <option value="credits">เครดิต</option>
-        <option value="spins">Spin</option>
-        <option value="script">Script</option>
-      </select>
-    </div>
-    <div class="adm-row" id="admAmtWrap">
-      <input class="adm-input" id="admCodeAmt" type="number" placeholder="จำนวน เช่น 10" min="1">
-    </div>
-    <div id="admScriptWrap" style="display:none">
-      <textarea class="adm-textarea" id="admCodeScript" placeholder="วางโค้ด Lua Script ที่นี่...&#10;-- ลูกค้าจะได้รับโค้ดนี้หลังแลก"></textarea>
-    </div>
-    <button class="adm-add-btn" onclick="addAdminCode()" style="width:100%;margin-bottom:0">➕ เพิ่มโค้ด</button>
-
-    <div class="adm-divider"></div>
-
-    <!-- Code list -->
-    <label class="adm-label">📋 โค้ดทั้งหมด (<span id="codeCount">0</span> โค้ด)</label>
-    <div class="adm-code-list" id="adminCodeList"></div>
-  </div>
-</div>
-
-<!-- CREDIT & SPIN POPUP -->
-<div class="credit-popup" id="creditPopup" onclick="if(event.target===this)closeCreditPopup()">
-  <div class="credit-box">
-    <div class="credit-box-title">💰 เครดิต & Spin ของคุณ</div>
-    <div class="credit-box-sub">ใส่ชื่อ Roblox เพื่อเช็คยอด</div>
-    <div class="credit-lookup-row">
-      <input class="credit-lookup-input" id="creditLookupInput" placeholder="ชื่อ Roblox..."
-        onkeydown="if(event.key==='Enter')lookupCredit()">
-      <button class="credit-lookup-btn" onclick="lookupCredit()">เช็ค</button>
-    </div>
-    <div class="credit-err" id="creditErr"></div>
-    <div class="credit-result" id="creditResult">
-      <div class="credit-cards">
-        <div class="credit-card c-credits">
-          <div class="cc-icon">💰</div>
-          <div class="cc-val" id="ccCredits">0</div>
-          <div class="cc-lbl">เครดิต</div>
-        </div>
-        <div class="credit-card c-spins">
-          <div class="cc-icon">🎰</div>
-          <div class="cc-val" id="ccSpins">0</div>
-          <div class="cc-lbl">Spin</div>
-        </div>
-      </div>
-    </div>
-    <button class="credit-close" onclick="closeCreditPopup()">ปิด</button>
-  </div>
-</div>
-
-<!-- three.js — used by the Beams WebGL hero background below -->
-<script src="https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.469.0/dist/umd/lucide.min.js"></script>
 <script>
-  // ── BEAMS (vanilla port of Beams.jsx — animated noise-displaced plane beams) ──
-  (function(){
-    const NOISE_GLSL = `
-float random (in vec2 st) {
-    return fract(sin(dot(st.xy,
-                         vec2(12.9898,78.233)))*
-        43758.5453123);
+var L=[
+{g:"เริ่มต้น",t:"เว็บทำงานอย่างไร",tags:1,
+ p:["เว็บเพจทุกหน้าประกอบด้วย 3 ส่วน: <b>HTML</b> กำหนดโครงสร้างและเนื้อหา, <b>CSS</b> กำหนดหน้าตา, และ <b>JavaScript</b> กำหนดการโต้ตอบ ในคอร์สนี้เราเรียน HTML และ CSS","เบราว์เซอร์อ่านไฟล์ HTML แล้วสร้างหน้าเว็บให้เรา คุณเขียนด้วยโปรแกรมแก้ข้อความอะไรก็ได้ เช่น VS Code แล้วบันทึกเป็นไฟล์ .html เปิดในเบราว์เซอร์ได้เลย"],
+ s:"ตัวอย่างแรก",x:"ไฟล์ HTML ที่เล็กที่สุดที่ใช้งานได้",
+ c:"<h1>สวัสดีชาวเว็บ</h1>\n<p>นี่คือหน้าเว็บหน้าแรกของฉัน</p>"},
+{g:"เริ่มต้น",t:"โครงสร้างเอกสาร HTML",
+ p:["HTML ใช้ <b>แท็ก</b> ครอบเนื้อหา เช่น <code>&lt;p&gt;…&lt;/p&gt;</code> มีแท็กเปิดและแท็กปิด บางแท็กไม่มีเนื้อหาข้างใน เช่น <code>&lt;img&gt;</code> และ <code>&lt;br&gt;</code>","ทุกหน้าเริ่มด้วย <code>&lt;!DOCTYPE html&gt;</code> ตามด้วย <code>&lt;html&gt;</code> ซึ่งมี <code>&lt;head&gt;</code> (ข้อมูลของหน้า) และ <code>&lt;body&gt;</code> (สิ่งที่ผู้ใช้เห็น)"],
+ s:"โครงมาตรฐาน",x:"ใส่ lang และ charset ทุกครั้งเพื่อให้ภาษาไทยแสดงถูกต้อง",
+ c:"<!DOCTYPE html>\n<html lang=\"th\">\n<head>\n  <meta charset=\"utf-8\">\n  <title>หน้าของฉัน</title>\n</head>\n<body>\n  <h1>หัวข้อ</h1>\n</body>\n</html>"},
+{g:"HTML",t:"ข้อความและหัวข้อ",
+ p:["<code>&lt;h1&gt;</code> ถึง <code>&lt;h6&gt;</code> คือหัวข้อ ใช้ h1 หนึ่งครั้งต่อหน้า ส่วน <code>&lt;p&gt;</code> คือย่อหน้า","เน้นข้อความด้วย <code>&lt;strong&gt;</code> (สำคัญ) และ <code>&lt;em&gt;</code> (เน้นน้ำเสียง) เลือกแท็กตามความหมาย ไม่ใช่ตามหน้าตา"],
+ s:"ลองดู",x:"หัวข้อ ย่อหน้า และการเน้นข้อความ",
+ c:"<h1>ชื่อเรื่อง</h1>\n<h2>หัวข้อรอง</h2>\n<p>ข้อความนี้มี <strong>ส่วนสำคัญ</strong> และ <em>ส่วนที่เน้น</em></p>"},
+{g:"HTML",t:"ลิงก์และรูปภาพ",
+ p:["<code>&lt;a href=\"…\"&gt;</code> สร้างลิงก์ ใช้ <code>target=\"_blank\"</code> เพื่อเปิดแท็บใหม่","<code>&lt;img src=\"…\" alt=\"…\"&gt;</code> แสดงรูป แอตทริบิวต์ <code>alt</code> จำเป็นเสมอ เพราะโปรแกรมอ่านหน้าจอและเบราว์เซอร์ใช้อธิบายรูปเมื่อมองไม่เห็น"],
+ s:"ตัวอย่าง",x:"ลิงก์และรูปภาพ (ใช้รูป SVG แบบฝังในโค้ด)",
+ c:"<a href=\"https://developer.mozilla.org\" target=\"_blank\">เปิดเอกสาร MDN</a>\n<br>\n<img alt=\"สี่เหลี่ยมสีเขียว\" width=\"80\"\n  src=\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='50'%3E%3Crect width='80' height='50' fill='%232cf0a0'/%3E%3C/svg%3E\">"},
+{g:"HTML",t:"รายการและตาราง",
+ p:["<code>&lt;ul&gt;</code> คือรายการแบบจุด, <code>&lt;ol&gt;</code> คือรายการแบบเลข แต่ละข้อใช้ <code>&lt;li&gt;</code>","ตารางใช้ <code>&lt;table&gt;</code> มีแถว <code>&lt;tr&gt;</code> หัวคอลัมน์ <code>&lt;th&gt;</code> และช่องข้อมูล <code>&lt;td&gt;</code> ใช้ตารางกับข้อมูลเท่านั้น ไม่ใช้จัดหน้า"],
+ s:"ตัวอย่าง",x:"รายการและตารางเล็ก ๆ",
+ c:"<ol><li>เขียน HTML</li><li>แต่งด้วย CSS</li></ol>\n<table border=\"1\" cellpadding=\"6\">\n  <tr><th>ภาษา</th><th>หน้าที่</th></tr>\n  <tr><td>HTML</td><td>โครงสร้าง</td></tr>\n  <tr><td>CSS</td><td>หน้าตา</td></tr>\n</table>"},
+{g:"HTML",t:"ฟอร์ม",
+ p:["ฟอร์มรับข้อมูลจากผู้ใช้ ใช้ <code>&lt;form&gt;</code> ครอบ <code>&lt;input&gt;</code>, <code>&lt;select&gt;</code>, <code>&lt;textarea&gt;</code> และปุ่ม <code>&lt;button&gt;</code>","ผูกป้ายกำกับกับช่องกรอกด้วย <code>&lt;label for=\"id\"&gt;</code> ให้ตรงกับ <code>id</code> ของ input ผู้ใช้จะกดที่ป้ายเพื่อโฟกัสช่องได้"],
+ s:"ตัวอย่าง",x:"ฟอร์มสมัครอย่างง่าย",
+ c:"<form>\n  <label for=\"n\">ชื่อ</label>\n  <input id=\"n\" type=\"text\" required>\n  <select><option>มือใหม่</option><option>เคยเขียนแล้ว</option></select>\n  <button>สมัคร</button>\n</form>"},
+{g:"HTML",t:"Semantic HTML",
+ p:["แท็กเชิงความหมายบอกว่าส่วนนั้นของหน้าคืออะไร: <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;article&gt;</code>, <code>&lt;footer&gt;</code>","ดีกว่าใช้ <code>&lt;div&gt;</code> ไปทั้งหน้า เพราะช่วยเรื่อง SEO และการเข้าถึง และอ่านโค้ดง่ายกว่า"],
+ s:"ตัวอย่าง",x:"โครงหน้าเว็บแบบมีความหมาย",
+ c:"<header><h1>บล็อกของฉัน</h1></header>\n<nav><a href=\"#\">หน้าแรก</a> <a href=\"#\">เกี่ยวกับ</a></nav>\n<main><article><h2>โพสต์แรก</h2><p>เนื้อหา…</p></article></main>\n<footer>© 2026</footer>"},
+{g:"HTML",t:"div, span และ Block/Inline",
+ p:["องค์ประกอบแบ่งเป็น <b>block</b> (ขึ้นบรรทัดใหม่ กว้างเต็มแถว เช่น <code>div</code>, <code>p</code>, <code>h1</code>) และ <b>inline</b> (อยู่ในบรรทัดเดียวกัน เช่น <code>span</code>, <code>a</code>, <code>strong</code>)","<code>&lt;div&gt;</code> ใช้จัดกลุ่มเนื้อหาเป็นก้อน ส่วน <code>&lt;span&gt;</code> ใช้ห่อข้อความสั้น ๆ เพื่อแต่งเฉพาะจุด"],
+ s:"ตัวอย่าง",x:"div เป็นก้อน ส่วน span อยู่ในบรรทัดเดียวกัน",
+ c:"<div style=\"background:#def;padding:8px\">div ก้อนที่ 1</div>\n<div style=\"background:#fed;padding:8px\">div ก้อนที่ 2</div>\n<p>ข้อความ <span style=\"color:crimson\">สีแดง</span> อยู่ในบรรทัดเดียวกัน</p>"},
+{g:"HTML",t:"แอตทริบิวต์ class และ id",
+ p:["แอตทริบิวต์คือข้อมูลเสริมในแท็กเปิด เช่น <code>class</code>, <code>id</code>, <code>title</code>, <code>lang</code>","<code>class</code> ใช้ซ้ำได้หลายองค์ประกอบ และใส่ได้หลายคลาสคั่นด้วยช่องว่าง ส่วน <code>id</code> ต้องไม่ซ้ำในหน้า ใช้เป็นจุดอ้างอิง เช่น ลิงก์ <code>#top</code>"],
+ s:"ตัวอย่าง",x:"หลายคลาสในองค์ประกอบเดียว",
+ c:"<style>\n  .card { border: 2px solid #0a9f66; padding: 10px; margin: 6px 0; }\n  .big { font-size: 20px; }\n</style>\n<p class=\"card\" id=\"p1\" title=\"คำอธิบาย\">การ์ดปกติ</p>\n<p class=\"card big\">การ์ดตัวใหญ่ (สองคลาส)</p>"},
+{g:"HTML",t:"แท็กน่ารู้",
+ p:["<code>&lt;details&gt;</code> กับ <code>&lt;summary&gt;</code> ทำกล่องพับ/กางได้โดยไม่ต้องใช้ JavaScript","<code>&lt;mark&gt;</code> ไฮไลต์ข้อความ, <code>&lt;abbr title=\"…\"&gt;</code> อธิบายตัวย่อ, <code>&lt;progress&gt;</code> แสดงความคืบหน้า, <code>&lt;code&gt;</code> แสดงโค้ดในประโยค"],
+ s:"ตัวอย่าง",x:"กล่องพับและแท็กช่วยเน้น",
+ c:"<details>\n  <summary>กดเพื่อดูคำตอบ</summary>\n  <p>HTML ย่อมาจาก <abbr title=\"HyperText Markup Language\">HTML</abbr></p>\n</details>\n<p>ข้อความ <mark>ถูกไฮไลต์</mark></p>\n<progress value=\"70\" max=\"100\"></progress>"},
+{g:"HTML",t:"ชนิดของ input และการตรวจสอบ",
+ p:["<code>type</code> ของ input มีหลายแบบ: <code>email</code>, <code>number</code>, <code>date</code>, <code>color</code>, <code>range</code>, <code>password</code> มือถือจะแสดงแป้นพิมพ์ที่เหมาะให้เอง","ตรวจสอบเบื้องต้นด้วยแอตทริบิวต์ <code>required</code>, <code>min</code>, <code>max</code>, <code>minlength</code>, <code>pattern</code> เบราว์เซอร์จะแจ้งข้อผิดพลาดก่อนส่งฟอร์มให้"],
+ s:"ตัวอย่าง",x:"ฟอร์มที่มีการตรวจสอบ (ลองกดส่งโดยไม่กรอก)",
+ c:"<form>\n  <input type=\"email\" placeholder=\"อีเมล\" required><br>\n  <input type=\"number\" min=\"1\" max=\"10\" value=\"5\"><br>\n  <input type=\"color\" value=\"#2cf0a0\">\n  <input type=\"range\" min=\"0\" max=\"100\"><br>\n  <button>ส่ง</button>\n</form>"},
+{g:"CSS",t:"เริ่มใช้ CSS และ Selector",
+ p:["CSS เขียนเป็นกฎ: <code>selector { property: value; }</code> selector เลือกว่าจะแต่งอะไร เช่น แท็ก (<code>p</code>), คลาส (<code>.card</code>), id (<code>#top</code>)","วิธีที่แนะนำคือแยกไฟล์ .css แล้วเชื่อมด้วย <code>&lt;link rel=\"stylesheet\" href=\"style.css\"&gt;</code> ในตัวอย่างเราใช้ <code>&lt;style&gt;</code> เพื่อให้เห็นผลในที่เดียว"],
+ s:"ตัวอย่าง",x:"แต่งด้วยแท็กและคลาส",
+ c:"<style>\n  h1 { color: teal; }\n  .hl { background: gold; padding: 2px 6px; }\n</style>\n<h1>หัวข้อสีเขียวอมฟ้า</h1>\n<p>ข้อความนี้มี <span class=\"hl\">ส่วนที่ไฮไลต์</span></p>"},
+{g:"CSS",t:"สีและตัวอักษร",
+ p:["กำหนดสีได้หลายแบบ: ชื่อ (<code>tomato</code>), hex (<code>#2cf0a0</code>), <code>rgb()</code> และ <code>hsl()</code> ใช้ <code>color</code> สำหรับตัวอักษร และ <code>background</code> สำหรับพื้นหลัง","ตัวอักษรควบคุมด้วย <code>font-family</code>, <code>font-size</code>, <code>font-weight</code>, <code>line-height</code> ภาษาไทยควรใช้ line-height ราว 1.6 ขึ้นไป"],
+ s:"ตัวอย่าง",x:"สีและฟอนต์",
+ c:"<style>\n  body { font-family: sans-serif; line-height: 1.7; }\n  .t { color: #fff; background: hsl(160 70% 35%);\n       padding: 12px; font-size: 20px; font-weight: 700; }\n</style>\n<div class=\"t\">ตัวอักษรสีขาวบนพื้นเขียว</div>"},
+{g:"CSS",t:"Box Model",
+ p:["ทุกองค์ประกอบคือกล่อง ประกอบด้วย <b>content</b> → <b>padding</b> (ช่องว่างด้านใน) → <b>border</b> (เส้นขอบ) → <b>margin</b> (ช่องว่างด้านนอก)","ใส่ <code>box-sizing: border-box</code> เพื่อให้ width รวม padding และ border ไว้แล้ว คำนวณขนาดง่ายขึ้นมาก"],
+ s:"ตัวอย่าง",x:"กล่องที่มี padding, border และ margin",
+ c:"<style>\n  * { box-sizing: border-box; }\n  .box { width: 220px; padding: 20px; margin: 16px;\n         border: 3px solid #0a9f66; border-radius: 12px; }\n</style>\n<div class=\"box\">กล่องของฉัน</div>"},
+{g:"CSS",t:"Flexbox",
+ p:["Flexbox จัดวางองค์ประกอบเป็นแถวหรือคอลัมน์ ใส่ <code>display: flex</code> ที่ตัวแม่ แล้วใช้ <code>justify-content</code> (แนวหลัก) กับ <code>align-items</code> (แนวขวาง)","ใช้ <code>gap</code> กำหนดระยะห่างระหว่างลูก และ <code>flex-wrap: wrap</code> ให้ขึ้นบรรทัดใหม่เมื่อที่ไม่พอ"],
+ s:"ตัวอย่าง",x:"แถบเมนูด้วย Flexbox",
+ c:"<style>\n  nav { display: flex; justify-content: space-between;\n        align-items: center; padding: 10px; background: #eee; }\n  .m { display: flex; gap: 12px; }\n</style>\n<nav><b>โลโก้</b><div class=\"m\"><a href=\"#\">หน้าแรก</a><a href=\"#\">ติดต่อ</a></div></nav>"},
+{g:"CSS",t:"Grid",
+ p:["Grid จัดวางเป็นตารางสองมิติ ใช้ <code>display: grid</code> และ <code>grid-template-columns</code> เช่น <code>repeat(3, 1fr)</code> คือ 3 คอลัมน์เท่ากัน","<code>repeat(auto-fit, minmax(120px, 1fr))</code> ทำให้จำนวนคอลัมน์ปรับตามความกว้างโดยไม่ต้องเขียน media query"],
+ s:"ตัวอย่าง",x:"แกลเลอรีแบบ Grid",
+ c:"<style>\n  .g { display: grid; gap: 8px;\n       grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); }\n  .g div { background: #2cf0a0; padding: 24px; text-align: center; }\n</style>\n<div class=\"g\"><div>1</div><div>2</div><div>3</div><div>4</div><div>5</div></div>"},
+{g:"CSS",t:"Responsive และ Transition",
+ p:["ใส่ <code>&lt;meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"&gt;</code> แล้วใช้ <code>@media (max-width: 600px) { … }</code> เปลี่ยนสไตล์ตามขนาดจอ เขียนสำหรับมือถือก่อนแล้วค่อยขยาย","<code>transition</code> ทำให้ค่าเปลี่ยนอย่างนุ่มนวล ใช้คู่กับ <code>:hover</code> เช่น เปลี่ยนสีปุ่มเมื่อเมาส์ชี้"],
+ s:"ตัวอย่าง",x:"ปุ่มที่เปลี่ยนสีเมื่อชี้ และเปลี่ยนสีพื้นเมื่อจอแคบ",
+ c:"<style>\n  body { background: #def; }\n  button { padding: 10px 18px; border: 0; border-radius: 999px;\n           background: #333; color: #fff; transition: background .2s; }\n  button:hover { background: #0a9f66; }\n  @media (max-width: 400px) { body { background: #fed; } }\n</style>\n<button>ชี้ที่นี่</button>"},
+{g:"CSS",t:"Pseudo-class และ Pseudo-element",
+ p:["<b>Pseudo-class</b> เลือกตามสถานะหรือตำแหน่ง เช่น <code>:hover</code>, <code>:focus</code>, <code>:first-child</code>, <code>:nth-child(2n)</code>","<b>Pseudo-element</b> สร้างหรือเลือกส่วนย่อย เช่น <code>::before</code> และ <code>::after</code> (ต้องมี <code>content</code>) และ <code>::first-line</code>"],
+ s:"ตัวอย่าง",x:"แถบสลับสี และไอคอนที่สร้างด้วย ::before",
+ c:"<style>\n  li:nth-child(even) { background: #eee; }\n  li:hover { background: gold; }\n  li::before { content: \"✓ \"; color: green; }\n</style>\n<ul><li>ข้อ 1</li><li>ข้อ 2</li><li>ข้อ 3</li><li>ข้อ 4</li></ul>"},
+{g:"CSS",t:"Position",
+ p:["<code>position</code> กำหนดวิธีวางองค์ประกอบ: <code>static</code> (ปกติ), <code>relative</code> (ขยับจากที่เดิม), <code>absolute</code> (วางอิงตัวแม่ที่เป็น relative), <code>fixed</code> (ติดหน้าจอ), <code>sticky</code> (ติดเมื่อเลื่อนถึง)","สูตรยอดนิยม: ตัวแม่ใส่ <code>position: relative</code> แล้วตัวลูกใส่ <code>position: absolute</code> พร้อม <code>top</code>/<code>right</code> เพื่อทำป้ายมุมการ์ด"],
+ s:"ตัวอย่าง",x:"ป้าย NEW ที่มุมขวาบนของการ์ด",
+ c:"<style>\n  .c { position: relative; width: 200px; padding: 24px;\n       border: 2px solid #333; border-radius: 12px; }\n  .b { position: absolute; top: -10px; right: -10px;\n       background: crimson; color: #fff; padding: 2px 10px;\n       border-radius: 999px; font-size: 12px; }\n</style>\n<div class=\"c\">สินค้าใหม่<span class=\"b\">NEW</span></div>"},
+{g:"CSS",t:"ตัวแปร CSS และหน่วย",
+ p:["ตัวแปรประกาศด้วย <code>--ชื่อ: ค่า</code> มักไว้ที่ <code>:root</code> แล้วเรียกด้วย <code>var(--ชื่อ)</code> เปลี่ยนธีมทั้งเว็บได้ที่เดียว","หน่วย: <code>px</code> (คงที่), <code>rem</code> (ตามขนาดฟอนต์หลัก), <code>%</code> (ตามตัวแม่), <code>vw</code>/<code>vh</code> (ตามหน้าจอ) และ <code>clamp(min, ideal, max)</code> ทำขนาดยืดหยุ่นในที่เดียว"],
+ s:"ตัวอย่าง",x:"ธีมสีด้วยตัวแปร และตัวอักษรที่ปรับตามจอ",
+ c:"<style>\n  :root { --main: #0a9f66; --r: 12px; }\n  .a { background: var(--main); border-radius: var(--r);\n       color: #fff; padding: 1rem;\n       font-size: clamp(16px, 4vw, 28px); }\n</style>\n<div class=\"a\">ใช้สีจากตัวแปร</div>"},
+{g:"CSS",t:"Transform และ Animation",
+ p:["<code>transform</code> ย้าย หมุน หรือย่อขยายโดยไม่กระทบการจัดวาง: <code>translate()</code>, <code>rotate()</code>, <code>scale()</code>","<code>@keyframes</code> กำหนดขั้นตอนของแอนิเมชัน แล้วเรียกด้วย <code>animation: ชื่อ เวลา ทำซ้ำ</code> เช่น <code>1s infinite alternate</code>"],
+ s:"ตัวอย่าง",x:"กล่องที่เด้งขึ้นลงและหมุนเมื่อชี้",
+ c:"<style>\n  @keyframes bounce { from { transform: translateY(0); }\n                      to { transform: translateY(-30px); } }\n  .o { width: 60px; height: 60px; margin-top: 40px;\n       background: #2cf0a0; border-radius: 12px;\n       animation: bounce .6s ease-in-out infinite alternate;\n       transition: rotate .3s; }\n  .o:hover { rotate: 45deg; }\n</style>\n<div class=\"o\"></div>"}
+];
+var EN=[
+{t:"How the web works",p:["Every web page has three parts: <b>HTML</b> defines structure and content, <b>CSS</b> defines appearance, and <b>JavaScript</b> adds interaction. This course covers HTML and CSS.","The browser reads an HTML file and builds the page. Write in any text editor, such as VS Code, save as a .html file, and open it in your browser."],s:"Your first example",x:"The smallest HTML file that works."},
+{t:"HTML document structure",p:["HTML wraps content in <b>tags</b>, like <code>&lt;p&gt;…&lt;/p&gt;</code>, with an opening and a closing tag. Some tags have no content, such as <code>&lt;img&gt;</code> and <code>&lt;br&gt;</code>.","Every page starts with <code>&lt;!DOCTYPE html&gt;</code>, then <code>&lt;html&gt;</code>, which holds <code>&lt;head&gt;</code> (page information) and <code>&lt;body&gt;</code> (what users see)."],s:"Standard skeleton",x:"Always set lang and charset so text displays correctly."},
+{t:"Text and headings",p:["<code>&lt;h1&gt;</code> to <code>&lt;h6&gt;</code> are headings. Use one h1 per page. <code>&lt;p&gt;</code> is a paragraph.","Emphasize text with <code>&lt;strong&gt;</code> (important) and <code>&lt;em&gt;</code> (stress). Choose tags by meaning, not by looks."],s:"Try it",x:"Headings, a paragraph, and emphasis."},
+{t:"Links and images",p:["<code>&lt;a href=\"…\"&gt;</code> creates a link. Add <code>target=\"_blank\"</code> to open a new tab.","<code>&lt;img src=\"…\" alt=\"…\"&gt;</code> shows an image. Always include <code>alt</code>: screen readers use it, and browsers show it when the image can't load."],s:"Example",x:"A link and an image (an inline SVG image)."},
+{t:"Lists and tables",p:["<code>&lt;ul&gt;</code> is a bulleted list and <code>&lt;ol&gt;</code> a numbered list. Each item uses <code>&lt;li&gt;</code>.","A table uses <code>&lt;table&gt;</code> with rows <code>&lt;tr&gt;</code>, header cells <code>&lt;th&gt;</code>, and data cells <code>&lt;td&gt;</code>. Use tables for data only, not for page layout."],s:"Example",x:"A list and a small table."},
+{t:"Forms",p:["Forms collect user input. Wrap <code>&lt;input&gt;</code>, <code>&lt;select&gt;</code>, <code>&lt;textarea&gt;</code> and <code>&lt;button&gt;</code> in a <code>&lt;form&gt;</code>.","Tie a label to its field with <code>&lt;label for=\"id\"&gt;</code> matching the input's <code>id</code>. Clicking the label focuses the field."],s:"Example",x:"A simple sign-up form."},
+{t:"Semantic HTML",p:["Semantic tags say what each part of the page is: <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;article&gt;</code>, <code>&lt;footer&gt;</code>.","They beat a page full of <code>&lt;div&gt;</code> because they help SEO and accessibility, and the code is easier to read."],s:"Example",x:"A page skeleton with meaning."},
+{t:"div, span and block/inline",p:["Elements are <b>block</b> (start a new line and fill the row, like <code>div</code>, <code>p</code>, <code>h1</code>) or <b>inline</b> (stay in the line, like <code>span</code>, <code>a</code>, <code>strong</code>).","<code>&lt;div&gt;</code> groups content into a block; <code>&lt;span&gt;</code> wraps short text so you can style just that part."],s:"Example",x:"divs stack as blocks; a span stays inline."},
+{t:"Attributes: class and id",p:["Attributes add extra information to an opening tag, such as <code>class</code>, <code>id</code>, <code>title</code>, <code>lang</code>.","<code>class</code> can be reused and you can list several separated by spaces. <code>id</code> must be unique on the page and works as a reference point, like the link <code>#top</code>."],s:"Example",x:"Several classes on one element."},
+{t:"Handy tags",p:["<code>&lt;details&gt;</code> with <code>&lt;summary&gt;</code> makes a collapsible box with no JavaScript.","<code>&lt;mark&gt;</code> highlights text, <code>&lt;abbr title=\"…\"&gt;</code> explains an abbreviation, <code>&lt;progress&gt;</code> shows progress."],s:"Example",x:"A collapsible box and helper tags."},
+{t:"Input types and validation",p:["Inputs have many <code>type</code> values: <code>email</code>, <code>number</code>, <code>date</code>, <code>color</code>, <code>range</code>, <code>password</code>. Phones show a fitting keyboard automatically.","Basic validation uses <code>required</code>, <code>min</code>, <code>max</code>, <code>minlength</code>, <code>pattern</code>. The browser reports errors before the form is submitted."],s:"Example",x:"A validated form (try submitting it empty)."},
+{t:"Getting started with CSS and selectors",p:["CSS is written as rules: <code>selector { property: value; }</code>. A selector picks what to style, such as a tag (<code>p</code>), a class (<code>.card</code>), or an id (<code>#top</code>).","The recommended way is a separate .css file linked with <code>&lt;link rel=\"stylesheet\" href=\"style.css\"&gt;</code>. Here we use <code>&lt;style&gt;</code> so you see everything in one place."],s:"Example",x:"Styling with tags and classes."},
+{t:"Color and typography",p:["Colors come in several forms: names (<code>tomato</code>), hex (<code>#2cf0a0</code>), <code>rgb()</code> and <code>hsl()</code>. Use <code>color</code> for text and <code>background</code> for backgrounds.","Type is controlled by <code>font-family</code>, <code>font-size</code>, <code>font-weight</code> and <code>line-height</code>. A line-height of about 1.6 or more reads well."],s:"Example",x:"Colors and fonts."},
+{t:"Box model",p:["Every element is a box: <b>content</b> → <b>padding</b> (inner space) → <b>border</b> → <b>margin</b> (outer space).","Set <code>box-sizing: border-box</code> so width includes padding and border. Sizing gets much easier."],s:"Example",x:"A box with padding, border and margin."},
+{t:"Flexbox",p:["Flexbox lays items out in a row or column. Put <code>display: flex</code> on the parent, then use <code>justify-content</code> (main axis) and <code>align-items</code> (cross axis).","Use <code>gap</code> for spacing between children and <code>flex-wrap: wrap</code> to wrap onto new lines when space runs out."],s:"Example",x:"A navigation bar with Flexbox."},
+{t:"Grid",p:["Grid lays out in two dimensions. Use <code>display: grid</code> and <code>grid-template-columns</code>, for example <code>repeat(3, 1fr)</code> for three equal columns.","<code>repeat(auto-fit, minmax(120px, 1fr))</code> adapts the column count to the width, no media query needed."],s:"Example",x:"A Grid gallery."},
+{t:"Responsive design and transitions",p:["Add <code>&lt;meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"&gt;</code>, then use <code>@media (max-width: 600px) { … }</code> to change styles by screen size. Design for mobile first, then scale up.","<code>transition</code> makes value changes smooth. Pair it with <code>:hover</code>, for example to change a button's color on mouse over."],s:"Example",x:"A button that changes color on hover, and a background that changes on narrow screens."},
+{t:"Pseudo-classes and pseudo-elements",p:["<b>Pseudo-classes</b> select by state or position, such as <code>:hover</code>, <code>:focus</code>, <code>:first-child</code>, <code>:nth-child(2n)</code>.","<b>Pseudo-elements</b> create or select parts of an element, such as <code>::before</code> and <code>::after</code> (they need <code>content</code>) and <code>::first-line</code>."],s:"Example",x:"Striped rows and icons made with ::before."},
+{t:"Position",p:["<code>position</code> controls placement: <code>static</code> (default), <code>relative</code> (offset from its normal spot), <code>absolute</code> (placed against a relative parent), <code>fixed</code> (pinned to the screen), <code>sticky</code> (sticks once scrolled to).","Popular pattern: parent gets <code>position: relative</code>, child gets <code>position: absolute</code> with <code>top</code>/<code>right</code> for a corner badge."],s:"Example",x:"A NEW badge on a card's top-right corner."},
+{t:"CSS variables and units",p:["Declare variables as <code>--name: value</code>, usually on <code>:root</code>, then use <code>var(--name)</code>. Change a whole theme in one place.","Units: <code>px</code> (fixed), <code>rem</code> (root font size), <code>%</code> (parent), <code>vw</code>/<code>vh</code> (viewport), and <code>clamp(min, ideal, max)</code> for flexible sizes in one line."],s:"Example",x:"A color theme with variables and responsive text size."},
+{t:"Transform and animation",p:["<code>transform</code> moves, rotates or scales without affecting layout: <code>translate()</code>, <code>rotate()</code>, <code>scale()</code>.","<code>@keyframes</code> defines animation steps, used with <code>animation: name time repeat</code>, for example <code>1s infinite alternate</code>."],s:"Example",x:"A box that bounces and rotates on hover."}
+];
+var UI={
+th:{h1:"เรียนเขียนเว็บ<br>ด้วย <em>HTML + CSS</em>",sub:"บทเรียนสั้น เข้าใจง่าย พร้อมตัวอย่างโค้ดที่กดรันดูผลได้ทันที",start:"เริ่มที่ HTML",soon:"More Soon",ov:"ภาพรวม",co:"แนวคิดหลัก",tags:["ตัวอย่างรันได้","เนื้อหาสั้น","เริ่มจากศูนย์","ภาษาไทย","ฟรี"],nt:"คอร์สนี้ครอบคลุมอะไรบ้าง",nb:"HTML 11 บท และ CSS 10 บท ไล่จากโครงสร้างหน้าเว็บ ไปจนถึง Flexbox, Grid และ Responsive เรียนตามลำดับได้เลย",cp:"คัดลอก",cd:"คัดลอกแล้ว",pv:"ก่อนหน้า",nx:"ถัดไป",st:"เริ่มต้น"},
+en:{h1:"Learn to build the web<br>with <em>HTML + CSS</em>",sub:"Short, clear lessons with code examples you can run right away.",start:"Start with HTML",soon:"More Soon",ov:"Overview",co:"Key ideas",tags:["Runnable examples","Short lessons","From zero","English","Free"],nt:"What this course covers",nb:"11 HTML lessons and 10 CSS lessons, from page structure to Flexbox, Grid and responsive design. Follow them in order.",cp:"Copy",cd:"Copied",pv:"Previous",nx:"Next",st:"Start"}
+};
+var lang="th";try{lang=localStorage.getItem("wl")||(/^th/.test(navigator.language)?"th":"en")}catch(e){lang=/^th/.test(navigator.language)?"th":"en"}
+if(!UI[lang])lang="th";
+function U(k){return UI[lang][k]}
+function X(k){return Object.assign({},L[k],lang==="en"?EN[k]:{})}
+function sync(){document.documentElement.lang=lang;document.querySelectorAll("[data-lang]").forEach(function(e){e.value=lang});document.querySelectorAll("[data-i]").forEach(function(e){e.innerHTML=U(e.dataset.i)})}
+var IC=["globe","file-code","type","link","list","text-cursor-input","layout-template","box","tag","sparkles","square-pen","paintbrush","palette","box","move-horizontal","layout-grid","smartphone","mouse-pointer-click","move","variable","wand-sparkles"];
+function ic(){if(window.lucide)lucide.createIcons()}
+var $=function(i){return document.getElementById(i)};
+var cols=["#2cf84a","#c6f21b","#ffb829","#2dd3ee","#3b5bff"];
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+function nav(i){var h="",g="";L.forEach(function(_,k){var l=X(k);if(l.g!==g){g=l.g;h+="<h4>"+(g==="เริ่มต้น"?U("st"):g)+"</h4>"}h+='<a href="#/'+k+'" class="'+(k===i?"on":"")+'"><i data-lucide="'+IC[k]+'"></i>'+l.t+"</a>"});$("nav").innerHTML=h}
+function doc(i){
+ var l=X(i),h="";
+ if(i===0)h+='<div class="ban"><span>WebLearn</span><span>Documentation</span></div><div class="tags">'+U("tags").map(function(t,k){return'<span style="background:'+cols[k]+(k>3?";color:#fff":"")+'"><i data-lucide="'+["play","zap","sprout","languages","heart"][k]+'"></i>'+t+"</span>"}).join("")+'</div><div class="note"><b><i data-lucide="info"></i>'+U("nt")+'</b><span>'+U("nb")+'</span></div>';
+ h+="<h1>"+l.t+"</h1><h2 id=\"a\">"+(i===0?U("ov"):U("co"))+"</h2>"+l.p.map(function(p){return"<p>"+p+"</p>"}).join("");
+ h+='<h2 id="b">'+l.s+"</h2><p>"+l.x+'</p><div class="cb"><div class="h"><span>HTML</span><button data-copy><i data-lucide="copy"></i><span>'+U("cp")+'</span></button></div><pre>'+esc(l.c)+'</pre><iframe sandbox title="ผลลัพธ์" srcdoc="'+l.c.replace(/&/g,"&amp;").replace(/"/g,"&quot;")+'"></iframe></div>';
+ h+='<div class="pn">'+(i>0?'<a href="#/'+(i-1)+'"><small><i data-lucide="chevron-left"></i>'+U("pv")+'</small>'+X(i-1).t+"</a>":"")+(i<L.length-1?'<a class="nx" href="#/'+(i+1)+'"><small>'+U("nx")+'<i data-lucide="chevron-right"></i></small>'+X(i+1).t+"</a>":"")+"</div>";
+ $("art").innerHTML=h;
+ $("toc").innerHTML="<div><i data-lucide=\"align-left\"></i>On this page</div><a href=\"#a\" onclick=\"go('a');return false\">"+(i===0?U("ov"):U("co"))+"</a><a href=\"#b\" onclick=\"go('b');return false\">"+l.s+"</a>";
+ nav(i);scrollTo(0,0);$("side").classList.remove("open");document.title=l.t+" | WebLearn";ic();
 }
-float noise (in vec2 st) {
-    vec2 i = floor(st);
-    vec2 f = fract(st);
-    float a = random(i);
-    float b = random(i + vec2(1.0, 0.0));
-    float c = random(i + vec2(0.0, 1.0));
-    float d = random(i + vec2(1.0, 1.0));
-    vec2 u = f * f * (3.0 - 2.0 * f);
-    return mix(a, b, u.x) +
-           (c - a)* u.y * (1.0 - u.x) +
-           (d - b) * u.x * u.y;
+function go(id){$(id).scrollIntoView({behavior:"smooth"})}
+function route(){
+ var m=location.hash.match(/^#\/(\d+)$/);
+ if(m&&L[+m[1]]){$("home").style.display="none";$("docs").style.display="block";doc(+m[1])}
+ else if(location.hash.indexOf("#/")===0||!location.hash){$("home").style.display="flex";$("docs").style.display="none";document.title="WebLearn"}
 }
-vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
-vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
-vec3 fade(vec3 t) {return t*t*t*(t*(t*6.0-15.0)+10.0);}
-float cnoise(vec3 P){
-  vec3 Pi0 = floor(P);
-  vec3 Pi1 = Pi0 + vec3(1.0);
-  Pi0 = mod(Pi0, 289.0);
-  Pi1 = mod(Pi1, 289.0);
-  vec3 Pf0 = fract(P);
-  vec3 Pf1 = Pf0 - vec3(1.0);
-  vec4 ix = vec4(Pi0.x, Pi1.x, Pi0.x, Pi1.x);
-  vec4 iy = vec4(Pi0.yy, Pi1.yy);
-  vec4 iz0 = Pi0.zzzz;
-  vec4 iz1 = Pi1.zzzz;
-  vec4 ixy = permute(permute(ix) + iy);
-  vec4 ixy0 = permute(ixy + iz0);
-  vec4 ixy1 = permute(ixy + iz1);
-  vec4 gx0 = ixy0 / 7.0;
-  vec4 gy0 = fract(floor(gx0) / 7.0) - 0.5;
-  gx0 = fract(gx0);
-  vec4 gz0 = vec4(0.5) - abs(gx0) - abs(gy0);
-  vec4 sz0 = step(gz0, vec4(0.0));
-  gx0 -= sz0 * (step(0.0, gx0) - 0.5);
-  gy0 -= sz0 * (step(0.0, gy0) - 0.5);
-  vec4 gx1 = ixy1 / 7.0;
-  vec4 gy1 = fract(floor(gx1) / 7.0) - 0.5;
-  gx1 = fract(gx1);
-  vec4 gz1 = vec4(0.5) - abs(gx1) - abs(gy1);
-  vec4 sz1 = step(gz1, vec4(0.0));
-  gx1 -= sz1 * (step(0.0, gx1) - 0.5);
-  gy1 -= sz1 * (step(0.0, gy1) - 0.5);
-  vec3 g000 = vec3(gx0.x,gy0.x,gz0.x);
-  vec3 g100 = vec3(gx0.y,gy0.y,gz0.y);
-  vec3 g010 = vec3(gx0.z,gy0.z,gz0.z);
-  vec3 g110 = vec3(gx0.w,gy0.w,gz0.w);
-  vec3 g001 = vec3(gx1.x,gy1.x,gz1.x);
-  vec3 g101 = vec3(gx1.y,gy1.y,gz1.y);
-  vec3 g011 = vec3(gx1.z,gy1.z,gz1.z);
-  vec3 g111 = vec3(gx1.w,gy1.w,gz1.w);
-  vec4 norm0 = taylorInvSqrt(vec4(dot(g000,g000),dot(g010,g010),dot(g100,g100),dot(g110,g110)));
-  g000 *= norm0.x; g010 *= norm0.y; g100 *= norm0.z; g110 *= norm0.w;
-  vec4 norm1 = taylorInvSqrt(vec4(dot(g001,g001),dot(g011,g011),dot(g101,g101),dot(g111,g111)));
-  g001 *= norm1.x; g011 *= norm1.y; g101 *= norm1.z; g111 *= norm1.w;
-  float n000 = dot(g000, Pf0);
-  float n100 = dot(g100, vec3(Pf1.x,Pf0.yz));
-  float n010 = dot(g010, vec3(Pf0.x,Pf1.y,Pf0.z));
-  float n110 = dot(g110, vec3(Pf1.xy,Pf0.z));
-  float n001 = dot(g001, vec3(Pf0.xy,Pf1.z));
-  float n101 = dot(g101, vec3(Pf1.x,Pf0.y,Pf1.z));
-  float n011 = dot(g011, vec3(Pf0.x,Pf1.yz));
-  float n111 = dot(g111, Pf1);
-  vec3 fade_xyz = fade(Pf0);
-  vec4 n_z = mix(vec4(n000,n100,n010,n110),vec4(n001,n101,n011,n111),fade_xyz.z);
-  vec2 n_yz = mix(n_z.xy,n_z.zw,fade_xyz.y);
-  float n_xyz = mix(n_yz.x,n_yz.y,fade_xyz.x);
-  return 2.2 * n_xyz;
-}
-`;
-
-    function hexToRGB(hex){
-      const c=hex.replace('#','');
-      return [parseInt(c.substring(0,2),16)/255, parseInt(c.substring(2,4),16)/255, parseInt(c.substring(4,6),16)/255];
-    }
-
-    function extendMaterial(BaseMaterial, cfg){
-      const physical = THREE.ShaderLib.physical;
-      const uniforms = THREE.UniformsUtils.clone(physical.uniforms);
-      const baseDefines = physical.defines || {};
-      const defaults = new BaseMaterial(cfg.material || {});
-      if(defaults.color) uniforms.diffuse.value = defaults.color;
-      if('roughness' in defaults) uniforms.roughness.value = defaults.roughness;
-      if('metalness' in defaults) uniforms.metalness.value = defaults.metalness;
-      Object.entries(cfg.uniforms || {}).forEach(([key,u])=>{
-        uniforms[key] = (u!==null && typeof u==='object' && 'value' in u) ? u : {value:u};
-      });
-      let vert = `${cfg.header}\n${cfg.vertexHeader||''}\n${physical.vertexShader}`;
-      let frag = `${cfg.header}\n${cfg.fragmentHeader||''}\n${physical.fragmentShader}`;
-      for(const [inc,code] of Object.entries(cfg.vertex||{})) vert = vert.replace(inc, `${inc}\n${code}`);
-      for(const [inc,code] of Object.entries(cfg.fragment||{})) frag = frag.replace(inc, `${inc}\n${code}`);
-      return new THREE.ShaderMaterial({
-        defines:{...baseDefines}, uniforms, vertexShader:vert, fragmentShader:frag,
-        lights:true, fog:!!(cfg.material && cfg.material.fog)
-      });
-    }
-
-    function createStackedPlanesGeometry(n, width, height, spacing, heightSegments){
-      const geometry = new THREE.BufferGeometry();
-      const numVertices = n * (heightSegments+1) * 2;
-      const numFaces = n * heightSegments * 2;
-      const positions = new Float32Array(numVertices*3);
-      const indices = new Uint32Array(numFaces*3);
-      const uvs = new Float32Array(numVertices*2);
-      let vOff=0, iOff=0, uOff=0;
-      const totalWidth = n*width + (n-1)*spacing;
-      const xBase = -totalWidth/2;
-      for(let i=0;i<n;i++){
-        const xOffset = xBase + i*(width+spacing);
-        const uvX = Math.random()*300, uvY0 = Math.random()*300;
-        for(let j=0;j<=heightSegments;j++){
-          const y = height*(j/heightSegments - 0.5);
-          positions.set([xOffset,y,0, xOffset+width,y,0], vOff*3);
-          const uvY = j/heightSegments;
-          uvs.set([uvX, uvY+uvY0, uvX+1, uvY+uvY0], uOff);
-          if(j<heightSegments){
-            const a=vOff,b=vOff+1,c=vOff+2,d=vOff+3;
-            indices.set([a,b,c,c,b,d], iOff);
-            iOff+=6;
-          }
-          vOff+=2; uOff+=4;
-        }
-      }
-      geometry.setAttribute('position', new THREE.BufferAttribute(positions,3));
-      geometry.setAttribute('uv', new THREE.BufferAttribute(uvs,2));
-      geometry.setIndex(new THREE.BufferAttribute(indices,1));
-      geometry.computeVertexNormals();
-      return geometry;
-    }
-
-    function initBeams(){
-      try{
-        const canvas = document.getElementById('beamsCanvas');
-        const container = canvas && canvas.parentElement;
-        if(!canvas || !container || !window.THREE) return;
-
-        // tuned to the site's purple/blue palette instead of the component's black-on-black default
-        const opt = {
-          beamWidth:2, beamHeight:16, beamNumber:10,
-          lightColor:'#845EF7', beamColor:'#4D96FF',
-          speed:1.1, noiseIntensity:1.4, scale:0.25, rotation:-8, lightMode:true
-        };
-
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
-        camera.position.set(0,0,20);
-
-        const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, 2));
-
-        const beamMaterial = extendMaterial(THREE.MeshStandardMaterial, {
-          header:`
-varying vec3 vEye; varying float vNoise; varying vec2 vUv; varying vec3 vPosition;
-uniform float time; uniform float uSpeed; uniform float uNoiseIntensity; uniform float uScale;
-${NOISE_GLSL}`,
-          vertexHeader:`
-float getPos(vec3 pos){ vec3 noisePos=vec3(pos.x*0., pos.y-uv.y, pos.z+time*uSpeed*3.)*uScale; return cnoise(noisePos); }
-vec3 getCurrentPos(vec3 pos){ vec3 newpos=pos; newpos.z+=getPos(pos); return newpos; }
-vec3 getNormal(vec3 pos){ vec3 curpos=getCurrentPos(pos); vec3 nextposX=getCurrentPos(pos+vec3(0.01,0.0,0.0)); vec3 nextposZ=getCurrentPos(pos+vec3(0.0,-0.01,0.0)); vec3 tangentX=normalize(nextposX-curpos); vec3 tangentZ=normalize(nextposZ-curpos); return normalize(cross(tangentZ,tangentX)); }`,
-          fragmentHeader:'uniform float uLightMode;',
-          vertex:{
-            '#include <begin_vertex>':'transformed.z += getPos(transformed.xyz);',
-            '#include <beginnormal_vertex>':'objectNormal = getNormal(position.xyz);'
-          },
-          fragment:{
-            '#include <dithering_fragment>':`
-float randomNoise = noise(gl_FragCoord.xy);
-gl_FragColor.rgb -= randomNoise/15. * uNoiseIntensity;
-if(uLightMode > 0.5){
-  float energy = max(max(gl_FragColor.r, gl_FragColor.g), gl_FragColor.b);
-  vec3 chroma = clamp(gl_FragColor.rgb/max(energy,0.0001),0.0,1.0);
-  chroma = pow(chroma, vec3(1.2));
-  gl_FragColor.rgb = mix(vec3(1.0), chroma, clamp(energy*0.98,0.0,0.94));
-}`
-          },
-          material:{fog:false},
-          uniforms:{
-            diffuse: new THREE.Color(...hexToRGB(opt.beamColor)),
-            time:{value:0}, roughness:0.3, metalness:0.3,
-            uSpeed:{value:opt.speed}, envMapIntensity:10,
-            uNoiseIntensity:opt.noiseIntensity, uScale:opt.scale,
-            uLightMode: opt.lightMode ? 1 : 0
-          }
-        });
-
-        const geometry = createStackedPlanesGeometry(opt.beamNumber, opt.beamWidth, opt.beamHeight, 0, 70);
-        const mesh = new THREE.Mesh(geometry, beamMaterial);
-
-        const group = new THREE.Group();
-        group.rotation.z = opt.rotation * Math.PI/180;
-        group.add(mesh);
-        scene.add(group);
-
-        const dirLight = new THREE.DirectionalLight(new THREE.Color(opt.lightColor), 1);
-        dirLight.position.set(0,3,10);
-        group.add(dirLight);
-        scene.add(new THREE.AmbientLight(0xffffff, 1));
-
-        function resize(){
-          const w = container.clientWidth, h = container.clientHeight || 1;
-          renderer.setSize(w, h, false);
-          camera.aspect = w/h;
-          camera.updateProjectionMatrix();
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        const clock = new THREE.Clock();
-        function animate(){
-          const delta = clock.getDelta();
-          beamMaterial.uniforms.time.value += 0.1 * delta;
-          renderer.render(scene, camera);
-          requestAnimationFrame(animate);
-        }
-        animate();
-      }catch(err){
-        console.warn('Beams background disabled:', err);
-      }
-    }
-    document.addEventListener('DOMContentLoaded', initBeams);
-  })();
-</script>
-
-<script>
-  // ── CREDIT POPUP ──
-  function openCreditPopup(){
-    document.getElementById('creditPopup').classList.add('show');
-    document.getElementById('creditResult').style.display='none';
-    document.getElementById('creditErr').style.display='none';
-    document.getElementById('creditLookupInput').value='';
-    setTimeout(()=>document.getElementById('creditLookupInput').focus(),100);
-  }
-  function closeCreditPopup(){
-    document.getElementById('creditPopup').classList.remove('show');
-  }
-  function lookupCredit(){
-    const input=document.getElementById('creditLookupInput');
-    const err=document.getElementById('creditErr');
-    const result=document.getElementById('creditResult');
-    const username=input.value.trim().toLowerCase();
-    err.style.display='none';
-    result.style.display='none';
-    if(!username){err.textContent='⚠️ กรุณาใส่ชื่อ Roblox';err.style.display='block';return;}
-    // ค้นหาจาก localStorage โดยตรง (ไม่ต้องผ่าน API)
-    let found=null;
-    for(let i=0;i<localStorage.length;i++){
-      const key=localStorage.key(i);
-      if(key&&key.startsWith('rbx_')){
-        try{
-          const data=JSON.parse(localStorage.getItem(key)||'null');
-          if(data&&data.uname&&data.uname.toLowerCase()===username){
-            found=data; break;
-          }
-        }catch(e){}
-      }
-    }
-    if(!found){
-      err.textContent='❌ ไม่พบข้อมูล "'+input.value.trim()+'" — ลองเข้าสู่ระบบ Sidebar ก่อนนะครับ';
-      err.style.display='block'; return;
-    }
-    document.getElementById('ccCredits').textContent=found.credits??0;
-    document.getElementById('ccSpins').textContent=found.spins??0;
-    result.style.display='block';
-  }
-
-  // ── AUTH TABS ──
-  function switchTab(tab){
-    document.getElementById('panelRegister').style.display=tab==='register'?'block':'none';
-    document.getElementById('panelLogin').style.display=tab==='login'?'block':'none';
-    document.getElementById('tabRegister').classList.toggle('active',tab==='register');
-    document.getElementById('tabLogin').classList.toggle('active',tab==='login');
-  }
-
-  // ── MODAL ──
-  function openModal(n,p){
-    document.getElementById('modalTitle').textContent=n;
-    document.getElementById('modalPrice').textContent=p;
-    document.getElementById('modalOverlay').classList.add('show');
-  }
-  function closeModal(e){
-    if(!e||e.target===document.getElementById('modalOverlay'))
-      document.getElementById('modalOverlay').classList.remove('show');
-  }
-
-  // ── FILTER ──
-  function filterCards(cat,btn){
-    document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('searchInput').value='';
-    document.getElementById('noResult').style.display='none';
-    document.querySelectorAll('.product-card').forEach(card=>{
-      const show=cat==='all'||card.dataset.cat.includes(cat);
-      card.style.display=show?'':'none';
-      if(show) card.style.animation='popIn 0.3s ease both';
-    });
-  }
-
-  // ── SEARCH ──
-  function searchCards(q){
-    const query=q.toLowerCase().trim();
-    let found=0;
-    document.querySelectorAll('.product-card').forEach(card=>{
-      const show=!query||card.innerText.toLowerCase().includes(query);
-      card.style.display=show?'':'none';
-      if(show) found++;
-    });
-    document.getElementById('noResult').style.display=found===0?'block':'none';
-    if(query) document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
-    else document.querySelector('.cat-btn').classList.add('active');
-  }
-
-  // ── DISCORD LINK ──
-  function saveDiscord(){
-    const val=document.getElementById('dcField').value.trim();
-    const s=document.getElementById('dcStatus');
-    const ok=val.startsWith('https://discord.gg/')||val.startsWith('https://discord.com/');
-    s.style.display='block';
-    if(!val||!ok){
-      Object.assign(s.style,{background:'rgba(255,71,87,0.08)',color:'#FF4757',border:'1px solid rgba(255,71,87,0.2)',padding:'9px 14px',borderRadius:'10px',fontSize:'0.82rem',fontWeight:'700',marginTop:'8px'});
-      s.textContent='❌ ลิงก์ไม่ถูกต้อง — ต้องขึ้นต้นด้วย https://discord.gg/';
-      return;
-    }
-    document.getElementById('discordBtn').href=val;
-    document.getElementById('modalDcBtn').href=val;
-    Object.assign(s.style,{background:'rgba(88,101,242,0.08)',color:'#5865F2',border:'1px solid rgba(88,101,242,0.2)',padding:'9px 14px',borderRadius:'10px',fontSize:'0.82rem',fontWeight:'700',marginTop:'8px'});
-    s.textContent='✅ บันทึกแล้ว: '+val;
-  }
-
-  // ── SCRIPT MANAGER ──
-  let scripts=[];
-
-  function addScript(){
-    const n=document.getElementById('sName').value.trim();
-    const code=document.getElementById('sCode').value.trim();
-    if(!n||!code){showToast('⚠️ กรอกชื่อและโค้ดก่อนนะครับ');return;}
-    scripts.push({
-      id:Date.now(),name:n,
-      game:document.getElementById('sGame').value.trim(),
-      price:document.getElementById('sPrice').value.trim(),
-      cat:document.getElementById('sCat').value.trim(),
-      code
-    });
-    ['sName','sGame','sPrice','sCat','sCode'].forEach(id=>document.getElementById(id).value='');
-    renderScripts();
-    showToast('✅ เพิ่มสคริปต์แล้ว!');
-  }
-
-  function delScript(id){
-    scripts=scripts.filter(s=>s.id!==id);
-    renderScripts();
-  }
-
-  // ── FUSE BUTTON (delete-with-undo, ported from FuseButton.jsx) ──
-  function fuseArm(btn){
-    const root=btn.closest('.fuse-button');
-    if(root.dataset.phase!=='idle') return;
-    root.dataset.phase='armed';
-    const dur=parseInt(root.dataset.fuseMs)||4000;
-    const rim=root.querySelector('.fuse-button__rim');
-    rim.style.transition='none';
-    rim.style.setProperty('--pct','100%');
-    void rim.offsetWidth; // force reflow so the next transition actually animates
-    rim.style.transition='--pct '+dur+'ms linear';
-    rim.style.setProperty('--pct','0%');
-    root._fuseTimer=setTimeout(()=>fuseCommit(root),dur);
-  }
-  function fuseUndo(btn){
-    const root=btn.closest('.fuse-button');
-    if(root.dataset.phase!=='armed') return;
-    clearTimeout(root._fuseTimer);
-    root.dataset.phase='idle';
-    const rim=root.querySelector('.fuse-button__rim');
-    rim.style.transition='none';
-    rim.style.setProperty('--pct','100%');
-    showToast('↩️ ยกเลิกการลบแล้ว');
-  }
-  function fuseCommit(root){
-    root.dataset.phase='settled';
-    const id=Number(root.getAttribute('data-script-id'));
-    setTimeout(()=>delScript(id), 700); // let the ✅ "ลบแล้ว" face show briefly before the row is gone
-  }
-  document.addEventListener('keydown', e=>{
-    if(e.key==='Escape'){
-      document.querySelectorAll('.fuse-button[data-phase="armed"] .fuse-button__undo').forEach(fuseUndo);
-    }
-  });
-
-  function toggleCode(id){
-    const el=document.getElementById('sc-'+id);
-    const btn=document.getElementById('sb-'+id);
-    el.classList.toggle('open');
-    btn.textContent=el.classList.contains('open')?'▲ ย่อ':'▼ ดูโค้ด';
-  }
-
-  function copyScript(id){
-    const s=scripts.find(x=>x.id===id);
-    if(!s) return;
-    navigator.clipboard.writeText(s.code).then(()=>showToast('✅ Copy โค้ดแล้ว!'));
-  }
-
-  function esc(str){
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
-
-  function renderScripts(){
-    const list=document.getElementById('scriptList');
-    if(!scripts.length){
-      list.innerHTML='<div class="sc-empty"><div class="sc-ei">📭</div><div>ยังไม่มีสคริปต์ — เพิ่มได้เลย!</div></div>';
-      return;
-    }
-    list.innerHTML=scripts.map(s=>`
-      <div class="script-card">
-        <div class="sc-header">
-          <div class="sc-name">📜 ${s.name}</div>
-          ${s.game?`<span class="sc-game">${s.game}</span>`:''}
-          ${s.price?`<span class="sc-price">${s.price}</span>`:''}
-        </div>
-        ${s.cat?`<div class="sc-cat">🏷 ${s.cat}</div>`:''}
-        <div class="sc-code" id="sc-${s.id}">${esc(s.code)}</div>
-        <div class="sc-actions">
-          <button class="sc-btn sc-copy" onclick="copyScript(${s.id})">⎘ Copy</button>
-          <button class="sc-btn sc-expand" id="sb-${s.id}" onclick="toggleCode(${s.id})">▼ ดูโค้ด</button>
-          <div class="fuse-button" data-phase="idle" data-fuse-ms="4000" data-script-id="${s.id}">
-            <button type="button" class="fuse-button__face fuse-button__idle" onclick="fuseArm(this)">🗑 ลบ</button>
-            <button type="button" class="fuse-button__face fuse-button__undo" onclick="fuseUndo(this)">↩️ เลิกทำ</button>
-            <span class="fuse-button__face fuse-button__settled">✅ ลบแล้ว</span>
-            <span class="fuse-button__rim"></span>
-          </div>
-        </div>
-      </div>`).join('');
-  }
-
-  // ── SIDEBAR ──
-  // ── CARD NAV (mobile menu, ported from CardNav.jsx) ──
-  function toggleCardNav(){
-    const navEl=document.getElementById('cardNav');
-    const btn=document.getElementById('cardNavHamburger');
-    const content=document.getElementById('cardNavContent');
-    const open=navEl.classList.toggle('open');
-    btn.classList.toggle('open',open);
-    btn.setAttribute('aria-expanded', open);
-    content.setAttribute('aria-hidden', String(!open));
-  }
-  function closeCardNavAfterClick(){
-    const navEl=document.getElementById('cardNav');
-    if(navEl.classList.contains('open')) toggleCardNav();
-  }
-
-  function toggleSidebar(){
-    const sb=document.getElementById('sidebar');
-    const ov=document.getElementById('sbOverlay');
-    const btn=document.getElementById('hamburgerBtn');
-    const open=sb.classList.toggle('open');
-    ov.classList.toggle('show',open);
-    btn.classList.toggle('open',open);
-  }
-  function closeSidebar(){
-    document.getElementById('sidebar').classList.remove('open');
-    document.getElementById('sbOverlay').classList.remove('show');
-    document.getElementById('hamburgerBtn').classList.remove('open');
-  }
-
-  // ── EMAIL AUTH ──
-  function hashPw(pw){
-    // simple hash (not cryptographic, localStorage only)
-    let h=0;
-    for(let i=0;i<pw.length;i++){h=((h<<5)-h)+pw.charCodeAt(i);h|=0;}
-    return h.toString(36);
-  }
-
-  function togglePw(id,btn){
-    const el=document.getElementById(id);
-    if(el.type==='password'){el.type='text';btn.textContent='🙈';}
-    else{el.type='password';btn.textContent='👁';}
-  }
-
-  function emailRegister(){
-    const name=document.getElementById('regName').value.trim();
-    const email=document.getElementById('regEmail').value.trim().toLowerCase();
-    const pass=document.getElementById('regPass').value;
-    const pass2=document.getElementById('regPass2').value;
-    const err=document.getElementById('sbRegErr');
-    const btn=document.getElementById('sbRegBtn');
-    err.style.display='none';
-    if(!name){err.textContent='⚠️ กรุณาใส่ชื่อ';err.style.display='block';return;}
-    if(!email||!email.includes('@')){err.textContent='⚠️ อีเมลไม่ถูกต้อง';err.style.display='block';return;}
-    if(pass.length<6){err.textContent='⚠️ รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร';err.style.display='block';return;}
-    if(pass!==pass2){err.textContent='❌ รหัสผ่านไม่ตรงกัน';err.style.display='block';return;}
-    // check duplicate
-    const key='bobs_user_'+email;
-    if(localStorage.getItem(key)){err.textContent='❌ อีเมลนี้ถูกใช้แล้ว';err.style.display='block';return;}
-    // save
-    const uid='u_'+Date.now();
-    const user={uid,name,email,pwHash:hashPw(pass),credits:0,spins:1,codes:[],joinDate:new Date().toISOString()};
-    localStorage.setItem(key,JSON.stringify(user));
-    window._rbxUser={...user,uname:name};
-    renderProfile();
-    showToast('🎉 สมัครสำเร็จ! ยินดีต้อนรับ '+name+' — ได้รับ 1 Spin ฟรี!');
-    document.getElementById('regName').value='';
-    document.getElementById('regEmail').value='';
-    document.getElementById('regPass').value='';
-    document.getElementById('regPass2').value='';
-  }
-
-  function emailLogin(){
-    const email=document.getElementById('loginEmail').value.trim().toLowerCase();
-    const pass=document.getElementById('loginPass').value;
-    const err=document.getElementById('sbErr');
-    err.style.display='none';
-    if(!email||!pass){err.textContent='⚠️ กรุณากรอกให้ครบ';err.style.display='block';return;}
-    const key='bobs_user_'+email;
-    const stored=JSON.parse(localStorage.getItem(key)||'null');
-    if(!stored){err.textContent='❌ ไม่พบบัญชีนี้';err.style.display='block';return;}
-    if(stored.pwHash!==hashPw(pass)){err.textContent='❌ รหัสผ่านไม่ถูกต้อง';err.style.display='block';return;}
-    window._rbxUser={...stored,uname:stored.name};
-    renderProfile();
-    showToast('✅ เข้าสู่ระบบสำเร็จ! ยินดีต้อนรับ '+stored.name);
-    document.getElementById('loginEmail').value='';
-    document.getElementById('loginPass').value='';
-  }
-
-  function rbxLogin(){ emailLogin(); } // compatibility alias
-
-  function renderProfile(){
-    const u=window._rbxUser;
-    if(!u) return;
-    document.getElementById('sbAuth').style.display='none';
-    document.getElementById('sbProfile').style.display='block';
-    // avatar initials
-    const init=(u.name||u.uname||'?').charAt(0).toUpperCase();
-    document.getElementById('sbAvatarInit').textContent=init;
-    document.getElementById('sbUname').textContent=u.name||u.uname;
-    document.getElementById('sbUid').textContent=u.email||'';
-    document.getElementById('sbCredits').textContent=u.credits||0;
-    document.getElementById('sbSpins').textContent=u.spins||0;
-    document.getElementById('infoName').textContent=u.name||u.uname;
-    document.getElementById('infoId').textContent=u.uid;
-    document.getElementById('infoFollow').textContent='—';
-    if(u.joinDate){
-      const d=new Date(u.joinDate);
-      document.getElementById('infoJoin').textContent=d.toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric'});
-    }
-    renderHistory();
-    saveUser();
-  }
-
-  function rbxLogout(){
-    window._rbxUser=null;
-    document.getElementById('sbAuth').style.display='block';
-    document.getElementById('sbProfile').style.display='none';
-    document.getElementById('sbCodeStatus').style.display='none';
-    switchTab('login');
-  }
-
-  function saveUser(){
-    if(!window._rbxUser) return;
-    const key='bobs_user_'+(window._rbxUser.email||window._rbxUser.uid);
-    localStorage.setItem(key,JSON.stringify(window._rbxUser));
-  }
-
-  // ── REDEEM CODE ──
-  // ── CODES — dynamic, editable ──
-  let CODES = JSON.parse(localStorage.getItem('bobs_codes') || 'null') || {
-    'NEW':       {type:'credits', amount:5,  label:'+5 เครดิต',   script:''},
-    'BOB':       {type:'spins',   amount:1,  label:'+1 Spin',     script:''},
-    'SRD':       {type:'credits', amount:5,  label:'+5 เครดิต',   script:''},
-    'SCRIPTNEW': {type:'credits', amount:10, label:'+10 เครดิต',  script:''},
-  };
-  function saveCodes(){ localStorage.setItem('bobs_codes', JSON.stringify(CODES)); }
-  function renderAdminCodes(){
-    const el=document.getElementById('adminCodeList');
-    const entries=Object.entries(CODES);
-    document.getElementById('codeCount').textContent=entries.length;
-    if(!entries.length){ el.innerHTML='<div style="color:var(--muted);font-size:0.85rem;text-align:center;padding:16px">ยังไม่มีโค้ด</div>'; return; }
-    el.innerHTML=entries.map(([k,v])=>`
-      <div class="adm-code-row">
-        <span class="adm-code-key">${k}</span>
-        <span class="adm-code-reward">${v.label}${v.type==='script'?' 📜':''}</span>
-        <button class="adm-del-btn" onclick="deleteCode('${k}')">ลบ</button>
-      </div>`).join('');
-  }
-  function addAdminCode(){
-    const key   = document.getElementById('admCodeKey').value.trim().toUpperCase();
-    const type  = document.getElementById('admCodeType').value;
-    const amt   = parseInt(document.getElementById('admCodeAmt').value)||0;
-    const script= document.getElementById('admCodeScript').value.trim();
-    if(!key){ showToast('⚠️ ใส่ชื่อโค้ดก่อน'); return; }
-    if(CODES[key]){ showToast('⚠️ โค้ดนี้มีอยู่แล้ว'); return; }
-    let label='';
-    if(type==='credits') label='+'+amt+' เครดิต';
-    else if(type==='spins') label='+'+amt+' Spin';
-    else if(type==='script') label='รับ Script';
-    CODES[key]={type, amount:amt, label, script};
-    saveCodes();
-    renderAdminCodes();
-    updateCodeListDisplay();
-    renderRedeemCodes();
-    document.getElementById('admCodeKey').value='';
-    document.getElementById('admCodeAmt').value='';
-    document.getElementById('admCodeScript').value='';
-    showToast('✅ เพิ่มโค้ด '+key+' แล้ว!');
-  }
-  function deleteCode(key){
-    delete CODES[key];
-    saveCodes();
-    renderAdminCodes();
-    updateCodeListDisplay();
-    renderRedeemCodes();
-    showToast('🗑 ลบโค้ด '+key+' แล้ว');
-  }
-  function updateCodeListDisplay(){
-    // update the visible code list in sidebar auth panel
-    const el=document.getElementById('codeListDisplay');
-    if(!el) return;
-    const entries=Object.entries(CODES);
-    if(!entries.length){ el.innerHTML='<span style="color:var(--muted)">ยังไม่มีโค้ด</span>'; return; }
-    el.innerHTML=entries.map(([k,v])=>`🎁 <b>${k}</b> = ${v.label}<br>`).join('');
-  }
-  function toggleAdminPanel(){
-    const p=document.getElementById('adminPanel');
-    const showing=p.style.display==='block';
-    p.style.display=showing?'none':'block';
-    if(!showing){ renderAdminCodes(); updateCodeListDisplay(); }
-  }
-  function showAdmCodeScript(val){
-    document.getElementById('admScriptWrap').style.display=val==='script'?'block':'none';
-    document.getElementById('admAmtWrap').style.display=val==='script'?'none':'flex';
-  }
-
-  function redeemCode(){
-    const input=document.getElementById('sbCodeInput');
-    const status=document.getElementById('sbCodeStatus');
-    const code=input.value.trim().toUpperCase();
-    status.style.display='block';
-    if(!window._rbxUser){status.style.color='#FF4757';status.textContent='⚠️ กรุณาเข้าสู่ระบบก่อน';return;}
-    if(!code){status.style.color='#FF4757';status.textContent='⚠️ กรุณาใส่โค้ด';return;}
-    if(window._rbxUser.codes.includes(code)){status.style.color='#FF4757';status.textContent='❌ ใช้โค้ดนี้ไปแล้ว';return;}
-    const reward=CODES[code];
-    if(!reward){status.style.color='#FF4757';status.textContent='❌ โค้ดไม่ถูกต้อง';return;}
-    // apply reward
-    if(reward.type==='credits') window._rbxUser.credits+=reward.amount;
-    else if(reward.type==='spins') window._rbxUser.spins+=reward.amount;
-    else if(reward.type==='script' && reward.script){
-      // show script popup
-      showScriptReward(code, reward.script);
-    }
-    window._rbxUser.codes.push(code);
-    document.getElementById('sbCredits').textContent=window._rbxUser.credits;
-    document.getElementById('sbSpins').textContent=window._rbxUser.spins;
-    status.style.color='#6c6ef7';
-    status.textContent='✅ แลกโค้ดสำเร็จ! ได้รับ '+reward.label;
-    input.value='';
-    renderHistory();
-    saveUser();
-    showToast('🎁 ได้รับ '+reward.label+'!');
-  }
-
-  function showScriptReward(code, script){
-    document.getElementById('srCodeName').textContent=code;
-    document.getElementById('srScriptBox').textContent=script;
-    document.getElementById('scriptRewardPopup').classList.add('show');
-  }
-  function copyScriptReward(){
-    const txt=document.getElementById('srScriptBox').textContent;
-    navigator.clipboard.writeText(txt).then(()=>showToast('✅ Copy โค้ดแล้ว!'));
-  }
-
-  function renderHistory(){
-    const u=window._rbxUser;
-    const el=document.getElementById('sbHistory');
-    if(!u||!u.codes.length){
-      el.innerHTML='<div style="font-size:0.8rem;color:var(--muted);text-align:center;padding:12px">ยังไม่เคยใช้โค้ด</div>';
-      return;
-    }
-    el.innerHTML=u.codes.map(c=>{
-      const r=CODES[c]||{label:'?'};
-      return`<div class="sb-hist-item"><span class="sb-hist-code">${c}</span><span class="sb-hist-reward">${r.label}</span></div>`;
-    }).reverse().join('');
-  }
-
-  // ── SPIN ──
-  const SPIN_REWARDS=[
-    {icon:'💰',label:'+3 เครดิต',type:'credits',amount:3},
-    {icon:'💰',label:'+5 เครดิต',type:'credits',amount:5},
-    {icon:'💰',label:'+10 เครดิต',type:'credits',amount:10},
-    {icon:'🎰',label:'+1 Spin',type:'spins',amount:1},
-    {icon:'🍀',label:'+1 เครดิต (ดวงซวย...)',type:'credits',amount:1},
-    {icon:'🌟',label:'+20 เครดิต (แจ็คพอต!)',type:'credits',amount:20},
-  ];
-
-  function doSpin(){
-    const u=window._rbxUser;
-    if(!u||u.spins<=0){showToast('⚠️ Spin หมดแล้ว! ใช้โค้ด BOB เพื่อรับ Spin');return;}
-    u.spins--;
-    document.getElementById('sbSpins').textContent=u.spins;
-    if(u.spins<=0) document.getElementById('sbSpinBtn').disabled=true;
-    const reward=SPIN_REWARDS[Math.floor(Math.random()*SPIN_REWARDS.length)];
-    if(reward.type==='credits') u.credits+=reward.amount;
-    else if(reward.type==='spins') u.spins+=reward.amount;
-    document.getElementById('sbCredits').textContent=u.credits;
-    document.getElementById('sbSpins').textContent=u.spins;
-    saveUser();
-    // Show popup
-    document.getElementById('spinIcon').textContent=reward.icon;
-    document.getElementById('spinResult').textContent=reward.label;
-    document.getElementById('spinDesc').textContent='เครดิตทั้งหมด: '+u.credits+' | Spin เหลือ: '+u.spins;
-    document.getElementById('spinPopup').classList.add('show');
-  }
-
-  // Enter key for login & redeem
-  document.addEventListener('DOMContentLoaded',()=>{
-    document.getElementById('sbCodeInput').addEventListener('keydown',e=>{if(e.key==='Enter')redeemCode();});
-    updateCodeListDisplay();
-    document.getElementById('codeCount').textContent=Object.keys(CODES).length;
-    renderRedeemCodes();
-  });
-
-  // ── REDEEM MAIN (หน้าเว็บ) ──
-  function redeemMain(){
-    const input=document.getElementById('redeemMainInput');
-    const status=document.getElementById('redeemStatus');
-    const scriptBox=document.getElementById('redeemScriptBox');
-    const copyBtn=document.getElementById('redeemCopyBtn');
-    const rewardBox=document.getElementById('redeemRewardBox');
-    const code=input.value.trim().toUpperCase();
-    // reset
-    status.className='redeem-status';
-    scriptBox.style.display='none';
-    copyBtn.style.display='none';
-    rewardBox.style.display='none';
-    if(!code){
-      status.textContent='⚠️ กรุณากรอกโค้ดก่อนนะครับ';
-      status.classList.add('err'); status.style.display='block'; return;
-    }
-    const reward=CODES[code];
-    if(!reward){
-      status.textContent='❌ โค้ด "'+code+'" ไม่ถูกต้อง หรือหมดอายุแล้ว';
-      status.classList.add('err'); status.style.display='block'; return;
-    }
-    // success
-    status.classList.add('ok'); status.style.display='block';
-    if(reward.type==='script' && reward.script){
-      status.textContent='✅ แลกโค้ดสำเร็จ! นี่คือ Script ของคุณ 👇';
-      scriptBox.textContent=reward.script;
-      scriptBox.style.display='block';
-      copyBtn.style.display='block';
-    } else if(reward.type==='credits'){
-      status.textContent='✅ แลกโค้ดสำเร็จ!';
-      rewardBox.style.display='flex';
-      document.getElementById('rewardIcon').textContent='💰';
-      document.getElementById('rewardAmt').textContent='+'+reward.amount;
-      document.getElementById('rewardLabel').textContent='เครดิต';
-    } else if(reward.type==='spins'){
-      status.textContent='✅ แลกโค้ดสำเร็จ!';
-      rewardBox.style.display='flex';
-      document.getElementById('rewardIcon').textContent='🎰';
-      document.getElementById('rewardAmt').textContent='+'+reward.amount;
-      document.getElementById('rewardLabel').textContent='Spin';
-    }
-    input.value='';
-    showToast('🎁 ได้รับ '+reward.label+'!');
-  }
-
-  function copyRedeemScript(){
-    const txt=document.getElementById('redeemScriptBox').textContent;
-    navigator.clipboard.writeText(txt).then(()=>showToast('✅ Copy Script แล้ว! วางใน Executor ได้เลย'));
-  }
-
-  function renderRedeemCodes(){
-    const grid=document.getElementById('redeemCodesGrid');
-    if(!grid) return;
-    const entries=Object.entries(CODES);
-    if(!entries.length){ grid.innerHTML='<span style="color:var(--muted);font-size:0.82rem">ยังไม่มีโค้ด</span>'; return; }
-    grid.innerHTML=entries.map(([k,v])=>
-      `<div class="redeem-code-chip">🎁 <b>${k}</b> <span class="rcc-reward">— ${v.label}</span></div>`
-    ).join('');
-  }
-  function showToast(msg){
-    const t=document.createElement('div');
-    t.className='toast';t.textContent=msg;
-    document.body.appendChild(t);
-    setTimeout(()=>t.remove(),2200);
-  }
-
-  // ── PROMO BANNER ──
-  function openPromoEdit(){
-    document.getElementById('promoField').value=document.getElementById('promoText').innerHTML;
-    document.getElementById('promoPopup').classList.add('show');
-    document.getElementById('promoField').focus();
-  }
-  function closePromoEdit(e){
-    if(!e||e.target===document.getElementById('promoPopup'))
-      document.getElementById('promoPopup').classList.remove('show');
-  }
-  function savePromo(){
-    const val=document.getElementById('promoField').value.trim();
-    if(val) document.getElementById('promoText').innerHTML=val;
-    document.getElementById('promoPopup').classList.remove('show');
-    showToast('✅ อัปเดตโปรโมชั่นแล้ว!');
-  }
-
-  // ── FOLDER (vanilla port of Folder.jsx) ──
-  function toggleFolder(){
-    const f=document.getElementById('scriptFolder');
-    const isOpen=f.classList.toggle('open');
-    f.setAttribute('aria-expanded', isOpen);
-    if(!isOpen){
-      f.querySelectorAll('.paper').forEach(p=>{p.style.setProperty('--magnet-x','0px');p.style.setProperty('--magnet-y','0px');});
-    }
-  }
-  function folderPaperMove(e,i){
-    const f=document.getElementById('scriptFolder');
-    if(!f.classList.contains('open')) return;
-    const rect=e.currentTarget.getBoundingClientRect();
-    const cx=rect.left+rect.width/2, cy=rect.top+rect.height/2;
-    const ox=(e.clientX-cx)*0.15, oy=(e.clientY-cy)*0.15;
-    e.currentTarget.style.setProperty('--magnet-x',ox+'px');
-    e.currentTarget.style.setProperty('--magnet-y',oy+'px');
-  }
-  function folderPaperLeave(i){
-    const f=document.getElementById('scriptFolder');
-    const paper=f.querySelectorAll('.paper')[i];
-    paper.style.setProperty('--magnet-x','0px');
-    paper.style.setProperty('--magnet-y','0px');
-  }
-
-  // ── DOCK (vanilla port of Dock.jsx magnify effect) ──
-  (function initDock(){
-    const panel=document.getElementById('dockPanel');
-    if(!panel) return;
-    const items=Array.from(panel.querySelectorAll('.dock-item'));
-    const BASE=50, MAX=70, DISTANCE=140;
-    let mouseX=Infinity, raf=null;
-
-    function render(){
-      items.forEach(item=>{
-        const rect=item.getBoundingClientRect();
-        const centerX=rect.left+rect.width/2;
-        const dist=Math.abs(mouseX-centerX);
-        let size=BASE;
-        if(dist<DISTANCE){
-          const t=1-dist/DISTANCE; // 0..1
-          size=BASE+(MAX-BASE)*t;
-        }
-        item.style.width=size+'px';
-        item.style.height=size+'px';
-        item.classList.toggle('hovered', dist<DISTANCE*0.35);
-      });
-      raf=null;
-    }
-    function scheduleRender(){ if(raf===null) raf=requestAnimationFrame(render); }
-
-    panel.addEventListener('mousemove', e=>{ mouseX=e.clientX; scheduleRender(); });
-    panel.addEventListener('mouseleave', ()=>{ mouseX=Infinity; scheduleRender(); });
-
-    items.forEach(item=>{
-      item.setAttribute('tabindex','0');
-      item.setAttribute('role','button');
-      item.addEventListener('click', ()=>{
-        const sel=item.getAttribute('data-target');
-        const target=document.querySelector(sel);
-        if(target) target.scrollIntoView({behavior:'smooth'});
-      });
-      item.addEventListener('keydown', e=>{
-        if(e.key==='Enter'||e.key===' '){ e.preventDefault(); item.click(); }
-      });
-      item.addEventListener('focus', ()=>item.classList.add('hovered'));
-      item.addEventListener('blur', ()=>item.classList.remove('hovered'));
-    });
-  })();
+addEventListener("hashchange",route);sync();route();ic();
+$("mb").onclick=function(){$("side").classList.add("open")};
+$("cl").onclick=function(){$("side").classList.remove("open")};
+document.addEventListener("click",function(e){
+ var t=e.target.closest("[data-tg]");
+ if(t){var r=document.documentElement,d=r.dataset.theme==="light"?"dark":"light";r.dataset.theme=d;document.querySelectorAll("[data-tg] span").forEach(function(x,k){x.classList.toggle("s",(k%2===1)===(d==="dark"))})}
+ var c=e.target.closest("[data-copy]");
+ if(c){var p=c.closest(".cb").querySelector("pre").textContent;try{navigator.clipboard.writeText(p)}catch(x){}var sp=c.querySelector("span");sp.textContent=U("cd");setTimeout(function(){sp.textContent=U("cp")},1200)}
+});
+document.addEventListener("change",function(e){var t=e.target.closest("[data-lang]");if(!t)return;lang=t.value;try{localStorage.setItem("wl",lang)}catch(x){}sync();var y=scrollY;route();scrollTo(0,y)});
 </script>
 </body>
 </html>
+
